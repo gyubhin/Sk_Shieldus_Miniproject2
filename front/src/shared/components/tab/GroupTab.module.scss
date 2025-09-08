@@ -1,0 +1,35 @@
+@use "@/shared/styles/mixin" as *;
+@use "@/shared/styles/color" as *;
+
+.tab_container {
+  @include flex-row;
+  width: fit-content;
+  background-color: $color-grayscale-0;
+  border-bottom: 1px solid $color-grayscale-20;
+}
+
+.tab {
+  width: 120px;
+  padding: 1.35rem 0;
+  font-size: 1.4rem;
+  color: $color-grayscale-50;
+  text-align: center;
+  border: none;
+  background: none;
+  position: relative;
+
+  &.active {
+    color: $color-grayscale-90;
+    font-weight: bold;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 0.2rem;
+      background-color: $color-grayscale-90;
+    }
+  }
+}

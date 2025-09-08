@@ -1,0 +1,57 @@
+@use "@/shared/styles/mixin" as *;
+@use "@/shared/styles/color" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-grayscale-90;
+}
+
+.input {
+  padding: 1.2rem 1.6rem;
+  border: 1px solid $color-grayscale-40;
+  border-radius: 8px;
+  font-size: 1.6rem;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &::placeholder {
+    color: $color-grayscale-50;
+  }
+
+  &:focus {
+    border-color: $color-positive-10;
+    box-shadow: 0 0 0 2px rgba($color-positive-0, 0.2);
+  }
+
+  &.invalid {
+    border-color: $color-negative-10;
+    box-shadow: 0 0 0 2px rgba($color-negative-10, 0.15);
+  }
+
+  &.success {
+    border-color: $color-positive-10;
+    box-shadow: 0 0 0 2px rgba($color-positive-10, 0.15);
+  }
+}
+
+.success {
+  font-size: 1.3rem;
+  color: $color-positive-10;
+  margin-top: 2px;
+}
+
+.error {
+  font-size: 1.3rem;
+  color: $color-negative-10;
+  margin-top: 2px;
+}

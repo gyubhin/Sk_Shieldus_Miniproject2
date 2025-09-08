@@ -1,0 +1,33 @@
+@use "@/shared/styles/mixin" as *;
+@use "@/shared/styles/color" as *;
+
+.button {
+  padding: 0.8rem 1.6rem;
+  border-radius: 2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &.primary {
+    background-color: $color-orange-10;
+    color: $color-grayscale-0;
+    border: 1px solid $color-orange-10;
+
+    @include hover {
+      background-color: $color-orange-20;
+    }
+  }
+
+  &.outline {
+    background-color: $color-grayscale-0;
+    border: 1px solid $color-grayscale-30;
+    color: $color-grayscale-90;
+
+    @include hover {
+      background-color: $color-grayscale-10;
+    }
+  }
+}
