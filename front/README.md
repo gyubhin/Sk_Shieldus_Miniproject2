@@ -11,7 +11,6 @@ init: 초기 생성
 rename: 파일 또는 폴더 이름 수정 및 이동 작업
 remove: 파일 삭제 작업
 
-### 작성 규칙
 test 
 testtest
 
