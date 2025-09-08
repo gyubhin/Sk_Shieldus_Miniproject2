@@ -5,13 +5,17 @@ import { IconButton } from "../icon/IconButton";
 
 type Props = {
   name: string;
-  fullWidth?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function DropdownButton({ name, fullWidth, className, ...props }: Props) {
+/**
+ *@description dropdown 버튼 (필터로 사용)
+
+ */
+export function DropdownButton({ name, className, ...props }: Props) {
   return (
     <button className={clsx(styles.button, className)} {...props}>
       <IconButton iconName={"Below"} />
+
       <span>{name}</span>
     </button>
   );

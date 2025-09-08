@@ -1,23 +1,20 @@
 import { SmallButton } from "../button/SmallButton";
 import styles from "./Header.module.scss";
 
-type Props = {};
-
 /**
  *@description 헤더 컴포넌트
+ * - 좌측: 로고
+ * - 우측: 주요 액션 버튼 (팀원 모집, 로그인)
  */
-export function Header({}: Props) {
+export function Header() {
   return (
     <header className={styles.header}>
       {/* Logo */}
-      <div className={styles.logo}>
-        <img src="/logo.svg" alt="HobbyHub 로고" className={styles.logoIcon} />
-      </div>
+      <img src="/images/ImageLogo.svg" alt="HobbyHub 로고" className={styles.logo_icon} />
 
-      {/* Actions */}
       <div className={styles.actions}>
         <SmallButton styleType={"PRIMARY"}>팀원 모집하기</SmallButton>
-        <SmallButton styleType={"OUTLINE"}>팀원 모집하기</SmallButton>
+        <SmallButton styleType={"OUTLINE"}>로그인</SmallButton>
       </div>
     </header>
   );

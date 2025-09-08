@@ -7,7 +7,7 @@ type Props = {
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
- *@description 활성화 버튼 컴포넌트 ui
+ *@description 작은 버튼 컴포넌트 ui
  */
 export function SmallButton({ styleType, ...props }: Props) {
   return (

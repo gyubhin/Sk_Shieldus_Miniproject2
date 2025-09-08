@@ -5,7 +5,7 @@
   @include flex-row;
   width: fit-content;
   background-color: $color-grayscale-0;
-  border-bottom: 1px solid $color-grayscale-20;
+  border-bottom: 1px solid $color-grayscale-50;
 }
 
 .tab {
@@ -18,10 +18,12 @@
   background: none;
   position: relative;
 
+  /* 활성화된 탭 스타일 */
   &.active {
     color: $color-grayscale-90;
     font-weight: bold;
 
+    /* 활성 탭 하단에 밑줄 표시 */
     &::after {
       content: "";
       position: absolute;

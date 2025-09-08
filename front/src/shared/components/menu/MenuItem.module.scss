@@ -1,0 +1,29 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.item {
+  @include flex-row-between;
+  padding: 2rem 4rem;
+  font-size: 1.4rem;
+  border-bottom: 1px solid $color-grayscale-30;
+  cursor: pointer;
+  background-color: $color-grayscale-0;
+
+  @include hover {
+    background-color: $color-grayscale-10;
+  }
+}
+
+.label {
+  color: $color-grayscale-90;
+  font-weight: 500;
+}
+
+.right_text {
+  font-size: 1.3rem;
+  color: $color-grayscale-80;
+}
+
+.right_icon {
+  @include flex-center;
+}

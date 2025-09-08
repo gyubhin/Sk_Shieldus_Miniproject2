@@ -1,0 +1,33 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.container {
+  @include flex-row;
+  gap: 6rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.page_button {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  line-height: 26px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: $color-grayscale-80;
+  cursor: pointer;
+
+  /* hover 시 글자 강조 */
+  @include hover {
+    color: $color-grayscale-90;
+  }
+}
+
+.active {
+  background-color: $color-yellow-30;
+  color: $color-grayscale-0;
+}

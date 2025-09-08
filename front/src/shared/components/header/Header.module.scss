@@ -7,22 +7,13 @@
   border-bottom: 1px solid $color-grayscale-20;
 }
 
-.logo {
-  @include flex-row;
-  gap: 0.6rem;
-
-  .logoIcon {
-    width: 2.4rem;
-    height: 2.4rem;
-  }
-
-  .logoText {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: $color-grayscale-90;
-  }
+/* 로그 icon */
+.logo_icon {
+  width: 11.2rem;
+  height: 3.7rem;
 }
 
+/* 팀원 모집하기, 로그인 버튼 뷰 */
 .actions {
   @include flex-row;
   gap: 1.2rem;

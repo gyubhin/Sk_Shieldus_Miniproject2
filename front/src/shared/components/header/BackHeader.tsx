@@ -6,11 +6,14 @@ type Props = {
   onBack: () => void;
 };
 
+/**
+ *@description 뒤로가기 버튼 있는 헤더 컴포넌트
+ */
 export function BackHeader({ title, onBack }: Props) {
   return (
     <header className={styles.header}>
       <button className={styles.back_button} onClick={onBack} aria-label="뒤로가기">
-        <IconButton iconName="Left" />
+        <IconButton iconName="Left" fill={"#383E4A"} />
       </button>
 
       <h1 className={styles.title}>{title}</h1>
