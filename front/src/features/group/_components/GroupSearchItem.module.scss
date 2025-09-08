@@ -1,0 +1,85 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.card {
+  padding: 1.2rem;
+  border: 1px solid $color-grayscale-30;
+  border-radius: 1.2rem;
+  background-color: $color-grayscale-0;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+
+  @include hover {
+    transform: translateY(-2px);
+  }
+}
+
+.content {
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 16rem;
+  object-fit: cover;
+  margin-bottom: 1.1rem;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: $color-grayscale-90;
+  margin-bottom: 0.8rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: $color-grayscale-80;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.info {
+  @include flex-row;
+  gap: 1.2rem;
+  font-size: 1.3rem;
+  color: $color-grayscale-70;
+  margin-bottom: 0.8rem;
+
+  svg {
+    margin-right: 0.2rem;
+  }
+}
+
+.members,
+.region {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  & svg {
+    color: $color-grayscale-60 !important;
+  }
+}
+
+.date {
+  font-size: 1.2rem;
+  color: $color-grayscale-70;
+}
+
+.heart {
+  width: 32px;
+  height: 32px;
+
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
