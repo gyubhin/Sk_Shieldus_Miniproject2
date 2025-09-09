@@ -15,14 +15,20 @@ import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import { CommentItem } from "@/features/comment/_components/CommentItem";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import { MenuItem } from "@/shared/components/menu/MenuItem";
+import ModalConfirm from "@/shared/components/modal/ModalConfirm";
+import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
 
 /**
  *@description ui 테스트용 페이지
  */
 function TestPage() {
   const [active, setActive] = useState("mycomment");
-
   const [page, setPage] = useState(1);
+
+
+  const [openSheet, setOpenSheet] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <div
@@ -35,6 +41,15 @@ function TestPage() {
         gap: 32,
       }}
     >
+       <div style={{ marginTop: 12, display: "flex", gap: 12 }}>
+        <button onClick={() => { console.log("[DEBUG] 액션시트 열기 클릭"); setOpenSheet(true); }}>
+          액션시트 열기
+        </button>
+        <button onClick={() => { console.log("[DEBUG] 삭제 모달 열기 클릭"); setOpenConfirm(true); }}>
+          삭제 모달 열기
+        </button>
+      </div>
+      
       <Header />
 
       <BackHeader
@@ -134,6 +149,56 @@ function TestPage() {
           isHeart={false}
         />
       </div>
+
+
+      <div style={{ marginTop: 12, display: "flex", gap: 12 }}>
+        <button onClick={() => setOpenSheet(true)}>액션시트 열기</button>
+        <button onClick={() => setOpenConfirm(true)}>삭제 모달 열기</button>
+      </div>
+
+      {/* 하단 액션시트 */}
+      <ActionSheet
+        open={openSheet}
+        onClose={() => { console.log("[DEBUG] 액션시트 닫기"); setOpenSheet(false); }}
+        onEdit={() => {
+          console.log("[DEBUG] 액션시트 수정 클릭");
+          setOpenSheet(false);
+          alert("수정 클릭됨");
+        }}
+        onDelete={() => {
+          console.log("[DEBUG] 액션시트 삭제 클릭 -> 모달 오픈");
+          setOpenSheet(false);
+          setOpenConfirm(true);
+        }}
+      />
+
+
+      {/* 삭제 확인 모달 */}
+      <ModalConfirm
+        open={openConfirm}
+        title="정말로 삭제하시겠습니까?"
+        confirmText={isDeleting ? "삭제중..." : "삭제"}
+        cancelText="취소"
+        onClose={() => {
+          if (isDeleting) return;
+          console.log("[DEBUG] 모달 닫기");
+          setOpenConfirm(false);
+        }}
+        onConfirm={async () => {
+          if (isDeleting) return;
+          try {
+            console.log("[DEBUG] 모달 확인 클릭 -> 삭제 진행");
+            setIsDeleting(true);
+            await new Promise((r) => setTimeout(r, 600)); // TODO: 실제 API로 교체
+            alert("삭제 완료!");
+          } catch (e) {
+            alert("삭제 실패, 다시 시도해주세요.");
+          } finally {
+            setIsDeleting(false);
+            setOpenConfirm(false);
+          }
+        }}
+      />
     </div>
   );
 }
