@@ -11,13 +11,13 @@ type Props = {
  */
 export function MyCommentItem({ title, content, createdAt }: Props) {
   return (
-    <div className={styles.card}>
+    <button className={styles.card}>
       <div className={styles.header}>
         <h3 className={styles.title}>{title}</h3>
         <span className={styles.date}>{createdAt}</span>
       </div>
 
       <p className={styles.content}>{content}</p>
-    </div>
+    </button>
   );
 }

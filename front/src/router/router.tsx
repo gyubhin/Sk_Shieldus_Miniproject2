@@ -11,6 +11,10 @@ import GroupRegisterPage from "@/pages/group/register/GroupRegisterPage";
 import PostRegisterPage from "@/pages/post/register/PostRegisterPage";
 import PrivacyPage from "@/pages/privacy/PrivacyPage";
 import GroupPostPage from "@/pages/group/post/GroupPostPage";
+import Mypage from "@/pages/mypage/Mypage";
+import SettingPage from "@/pages/mypage/setting/SettingPage";
+import NoticePage from "@/pages/mypage/setting/notice/NoticePage";
+import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -32,6 +36,10 @@ function Router() {
         <Route path="group/register" element={<GroupRegisterPage />} />
         <Route path="post/register" element={<PostRegisterPage />} />
         <Route path="group/info" element={<GroupInfoPage />} />
+        <Route path="mypage" element={<Mypage />} />
+        <Route path="mypage/setting" element={<SettingPage />} />
+        <Route path="mypage/notice" element={<NoticePage />} />
+        <Route path="mypage/edit" element={<ProfileEditPage />} />
       </Routes>
     </BrowserRouter>
   );

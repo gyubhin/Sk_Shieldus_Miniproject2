@@ -1,0 +1,117 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 3.2rem;
+}
+
+/* 좌측 뷰 */
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding-right: 3rem;
+}
+
+/* 프로필 이미지 뷰 */
+.profile_img_wrapper {
+  position: relative;
+}
+
+.profile_default_image {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+}
+
+.profile_image {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 프로필 수정 버튼 */
+.edit_btn {
+  border: 1px solid $color-grayscale-80;
+  color: $color-grayscale-70;
+  border-radius: 1.2rem;
+  padding: 1rem;
+  background: white;
+  font-size: 1.6rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-grayscale-10;
+  }
+}
+
+/* 중앙 뷰 */
+.center {
+  flex: 1;
+  text-align: left;
+  padding: 0 2rem;
+  font-size: 1.6rem;
+}
+
+.description {
+  font-size: 1.4rem;
+  color: $color-grayscale-70;
+  margin-bottom: 0.8rem;
+}
+
+.nickname {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.counts {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.6rem;
+}
+
+.count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.number {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: $color-grayscale-70;
+}
+
+.label {
+  font-size: 1.6rem;
+  color: $color-grayscale-80;
+}
+
+/* 우측 뷰 */
+.right {
+  display: flex;
+  gap: 2rem;
+}
+
+.icon_btn {
+  @include flex-column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 0.8rem;
+
+  .icon_button_text {
+    color: $color-grayscale-80;
+    font-size: 1.6rem;
+  }
+
+  &:hover {
+    color: $color-grayscale-90;
+  }
+}

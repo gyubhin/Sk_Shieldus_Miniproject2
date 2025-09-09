@@ -5,14 +5,14 @@
 .card {
   border: 1px solid $color-grayscale-40;
   border-radius: 1rem;
-  padding: 3.2rem;
+  padding: 2rem 3.2rem;
   background-color: $color-grayscale-0;
 }
 
 /* title, date 뷰 */
 .header {
   @include flex-row-between;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.6rem;
 
   .title {
     font-size: 1.6rem;
@@ -27,6 +27,7 @@
 }
 
 .content {
+  text-align: start;
   font-size: 1.6rem;
   color: $color-grayscale-80;
   line-height: 1.5;

@@ -2,7 +2,7 @@ import { useAccessTokenStore } from "@/features/auth/_stores/accessToken.store";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./cookie";
 
-const isMockApi = false;
+const isMockApi = true;
 export const apiCall = axios.create({
   baseURL: isMockApi ? "" : process.env.NEXT_PUBLIC_API_BASE_URL,
   withCredentials: true,
@@ -18,7 +18,7 @@ apiCall.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 let isRefreshing = false;
@@ -54,9 +54,10 @@ apiCall.interceptors.response.use(
       isRefreshing = true;
       try {
         const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
-          {},
-          { withCredentials: true }
+          // `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
+          // {},
+          "",
+          { withCredentials: true },
         );
 
         const newAccessToken = res.data.accessToken;
@@ -81,5 +82,5 @@ apiCall.interceptors.response.use(
 
     // 그 외 에러 응답
     return Promise.reject(error);
-  }
+  },
 );
