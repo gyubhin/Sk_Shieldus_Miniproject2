@@ -1,0 +1,57 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.group_content {
+  .top_view {
+    @include flex-row-between; /* 모임 이름*/
+    margin-bottom: 18px;
+
+    h2 {
+      color: $color-grayscale-90;
+      font-size: 2.4rem;
+      font-weight: bold;
+    }
+
+    /* 탈퇴하기 버튼 */
+    button {
+      color: $color-negative--10;
+      font-weight: bold;
+      font-size: 1.6rem;
+    }
+  }
+
+  /* 장소, 멤버 인원수 */
+  .group_sub_info_view {
+    font-size: 1.6rem;
+    color: $color-grayscale-90;
+
+    @include flex-row;
+    gap: 1rem;
+    margin-bottom: 18px;
+  }
+
+  /* 태그 */
+  .tags_view {
+    @include flex-row;
+    gap: 1.4rem;
+    margin-bottom: 40px;
+  }
+
+  /* 모임 소개글 */
+  .instruction {
+    margin-bottom: 60px;
+
+    h3 {
+      color: $color-grayscale-90;
+      font-weight: bold;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: $color-grayscale-80;
+      font-size: 1.6rem;
+      line-height: 3.2rem;
+    }
+  }
+}
