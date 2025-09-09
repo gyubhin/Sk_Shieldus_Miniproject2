@@ -1,4 +1,4 @@
 package com.csu.csu_backend.service;
 
-public class service2 {
+public class AttendeeService {
 }

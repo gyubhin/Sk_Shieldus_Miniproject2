@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9297ca96-bf48-4189-94e9-dd6459d2b9ed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Sk_Shieldus_Miniproject2.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/controller1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/dto1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/entity1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/repository/repository1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/service1.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/service2.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/AttendeeService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="32RSQ3mB9McEX8mtSBycwqq9olN" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.CsuBackendApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "git-widget-placeholder": "feature/KimGyuBhin",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/rookies4dev/mini_project2/csu-backend",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "advanced.settings"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9297ca96-bf48-4189-94e9-dd6459d2b9ed" name="Changes" comment="" />
+      <created>1757381874515</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1757381874515</updated>
+    </task>
+    <servers />
+  </component>
+</project>
