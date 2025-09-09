@@ -1,0 +1,13 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.form {
+  @include flex-column;
+  gap: 4rem;
+
+  .button_groups {
+    width: 100%;
+    @include flex-column;
+    gap: 4rem;
+  }
+}

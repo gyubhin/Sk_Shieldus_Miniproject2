@@ -1,0 +1,20 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.top_tab_view {
+  margin-bottom: 40px;
+}
+
+.schedule_view {
+  display: grid;
+  column-gap: 5rem;
+  row-gap: 2.8rem;
+  margin-bottom: 40px;
+  grid-template-columns: repeat(1, 310px);
+
+  @include media(sm) {
+    column-gap: 5rem;
+    row-gap: 2.8rem;
+    grid-template-columns: repeat(2, 310px);
+  }
+}
