@@ -2,11 +2,13 @@ import { type ButtonHTMLAttributes } from "react";
 import styles from "./ActiveButton.module.scss";
 import clsx from "clsx";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement>;
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  buttonStyle?: "active" | "disabled";
+};
 
 /**
  *@description 활성화 버튼 컴포넌트
  */
-export function ActiveButton({ className, ...props }: Props) {
-  return <button className={clsx(styles.button, className)} {...props} />;
+export function ActiveButton({ className, buttonStyle = "active", ...props }: Props) {
+  return <button className={clsx(styles.button, styles[buttonStyle], className)} {...props} />;
 }

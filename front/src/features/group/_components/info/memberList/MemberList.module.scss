@@ -1,0 +1,28 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.member_list_container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4rem;
+
+  .members_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+
+    & > p {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: $color-grayscale-90;
+    }
+  }
+
+  /* 모임원들 정보 */
+  .manager_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+}

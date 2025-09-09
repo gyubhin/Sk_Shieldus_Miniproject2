@@ -10,7 +10,7 @@ import { BottomTab } from "@/shared/components/tab/BottomTab";
 import { FilterButton } from "@/shared/components/button/FilterButton";
 import { GroupSearchItem } from "@/features/group/_components/GroupSearchItem";
 import { MyCommentItem } from "@/features/users/_components/MyCommentItem";
-import { ScheduleItem } from "@/features/group/_components/ScheduleItem";
+import EventItem from "@/features/group/_components/EventItem";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import { CommentItem } from "@/features/comment/_components/CommentItem";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
@@ -103,7 +103,7 @@ function TestPage() {
       </div>
 
       <div style={{ maxWidth: "400px" }}>
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"

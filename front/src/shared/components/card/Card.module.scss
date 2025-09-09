@@ -1,0 +1,22 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.card {
+  width: 100%;
+  border: 1px solid $color-grayscale-40;
+  border-radius: 14px;
+  padding: 2.4rem 2.8rem;
+
+  & > h3 {
+    color: $color-grayscale-90;
+    font-size: 1.8rem;
+    font-weight: bold;
+
+    margin-bottom: 38px;
+  }
+
+  & > .content {
+    @include flex-column;
+    gap: 5.1rem;
+  }
+}

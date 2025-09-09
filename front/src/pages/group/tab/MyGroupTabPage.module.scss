@@ -1,0 +1,24 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.schedule_view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  margin-bottom: 40px;
+
+  @include media(sm) {
+    gap: 5.3rem;
+  }
+}
+
+.my_group_view {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 3.2rem;
+
+  @include media(sm) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+}

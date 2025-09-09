@@ -14,7 +14,8 @@
 
   @include media(sm) {
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
+    column-gap: 1.6rem;
+    row-gap: 4rem;
   }
 }
 
