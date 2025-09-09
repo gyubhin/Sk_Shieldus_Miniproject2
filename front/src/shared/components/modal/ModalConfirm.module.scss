@@ -31,7 +31,7 @@
   margin: 6px 0 18px;
 }
 
-.actions { display: flex; gap: 12px; }
+.actions { display: flex; gap: 12px; justify-content: flex-end; }
 
 .primary, .ghost {
   border-radius: 12px;
