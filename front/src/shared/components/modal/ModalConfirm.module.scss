@@ -1,0 +1,48 @@
+:root {
+  --radius-xxl: 20px;
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.16);
+  --brand: #1e90ff;
+  --text: #111827;
+  --bg: #ffffff;        /* 평소 배경은 페이지에서 흰색으로 */
+  --overlay: rgba(17,24,39,0.55); /* 모달 열릴 때 어두운 딤 */
+  --border: #e5e7eb;
+}
+
+.backdrop {
+  position: fixed; inset: 0;
+  background: var(--overlay);   /* ✅ 딤 처리 */
+  display: grid; place-items: center;
+  z-index: 1000;
+}
+
+.card {
+  width: min(520px, calc(100% - 32px));
+  background: var(--bg);
+  border-radius: var(--radius-xxl);
+  box-shadow: var(--shadow-lg);
+  padding: 28px 28px 22px;
+  border: 1px solid var(--border);
+}
+
+.title {
+  color: var(--text);
+  font-weight: 800;
+  font-size: 20px;
+  margin: 6px 0 18px;
+}
+
+.actions { display: flex; gap: 12px; }
+
+.primary, .ghost {
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  transition: transform .04s ease, filter .15s ease;
+}
+
+.primary { background: var(--brand); color: #fff; }
+.primary:active, .ghost:active { transform: translateY(1px); }
+
+.ghost { background: #fff; color: #111827; border-color: var(--border); }
+.ghost:hover { filter: brightness(0.98); }

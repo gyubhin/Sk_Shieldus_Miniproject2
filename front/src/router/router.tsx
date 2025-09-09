@@ -4,6 +4,7 @@ import MainPage from "../pages/main/MainPage";
 import LoginPage from "../pages/login/LoginPage";
 import SignupPage from "../pages/signup/SignupPage";
 import TestPage from "@/pages/test/TestPage";
+import PostPage from "@/pages/post/PostPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -16,6 +17,7 @@ function Router() {
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
         <Route path="test" element={<TestPage />} />
+        <Route path="/post" element={<PostPage />} />
       </Routes>
     </BrowserRouter>
   );
