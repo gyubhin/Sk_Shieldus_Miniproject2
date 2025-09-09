@@ -13,8 +13,8 @@ export function Header() {
       <img src="/images/ImageLogo.svg" alt="HobbyHub 로고" className={styles.logo_icon} />
 
       <div className={styles.actions}>
-        <SmallButton styleType={"PRIMARY"}>팀원 모집하기</SmallButton>
-        <SmallButton styleType={"OUTLINE"}>로그인</SmallButton>
+        <SmallButton styleType={"primary"}>팀원 모집하기</SmallButton>
+        <SmallButton styleType={"outline"}>로그인</SmallButton>
       </div>
     </header>
   );

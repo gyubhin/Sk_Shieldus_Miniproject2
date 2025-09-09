@@ -4,7 +4,7 @@
 .header {
   @include flex-row-between;
   background-color: $color-grayscale-0;
-  border-bottom: 1px solid $color-grayscale-20;
+  margin-bottom: 40px;
 }
 
 /* 로그 icon */

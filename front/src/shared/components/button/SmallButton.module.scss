@@ -2,7 +2,8 @@
 @use "@/shared/styles/color" as *;
 
 .button {
-  padding: 0.8rem 1.6rem;
+  min-width: 130px;
+  padding: 1rem 1.6rem;
   border-radius: 2rem;
   font-size: 1.4rem;
   font-weight: 600;
@@ -28,6 +29,17 @@
 
     @include hover {
       background-color: $color-grayscale-10;
+    }
+  }
+
+  &.black {
+    background-color: $color-grayscale-90;
+    border: 1px solid $color-grayscale-70;
+    color: $color-grayscale-0;
+
+    @include hover {
+      border: 1px solid $color-grayscale-80;
+      color: $color-grayscale-10;
     }
   }
 }
