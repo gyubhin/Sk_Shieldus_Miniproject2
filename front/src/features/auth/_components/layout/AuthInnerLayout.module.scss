@@ -1,0 +1,7 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.inner_layout {
+  @include flex-column;
+  padding: 0 17rem;
+}

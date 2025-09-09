@@ -9,6 +9,7 @@ import MyGroupTabPage from "@/pages/group/tab/MyGroupTabPage";
 import GroupInfoPage from "@/pages/group/info/GroupInfoPage";
 import GroupRegisterPage from "@/pages/group/register/GroupRegisterPage";
 import PostRegisterPage from "@/pages/post/register/PostRegisterPage";
+import PrivacyPage from "@/pages/privacy/PrivacyPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -19,6 +20,8 @@ function Router() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
+
         <Route path="signup" element={<SignupPage />} />
         <Route path="test" element={<TestPage />} />
         <Route path="search" element={<MainSearch />} />
