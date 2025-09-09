@@ -1,0 +1,29 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.container {
+  @include flex-row-between;
+  width: 100%;
+  padding: 0.8rem 0;
+  background-color: $color-grayscale-0;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: $color-grayscale-90;
+}
+
+.action {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: $color-grayscale-80;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  @include hover {
+    text-decoration: underline;
+  }
+}

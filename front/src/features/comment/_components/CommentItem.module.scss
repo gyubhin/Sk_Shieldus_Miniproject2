@@ -1,0 +1,60 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+/* 댓글 전체 컨테이너 */
+.container {
+  display: flex;
+  gap: 1.4rem;
+}
+
+/* 프로필 아이콘 */
+.avatar {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background-color: $color-grayscale-40;
+  flex-shrink: 0;
+}
+
+.body {
+  flex: 1;
+}
+
+.text {
+  font-size: 1.4rem;
+  color: $color-grayscale-80;
+  margin-bottom: 0.6rem;
+}
+
+/* 작성자 이름  */
+.author {
+  font-weight: bold;
+  color: $color-grayscale-90;
+  margin-right: 0.4rem;
+}
+
+/* 댓글 메타 정보 (날짜, 액션 버튼 묶음) */
+.meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.3rem;
+  color: $color-grayscale-80;
+}
+
+/* 작성일 표시 */
+.date {
+  padding: 1rem 0;
+}
+
+/* 액션 버튼 (답글달기, 삭제) */
+.action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem 0;
+  color: $color-grayscale-70;
+
+  @include hover {
+    color: $color-grayscale-90;
+  }
+}

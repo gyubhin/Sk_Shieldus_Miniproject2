@@ -3,12 +3,34 @@
 import clsx from "clsx";
 import styles from "./IconButton.module.scss";
 import React from "react";
-import { BsArrowLeft, BsChevronDown, BsSearch } from "react-icons/bs";
+import {
+  BsChevronDown,
+  BsSearch,
+  BsFillPersonFill,
+  BsFillGeoAltFill,
+  BsHeart,
+  BsFillHeartFill,
+  BsChevronLeft,
+  BsStar,
+  BsBook,
+  BsChatSquare,
+} from "react-icons/bs";
+import { IoIosMore } from "react-icons/io";
+import { IoHomeOutline } from "react-icons/io5";
 
 const Icon = {
   Below: BsChevronDown,
   Search: BsSearch,
-  Left: BsArrowLeft,
+  Left: BsChevronLeft,
+  Person: BsFillPersonFill,
+  Marker: BsFillGeoAltFill,
+  StrokeHeart: BsHeart,
+  FillHeart: BsFillHeartFill,
+  More: IoIosMore,
+  Home: IoHomeOutline,
+  Star: BsStar,
+  Book: BsBook,
+  Bubble: BsChatSquare,
 } as const;
 
 type IconKey = keyof typeof Icon;

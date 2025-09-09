@@ -11,6 +11,19 @@ type Props = {
 
 /**
  *@description common input field (with label + input + message)
+ * @prop label 입력 필드 라벨 텍스트
+ * @prop name input name/id 값 (label과 연결)
+ * @prop successMessage 성공 시 표시할
+ * @prop errorMessage 에러 시 표시할 메시지
+ *
+ * @example
+ * <InputField
+ *   label="이메일"
+ *   name="email"
+ *   type="email"
+ *   placeholder="이메일을 입력하세요"
+ *   errorMessage="올바른 이메일 형식이 아닙니다."
+ * />
  */
 export function InputField({ label, name, successMessage, errorMessage }: Props) {
   return (

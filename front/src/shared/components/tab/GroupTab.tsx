@@ -1,10 +1,6 @@
+import type { Tab } from "@/shared/types/tabs";
 import styles from "./GroupTab.module.scss";
 import clsx from "clsx";
-
-type Tab = {
-  key: string;
-  label: string;
-};
 
 type Props = {
   tabs: Tab[];
@@ -13,7 +9,24 @@ type Props = {
 };
 
 /**
- *@description 탭리스트 (그룹 페이지)
+ *@description 탭 리스트 컴포넌트
+ * @prop tabs 탭 목록 (key, label 포함)
+ * @prop activeKey 현재 선택된 탭의 key
+ * @prop onChange 탭 클릭 시 호출되는 콜백 (선택된 탭의 key 전달)
+ * 
+ * @example
+ * const tabs = [
+ *   { key: "home", label: "홈" },
+ *   { key: "board", label: "게시판" },
+ *   { key: "chat", label: "채팅" },
+ * ];
+ *
+ * <GroupTab 
+ *   tabs={tabs} 
+ *   activeKey="home" 
+ *   onChange={(key) => setActiveTab(key)} 
+ * />
+
  */
 export function GroupTab({ tabs, activeKey, onChange }: Props) {
   return (
@@ -24,7 +37,7 @@ export function GroupTab({ tabs, activeKey, onChange }: Props) {
           className={clsx(styles.tab, activeKey === tab.key && styles.active)}
           onClick={() => onChange(tab.key)}
         >
-          {tab.label}
+          {tab.name}
         </button>
       ))}
     </nav>
