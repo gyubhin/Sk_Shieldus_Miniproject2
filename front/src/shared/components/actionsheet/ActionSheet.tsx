@@ -6,27 +6,18 @@ import { ensurePortalRoot } from "@/shared/utils/portal";
 type Props = {
   open: boolean;
   onClose: () => void;
-
-  // ✅ 중립 프롭
   onClickFirst?: () => void;
   onClickSecond?: () => void;
-  firstText?: string;   // default: "수정"
-  secondText?: string;  // default: "삭제"
+  firstText?: string;   
+  secondText?: string;  
   title?: string;
   destructive?: "first" | "second";
 
-  // ⛳️ 하위호환
-  onEdit?: () => void;
-  onDelete?: () => void;
-  editText?: string;
-  deleteText?: string;
 };
 
 export default function ActionSheet({
   open,
   onClose,
-
-  // 새 프롭
   onClickFirst,
   onClickSecond,
   firstText,
@@ -34,19 +25,12 @@ export default function ActionSheet({
   title,
   destructive,
 
-  // 하위호환
-  onEdit,
-  onDelete,
-  editText,
-  deleteText,
 }: Props) {
   // ---- 하위호환 매핑 ----
-  const handleFirst = onClickFirst ?? onEdit;
-  const handleSecond = onClickSecond ?? onDelete;
-
-  // 기본 라벨을 "수정" / "삭제"로
-  const labelFirst = firstText ?? editText ?? "수정";
-  const labelSecond = secondText ?? deleteText ?? "삭제";
+  const handleFirst = onClickFirst;
+  const handleSecond = onClickSecond;
+  const labelFirst = firstText ;
+  const labelSecond = secondText ;
 
   useEffect(() => {
     if (!open) return;
