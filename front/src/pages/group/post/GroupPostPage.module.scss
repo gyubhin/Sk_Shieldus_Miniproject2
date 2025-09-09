@@ -1,0 +1,10 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+/* 게시글 목록 래퍼 */
+.posts_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: 40px;
+}
