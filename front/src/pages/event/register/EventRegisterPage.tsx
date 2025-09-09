@@ -1,9 +1,9 @@
 import styles from "./EventRegisterPage.module.scss";
-import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { BackHeader } from "@/shared/components/header/BackHeader";
 import Card from "@/shared/components/card/Card";
 import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
+import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 
 /**
  *@description 일정 등록/수정 페이지

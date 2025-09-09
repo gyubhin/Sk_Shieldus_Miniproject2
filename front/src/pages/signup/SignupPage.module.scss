@@ -1,0 +1,15 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.form_wrapper {
+  & > img {
+    margin-bottom: 5rem;
+  }
+
+  & > form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+}

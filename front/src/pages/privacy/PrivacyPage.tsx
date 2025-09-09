@@ -1,14 +1,11 @@
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 
-/**
- *@description 로그인 페이지
- */
-function LoginPage() {
+function PrivacyPage() {
   return (
     <CommonLayout>
-      <div>div</div>
+      <div>privacy</div>
     </CommonLayout>
   );
 }
 
-export default LoginPage;
+export default PrivacyPage;
