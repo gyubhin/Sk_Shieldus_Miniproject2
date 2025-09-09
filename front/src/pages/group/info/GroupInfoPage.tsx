@@ -2,7 +2,7 @@ import { Header } from "@/shared/components/header/Header";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./GroupInfoPage.module.scss";
-import { ScheduleItem } from "@/features/group/_components/ScheduleItem";
+import EventItem from "@/features/group/_components/EventItem";
 import { GroupTab } from "@/shared/components/tab/GroupTab";
 import GroupBanner from "@/features/group/_components/info/banner/GroupBanner";
 import GroupInfoContent from "@/features/group/_components/info/content/GroupInfoContent";
@@ -12,7 +12,6 @@ import MemberList from "@/features/group/_components/info/memberList/MemberList"
  *@description 내 모임 탭 > 모임 정보 페이지
  */
 function GroupInfoPage() {
-  console.log(22);
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -38,7 +37,7 @@ function GroupInfoPage() {
       <SectionTitle title={"정모 일정 4"} rightActionLabel="+ 일정 생성" />
 
       <section className={styles.schedule_view}>
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"
@@ -46,7 +45,7 @@ function GroupInfoPage() {
           onMoreClick={() => console.log("더보기 클릭")}
         />
 
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"
@@ -54,7 +53,7 @@ function GroupInfoPage() {
           onMoreClick={() => console.log("더보기 클릭")}
         />
 
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"

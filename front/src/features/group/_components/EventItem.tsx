@@ -1,5 +1,5 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
-import styles from "./ScheduleItem.module.scss";
+import styles from "./EventItem.module.scss";
 
 type Props = {
   title: string;
@@ -15,7 +15,7 @@ type Props = {
  *@param location 장소
  *@param imageUrl 일정 이미지
  *@example
- * <ScheduleItem
+ * <EventItem
  *   title="토요일 스터디 모임"
  *   time="내일 오전 11:00"
  *   location="당산역 커피점"
@@ -23,7 +23,7 @@ type Props = {
  *   onMoreClick={() => console.log("더보기 클릭")}
  * />
  */
-export function ScheduleItem({ title, time, location, imageUrl, onMoreClick }: Props) {
+export default function EventItem({ title, time, location, imageUrl, onMoreClick }: Props) {
   return (
     <div className={styles.card}>
       {/* 썸네일 */}

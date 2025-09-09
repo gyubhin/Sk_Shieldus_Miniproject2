@@ -4,7 +4,7 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MyGroupTabPage.module.scss";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
-import { ScheduleItem } from "@/features/group/_components/ScheduleItem";
+import EventItem from "@/features/group/_components/EventItem";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
@@ -18,7 +18,7 @@ function MyGroupTabPage() {
       <SectionTitle title={"다가오는 정모 일정 4"} />
 
       <section className={styles.schedule_view}>
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"
@@ -26,7 +26,7 @@ function MyGroupTabPage() {
           onMoreClick={() => console.log("더보기 클릭")}
         />
 
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"
@@ -34,7 +34,7 @@ function MyGroupTabPage() {
           onMoreClick={() => console.log("더보기 클릭")}
         />
 
-        <ScheduleItem
+        <EventItem
           title="토요일 스터디 모임"
           time="내일 오전 11:00"
           location="당산역 커피점"
