@@ -1,0 +1,13 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.check_field {
+  @include flex-row;
+  gap: 1.8rem;
+
+  & > p {
+    color: $color-grayscale-80;
+    font-weight: bold;
+    font-size: 2rem;
+  }
+}

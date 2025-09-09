@@ -14,6 +14,9 @@ import {
   BsStar,
   BsBook,
   BsChatSquare,
+  BsCheckCircle,
+  BsCheckCircleFill,
+  BsReply,
 } from "react-icons/bs";
 import { IoIosMore } from "react-icons/io";
 import { IoHomeOutline } from "react-icons/io5";
@@ -31,6 +34,9 @@ const Icon = {
   Star: BsStar,
   Book: BsBook,
   Bubble: BsChatSquare,
+  StrokeCheckCircle: BsCheckCircle,
+  FillCheckCircle: BsCheckCircleFill,
+  Share: BsReply,
 } as const;
 
 type IconKey = keyof typeof Icon;
