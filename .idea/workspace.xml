@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9297ca96-bf48-4189-94e9-dd6459d2b9ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Sk_Shieldus_Miniproject2.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/controller1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/dto1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/entity1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/repository/repository1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/service1.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/service2.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/AttendeeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/AttendeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/EventAttendeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/AttendeeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventAttendeeDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/Attendee.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/EventAttendee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/repository/AttendeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/repository/EventAttendeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/AttendeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventAttendeeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/resources/application.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,10 +42,10 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="32RSQ3mB9McEX8mtSBycwqq9olN" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -62,15 +60,56 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feature/KimGyuBhin",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/rookies4dev/mini_project2/csu-backend",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "advanced.settings"
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\rookies4dev\mini_project2\csu-backend\back\csu-backend\src\main\resources" />
+      <recent name="C:\rookies4dev\mini_project2\csu-backend\back\csu-backend\src\main" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.csu.csu_backend.repository" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="CsuBackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.csu.csu_backend.CsuBackendApplication" />
+      <module name="csu-backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.csu.csu_backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="csu-backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="csu-backend" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.CsuBackendApplication" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="9297ca96-bf48-4189-94e9-dd6459d2b9ed" name="Changes" comment="" />
