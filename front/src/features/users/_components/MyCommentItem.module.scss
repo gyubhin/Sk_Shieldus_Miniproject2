@@ -1,0 +1,33 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+/* 카드 ui */
+.card {
+  border: 1px solid $color-grayscale-40;
+  border-radius: 1rem;
+  padding: 3.2rem;
+  background-color: $color-grayscale-0;
+}
+
+/* title, date 뷰 */
+.header {
+  @include flex-row-between;
+  margin-bottom: 1.2rem;
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: $color-grayscale-90;
+  }
+
+  .date {
+    font-size: 1.4rem;
+    color: $color-grayscale-70;
+  }
+}
+
+.content {
+  font-size: 1.6rem;
+  color: $color-grayscale-80;
+  line-height: 1.5;
+}

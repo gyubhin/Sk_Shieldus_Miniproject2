@@ -3,9 +3,10 @@
 
 .container {
   @include flex-row;
-  gap: 0.8rem;
+  gap: 1rem;
   width: 100%;
-  padding: 1rem 3.5rem;
+  height: 4.4rem;
+  padding: 0 3.2rem;
   border-radius: 1.2rem;
   border: 1px solid $color-grayscale-50;
   background-color: $color-grayscale-0;
@@ -13,17 +14,14 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 
+  /* 인풋 focus 시 부모 컨테이너 강조 */
   &:focus-within {
     border-color: $color-grayscale-60;
     box-shadow: 0 0 0 2px rgba($color-grayscale-60, 0.3);
   }
 }
 
-.icon {
-  flex-shrink: 0;
-  color: $color-grayscale-60;
-}
-
+/* 인풋 필드 */
 .input {
   flex: 1;
   border: none;

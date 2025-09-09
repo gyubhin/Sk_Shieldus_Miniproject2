@@ -1,0 +1,15 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.filter_list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 40px;
+
+  @media (sm) {
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+}

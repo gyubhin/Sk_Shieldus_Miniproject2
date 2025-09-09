@@ -4,13 +4,14 @@ import { Header } from "@/shared/components/header/Header";
 import { SearchInput } from "@/shared/components/input/SearchInput";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
-import styles from "./MainPage.module.scss";
+import styles from "./MainSearch.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
+import { Pagination } from "@/shared/components/pagenation/Pagenation";
 
 /**
- *@description 메인 페이지 > 검색, 추천 그룹 표시, 내가 가입한 모임,
+ *@description 메인 페이지 > 검색 내용 페이지 컴포넌트
  */
-function MainPage() {
+function MainSearch() {
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -27,9 +28,33 @@ function MainPage() {
       <FilterList />
 
       {/* 그룹 리스트 뷰 */}
-      <SectionTitle title={"추천 그룹 표시"} rightActionLabel="더보기" onActionClick={() => {}} />
+      <SectionTitle title={"'파이썬'으로 검색한 내용"} />
 
-      <section className={styles.group_view}>
+      <section className={styles.group_serach_view}>
+        <GroupSearchItem
+          name="파이썬 프로그래밍"
+          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
+          region="강남구"
+          maxMembers={6}
+          currentMembers={3}
+          createdAt="2025.02.04"
+          imageUrl="https://placehold.co/600x400"
+          tags={["파이썬", "AI"]}
+          isHeart
+        />
+
+        <GroupSearchItem
+          name="파이썬 프로그래밍"
+          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
+          region="강남구"
+          maxMembers={6}
+          currentMembers={3}
+          createdAt="2025.02.04"
+          imageUrl="https://placehold.co/600x400"
+          tags={["파이썬", "AI"]}
+          isHeart
+        />
+
         <GroupSearchItem
           name="파이썬 프로그래밍"
           description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
@@ -67,47 +92,9 @@ function MainPage() {
         />
       </section>
 
-      <SectionTitle title={"내가 찜한 모임"} rightActionLabel="더보기" onActionClick={() => {}} />
-
-      <section className={styles.group_view}>
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-      </section>
+      <Pagination totalPages={7} currentPage={2} onChange={() => {}} />
     </CommonLayout>
   );
 }
 
-export default MainPage;
+export default MainSearch;

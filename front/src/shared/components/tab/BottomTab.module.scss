@@ -1,0 +1,31 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.tab_bar {
+  @include flex-row-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: $color-grayscale-0;
+  border-top: 1px solid $color-grayscale-20;
+  padding: 0.6rem 0;
+  z-index: 99;
+}
+
+.tab_item {
+  flex: 1;
+  @include flex-column;
+  gap: 0.2rem;
+  color: $color-grayscale-60;
+  font-size: 1.2rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &.active {
+    color: $color-orange-30;
+    font-size: 1.25rem;
+  }
+}
