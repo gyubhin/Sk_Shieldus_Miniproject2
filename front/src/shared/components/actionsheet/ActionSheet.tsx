@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ActionSheet.module.scss";
+import { ensurePortalRoot } from "@/shared/utils/portal";
+
 
 type Props = {
   open: boolean;
@@ -33,7 +35,7 @@ export default function ActionSheet({
   }, [open, onClose]);
 
   if (!open) return null;
-  const root = document.getElementById("overlay-root")!;
+  const root = ensurePortalRoot("overlay-root");
 
   return createPortal(
     <div className={styles.wrap} onClick={onClose}>

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ModalConfirm.module.scss";
+import { ensurePortalRoot } from "@/shared/utils/portal";
+
 
 type Props = {
   open: boolean;
@@ -26,6 +28,8 @@ export default function ModalConfirm({
     const prev = document.activeElement as HTMLElement | null;
     firstBtnRef.current?.focus();
 
+    
+
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden"; // 스크롤 잠금
@@ -39,7 +43,7 @@ export default function ModalConfirm({
 
   if (!open) return null;
 
-  const root = document.getElementById("overlay-root")!;
+  const root = ensurePortalRoot("overlay-root");
   return createPortal(
     <div className={styles.backdrop} onClick={onClose} aria-hidden>
       {/* 딤 클릭 시 닫히게 하고, 카드 안에서의 클릭은 전파 중단 */}
