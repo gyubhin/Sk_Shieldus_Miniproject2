@@ -1,0 +1,53 @@
+:root {
+  --radius-xxl: 20px;
+  --shadow-lg: 0 -10px 24px rgba(0,0,0,0.18);
+  --bg: #fff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+  --danger: #ef4444;
+  --overlay: rgba(17,24,39,0.55); /* ✅ 딤 */
+}
+
+.wrap {
+  position: fixed; inset: 0;
+  background: var(--overlay);
+  display: flex; justify-content: center; align-items: flex-end;
+  z-index: 1000;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 640px;
+  background: transparent;
+  padding: 12px;
+  animation: slideUp .18s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: .7; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.title {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.item, .cancel {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xxl);
+  padding: 16px 12px;
+  font-weight: 800;
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-lg);
+}
+
+.item.destructive { color: var(--danger); }
+.cancel { font-weight: 700; }
