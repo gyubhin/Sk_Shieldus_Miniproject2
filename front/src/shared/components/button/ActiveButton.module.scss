@@ -17,11 +17,11 @@
     background-color: $color-orange-10;
   }
 
-  &:active {
-    background-color: $color-orange-20;
+  &.active {
+    background-color: $color-yellow-30;
   }
 
-  &:disabled {
+  &.disabled {
     background-color: $color-grayscale-0;
     border-color: $color-grayscale-60;
     color: $color-grayscale-60;

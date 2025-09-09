@@ -7,6 +7,7 @@ type Props = {
   name: string;
   successMessage?: string;
   errorMessage?: string;
+  required?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 /**
@@ -25,11 +26,13 @@ type Props = {
  *   errorMessage="올바른 이메일 형식이 아닙니다."
  * />
  */
-export function InputField({ label, name, successMessage, errorMessage }: Props) {
+export function InputField({ label, required, name, successMessage, errorMessage }: Props) {
   return (
     <div className={styles.container}>
       <label className={styles.label} htmlFor={name}>
-        {label}
+        <span>{label}</span>
+
+        {required ? "*" : ""}
       </label>
 
       <input
