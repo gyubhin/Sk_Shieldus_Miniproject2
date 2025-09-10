@@ -2,6 +2,7 @@
 @use "@/shared/styles/mixin" as *;
 
 .card {
+  cursor: pointer;
   padding: 1.2rem;
   border: 1px solid $color-grayscale-30;
   border-radius: 1.2rem;

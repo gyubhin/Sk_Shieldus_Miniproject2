@@ -8,7 +8,7 @@ import { MenuItem } from "@/shared/components/menu/MenuItem";
 function SettingPage() {
   return (
     <CommonLayout>
-      <BackHeader title={"설정"} onBack={() => {}} />
+      <BackHeader title={"설정"} />
 
       <section>
         <MenuItem label={"공지사항"} />

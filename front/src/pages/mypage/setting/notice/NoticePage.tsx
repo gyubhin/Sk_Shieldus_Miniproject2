@@ -8,7 +8,7 @@ import { MenuItem } from "@/shared/components/menu/MenuItem";
 function NoticePage() {
   return (
     <CommonLayout>
-      <BackHeader title={"공지사항"} onBack={() => {}} />
+      <BackHeader title={"공지사항"} />
 
       <section>
         <MenuItem label={"공지사항1"} right="250513" />

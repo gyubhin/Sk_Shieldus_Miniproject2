@@ -11,7 +11,7 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 function EventRegisterPage() {
   return (
     <CommonLayout>
-      <BackHeader title={"일정 등록"} onBack={() => {}} />
+      <BackHeader title={"일정 등록"} />
 
       <form className={styles.form}>
         <Card title="일정 정보">

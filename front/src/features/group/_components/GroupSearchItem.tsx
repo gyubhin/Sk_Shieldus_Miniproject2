@@ -1,7 +1,8 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./GroupSearchItem.module.scss";
-import React from "react";
+import React, { useState } from "react";
 import Tag from "@/shared/components/tag/Tag";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   name: string;
@@ -29,8 +30,34 @@ export function GroupSearchItem({
   tags = [],
   isHeart,
 }: Props) {
+  const navigate = useNavigate();
+  const [heart, setHeart] = useState(isHeart);
+
+  const onClickGroup = () => {
+    const id = 1;
+    navigate(`/group/info/${id}`);
+  };
+
+  const onKeyDownGroup = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      onClickGroup();
+    }
+  };
+
+  const onHeartTogggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+
+    setHeart((prev) => !prev);
+  };
+
   return (
-    <div className={styles.card}>
+    <div
+      className={styles.card}
+      role="button"
+      tabIndex={0}
+      onClick={onClickGroup}
+      onKeyDown={onKeyDownGroup}
+    >
       {/* 이미지 */}
       {imageUrl && <img src={imageUrl} alt={name} className={styles.image} />}
 
@@ -68,8 +95,8 @@ export function GroupSearchItem({
         {/* 날짜 */}
         <div className={styles.date}>{createdAt}</div>
 
-        <button className={styles.heart}>
-          <IconButton fill={isHeart ? "#F36438" : "#C6C8CD"} iconName={"FillHeart"} />
+        <button className={styles.heart} onClick={onHeartTogggle}>
+          <IconButton fill={heart ? "#F36438" : "#C6C8CD"} iconName={"FillHeart"} />
         </button>
       </div>
     </div>

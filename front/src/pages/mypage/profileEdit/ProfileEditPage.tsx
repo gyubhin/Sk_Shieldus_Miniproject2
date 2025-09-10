@@ -11,7 +11,7 @@ import { BackHeader } from "@/shared/components/header/BackHeader";
 function ProfileEditPage() {
   return (
     <CommonLayout>
-      <BackHeader title={"프로필 수정"} onBack={() => {}} />
+      <BackHeader title={"프로필 수정"} />
 
       <form className={styles.form}>
         <section className={styles.profile_field}>

@@ -2,9 +2,14 @@
 @use "@/shared/styles/mixin" as *;
 
 .search_view {
-  @include flex-row;
-  gap: 5rem;
+  @include flex-row-between;
+  gap: 2rem;
   margin-bottom: 40px;
+
+  @include media(sm) {
+    @include flex-row;
+    gap: 5rem;
+  }
 }
 
 .group_view {

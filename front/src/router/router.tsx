@@ -35,7 +35,7 @@ function Router() {
 
         <Route path="group/register" element={<GroupRegisterPage />} />
         <Route path="post/register" element={<PostRegisterPage />} />
-        <Route path="group/info" element={<GroupInfoPage />} />
+        <Route path="group/info/:id" element={<GroupInfoPage />} />
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />

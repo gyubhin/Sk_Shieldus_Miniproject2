@@ -10,12 +10,18 @@ import { MyProfileView } from "@/features/users/_components/mypage/MyProfileView
 import MyPostItem from "@/features/users/_components/mypage/MyPostItem";
 import { MypageInnerTab } from "@/features/users/_components/mypage/MypageInnerTab";
 import { MyCommentItem } from "@/features/users/_components/mypage/MyCommentItem";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 /**
  *@description 마이페이지
  */
 function Mypage() {
   const [tab, setTab] = useState<MypageTabKey>("wish");
+  const [searchParams] = useSearchParams();
+
+  const page = searchParams.get("page");
+
+  const navigate = useNavigate();
 
   const user = {
     avatarUrl: undefined,
@@ -24,6 +30,21 @@ function Mypage() {
     postCount: 0,
     commentCount: 0,
   };
+
+  const onMoveEditProfile = () => {
+    navigate("/mypage/edit");
+  };
+
+  const onMoveSetting = () => {
+    navigate("/mypage/setting");
+  };
+
+  // 페이지 이동 이벤트
+  const onPageMove = (page: number) => {
+    navigate(`/mypage?page=${page}`);
+  };
+
+  const wishGroups = Array.from({ length: 5 });
 
   return (
     <CommonLayout>
@@ -35,100 +56,49 @@ function Mypage() {
         description={user.description}
         postCount={user.postCount}
         commentCount={user.commentCount}
-        onEditProfile={() => alert("프로필 수정 클릭됨")}
+        onEditProfile={onMoveEditProfile}
         onEditLocation={() => alert("동네 수정 클릭됨")}
-        onSettings={() => alert("설정 클릭됨")}
+        onSettings={onMoveSetting}
       />
 
       <MypageInnerTab activeKey={tab} onChange={(_tab) => setTab(_tab)} />
 
       {tab === "wish" && (
         <section className={clsx(styles.item_container, styles[`${tab}_container`])}>
-          <GroupSearchItem
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
-          <GroupSearchItem
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
-          <GroupSearchItem
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
-
-          <GroupSearchItem
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
-
-          <GroupSearchItem
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
+          {wishGroups.map((_, idx) => (
+            <GroupSearchItem
+              key={idx}
+              name="파이썬 프로그래밍"
+              description="파이썬 기초부터 실무·AI까지..."
+              region="강남구"
+              maxMembers={6}
+              currentMembers={3}
+              createdAt="2025.02.04"
+              imageUrl="https://placehold.co/600x400"
+              tags={["파이썬", "AI"]}
+              isHeart
+            />
+          ))}
         </section>
       )}
 
       {tab === "mypost" && (
         <section className={clsx(styles.item_container, styles[`${tab}_container`])}>
-          <MyPostItem title={"title"} content={"content"} />
-          <MyPostItem title={"title"} content={"content"} />
-          <MyPostItem title={"title"} content={"content"} />
-          <MyPostItem title={"title"} content={"content"} />
-          <MyPostItem title={"title"} content={"content"} />
-          <MyPostItem title={"title"} content={"content"} />
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <MyPostItem key={idx} title="title" content="content" />
+          ))}
         </section>
       )}
 
       {tab === "mycomment" && (
         <section className={clsx(styles.item_container, styles[`${tab}_container`])}>
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
-          <MyCommentItem title={"title"} content={"content"} createdAt={"250812"} />
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <MyCommentItem key={idx} title="title" content="content" createdAt="250812" />
+          ))}
         </section>
       )}
 
-      <Pagination totalPages={7} currentPage={2} onChange={() => {}} />
+      <Pagination totalPages={7} currentPage={Number(page ?? 1)} onChange={onPageMove} />
     </CommonLayout>
   );
 }

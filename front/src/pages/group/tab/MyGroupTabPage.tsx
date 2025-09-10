@@ -5,11 +5,24 @@ import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MyGroupTabPage.module.scss";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import EventItem from "@/features/group/_components/EventItem";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
  */
 function MyGroupTabPage() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const page = searchParams.get("page");
+
+  // 페이지 이동 이벤트
+  const onPageMove = (page: number) => {
+    navigate(`/mypage?page=${page}`);
+  };
+
+  console.log(Number(page));
+
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -107,7 +120,7 @@ function MyGroupTabPage() {
         />
       </section>
 
-      <Pagination totalPages={7} currentPage={2} onChange={() => {}} />
+      <Pagination totalPages={7} currentPage={Number(page ?? 1)} onChange={onPageMove} />
     </CommonLayout>
   );
 }
