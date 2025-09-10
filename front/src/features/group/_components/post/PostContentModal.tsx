@@ -1,38 +1,24 @@
 import { CommentItem } from "@/features/comment/_components/CommentItem";
 import styles from "./PostContentModal.module.scss";
 import { IconButton } from "@/shared/components/icon/IconButton";
-
-type Comment = {
-  id: string;
-  author: string;
-  content: string;
-  createdAt: string;
-};
+import { usePostDetailApi } from "@/features/post/_hooks/query";
+import dayjs from "dayjs";
 
 type Props = {
+  groupId?: number;
+  postId?: number;
   isOpen?: boolean;
   imageUrl: string;
-  author: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  comments: Comment[];
   onClose: () => void;
-  onAddComment?: (text: string) => void;
 };
 
-export function PostContentModal({
-  isOpen,
-  imageUrl,
-  author,
-  content,
-  createdAt,
-  comments,
-  onClose,
-  onAddComment,
-  title,
-}: Props) {
-  if (!isOpen) return;
+/**
+ *@description 게시글 상세 내용 + 댓글 모달
+ */
+export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }: Props) {
+  if (!isOpen || !groupId || !postId) return;
+
+  const { data } = usePostDetailApi(groupId, postId);
 
   return (
     <div className={styles.overlay}>
@@ -49,8 +35,8 @@ export function PostContentModal({
             <div className={styles.author_view}>
               <div className={styles.profile_img} />
 
-              <span className={styles.author}>{author}</span>
-              <span>{createdAt}</span>
+              <span className={styles.author}>{data?.authorNickname ?? ""}</span>
+              <span>{dayjs(data?.createdAt).format("YYYY-MM-DD")}</span>
             </div>
 
             <IconButton size={24} onClick={onClose} iconName={"Close"} />
@@ -60,23 +46,18 @@ export function PostContentModal({
             {/* 본문 */}
             <div className={styles.content_wrapper}>
               <p className={styles.text}>
-                <span className={styles.title}>{title}</span>
+                <span className={styles.title}>{data?.title ?? ""}</span>
               </p>
 
               <p className={styles.text}>
-                <span className={styles.content}>{content}</span>
+                <span className={styles.content}>{data?.content ?? ""}</span>
               </p>
             </div>
 
             {/* 댓글 리스트 */}
             <div className={styles.comments_wrapper}>
-              {comments.map((c) => (
-                <CommentItem
-                  key={c.id}
-                  author={c.author}
-                  content={c.content}
-                  createdAt={c.createdAt}
-                />
+              {data?.comments.map((c) => (
+                <CommentItem key={c.id} data={c} />
               ))}
             </div>
           </div>
@@ -84,6 +65,7 @@ export function PostContentModal({
           {/* 댓글 입력 */}
           <div className={styles.comment_input}>
             <input type="text" placeholder="댓글을 입력하세요..." onKeyDown={(e) => {}} />
+
             <button onClick={() => {}}>등록</button>
           </div>
         </div>

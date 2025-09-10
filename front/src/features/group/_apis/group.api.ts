@@ -21,10 +21,11 @@ export const postGroupsApi = (body: PostGroupsBody) => {
 
 /**
  *@description 모임 정보 목록 조회 api
+ *@query ?page=0&size=10&sort=createdAt,DESC
  */
 export const getGroupsListApi = (params: GetGroupsListQuery) => {
   return apiCall<GetGroupsListResponse>({
-    url: "/groups?page=0&size=10&sort=createdAt,DESC",
+    url: "/groups",
     params,
   });
 };

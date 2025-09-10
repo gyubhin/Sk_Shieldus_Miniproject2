@@ -6,19 +6,24 @@ import styles from "./MyGroupTabPage.module.scss";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import EventItem from "@/features/group/_components/EventItem";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useGetMyJoinedGroup } from "@/features/users/_hooks/query";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
  */
 function MyGroupTabPage() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
   const page = searchParams.get("page");
+
+  const { data: myJoinedGroups } = useGetMyJoinedGroup({
+    page: Number(page),
+    size: 9,
+  });
 
   // 페이지 이동 이벤트
   const onPageMove = (page: number) => {
-    navigate(`/mypage?page=${page}`);
+    navigate(`/group?page=${page}`);
   };
 
   return (
@@ -57,68 +62,16 @@ function MyGroupTabPage() {
       <SectionTitle title={"참여중인 모임"} />
 
       <section className={styles.my_group_view}>
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
+        {myJoinedGroups?.content.map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
+        ))}
       </section>
 
-      <Pagination totalPages={7} currentPage={Number(page ?? 1)} onChange={onPageMove} />
+      <Pagination
+        totalPages={myJoinedGroups?.totalPages ?? 1}
+        currentPage={Number(page ?? 1)}
+        onChange={onPageMove}
+      />
     </CommonLayout>
   );
 }

@@ -8,7 +8,7 @@ import MainSearch from "@/pages/main/search/MainSearch";
 import MyGroupTabPage from "@/pages/group/tab/MyGroupTabPage";
 import GroupInfoPage from "@/pages/group/info/GroupInfoPage";
 import GroupRegisterPage from "@/pages/group/register/GroupRegisterPage";
-import PostRegisterPage from "@/pages/post/register/PostRegisterPage";
+import PostRegisterPage from "@/pages/group/post/register/PostRegisterPage";
 import PrivacyPage from "@/pages/privacy/PrivacyPage";
 import GroupPostPage from "@/pages/group/post/GroupPostPage";
 import Mypage from "@/pages/mypage/Mypage";
@@ -33,12 +33,11 @@ function Router() {
         <Route path="search" element={<MainSearch />} />
 
         <Route path="group" element={<MyGroupTabPage />} />
-        <Route path="group/:id/post" element={<GroupPostPage />} />
+        <Route path="group/:groupId/post" element={<GroupPostPage />} />
+        <Route path="group/:groupId/post/register" element={<PostRegisterPage />} />
         <Route path="group/register" element={<GroupRegisterPage />} />
         <Route path="group/event/register" element={<EventRegisterPage />} />
-        <Route path="group/:id/info" element={<GroupInfoPage />} />
-
-        <Route path="post/register" element={<PostRegisterPage />} />
+        <Route path="group/:groupId/info" element={<GroupInfoPage />} />
 
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />
