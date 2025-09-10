@@ -1,5 +1,5 @@
 import { apiCall } from "@/libs/apiCall";
-import type { MutationResponse } from "@/shared/types/api";
+import type { MutationResponse, PagingQuery } from "@/shared/types/api";
 import type { PatchAttendeeStatusBody, PatchEventBody, PostEventBody } from "../_types/body";
 import type { GetEventListResponse } from "../_types/response";
 
@@ -17,9 +17,10 @@ export const postEventsApi = (groupId: number, body: PostEventBody) => {
 /**
  *@description 일정 목록 조회 api
  */
-export const getEventsListApi = (groupId: number) => {
+export const getEventsListApi = (groupId: number, query: PagingQuery) => {
   return apiCall<GetEventListResponse>({
     url: `/groups/${groupId}/events`,
+    params: query,
   });
 };
 

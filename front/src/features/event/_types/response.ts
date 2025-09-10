@@ -4,9 +4,7 @@ import type { EventAttendee, EventItem } from "./base";
 /**
  *@description 일정 목록 조회 응답
  */
-export type GetEventListResponse = {
-  content: EventItem[];
-} & PagingResponse;
+export type GetEventListResponse = PagingResponse<EventItem>;
 
 /**
  *@description 일정 상세 조회 응답
