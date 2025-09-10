@@ -1,15 +1,17 @@
-package com.csu.csu_backend.handler; // 이 패키지 선언과 실제 폴더 위치가 일치해야 합니다.
+package com.csu.csu_backend.handler;
 
 import com.csu.csu_backend.controller.dto.Response.ErrorResponse;
 import com.csu.csu_backend.exception.DuplicateResourceException;
+import com.csu.csu_backend.exception.GroupFullException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import java.util.stream.Collectors;
 
 /**
@@ -75,6 +77,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 그룹 또는 이벤트의 정원이 가득 찼을 때 발생하는 예외를 처리합니다.
+     * @param ex 발생한 예외 객체
+     * @param request 현재 요청 정보
+     * @return 409 Conflict 상태 코드와 에러 메시지를 담은 응답
+     */
+    @ExceptionHandler(GroupFullException.class)
+    public ResponseEntity<ErrorResponse> handleGroupFullException(GroupFullException ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
      * 리소스 생성 시 중복된 데이터가 존재할 때 발생하는 예외를 처리합니다.
      * @param ex 발생한 예외 객체
      * @param request 현재 요청 정보
@@ -110,5 +129,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-
-

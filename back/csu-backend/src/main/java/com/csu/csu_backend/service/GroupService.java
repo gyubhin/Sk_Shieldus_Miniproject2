@@ -8,6 +8,7 @@ import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.Membership;
 import com.csu.csu_backend.entity.User;
 import com.csu.csu_backend.exception.DuplicateResourceException;
+import com.csu.csu_backend.exception.GroupFullException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.exception.UnauthorizedException;
 import com.csu.csu_backend.repository.CategoryRepository;
@@ -161,7 +162,7 @@ public class GroupService {
     private void validateGroupCapacity(Group group) {
         long currentMembers = membershipRepository.countByGroup(group);
         if (currentMembers >= group.getMaxMembers()) {
-            throw new IllegalStateException("그룹 정원이 모두 찼습니다.");
+            throw new GroupFullException("그룹 정원이 모두 찼습니다.");
         }
     }
 
@@ -177,4 +178,3 @@ public class GroupService {
         }
     }
 }
-

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 
 @RestController
@@ -20,15 +21,16 @@ public class CommentController {
 
     // 댓글/대댓글 생성
     @PostMapping
-    public ResponseEntity<Void> createComment(@PathVariable Long postId, @Valid @RequestBody CreateCommentRequest request,
+    public ResponseEntity<Void> createComment(@PathVariable Long groupId, @PathVariable Long postId,
+                                              @Valid @RequestBody CreateCommentRequest request,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
         Long commentId = commentService.createComment(postId, userId, request);
-        return ResponseEntity.created(URI.create(String.format("/api/groups/%d/posts/%d/comments/%d", 1L, postId, commentId))).build();
+        return ResponseEntity.created(URI.create(String.format("/api/groups/%d/posts/%d/comments/%d", groupId, postId, commentId))).build();
     }
 
     // 댓글 수정
-    @PutMapping("/{commentId}")
+    @PatchMapping("/{commentId}")
     public ResponseEntity<Void> updateComment(@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest request,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
