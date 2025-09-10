@@ -21,8 +21,6 @@ function MyGroupTabPage() {
     navigate(`/mypage?page=${page}`);
   };
 
-  console.log(Number(page));
-
   return (
     <CommonLayout>
       {/* 헤더 */}

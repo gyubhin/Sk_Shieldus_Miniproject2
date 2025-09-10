@@ -15,6 +15,7 @@ import Mypage from "@/pages/mypage/Mypage";
 import SettingPage from "@/pages/mypage/setting/SettingPage";
 import NoticePage from "@/pages/mypage/setting/notice/NoticePage";
 import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
+import EventRegisterPage from "@/pages/event/register/EventRegisterPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -30,12 +31,15 @@ function Router() {
         <Route path="signup" element={<SignupPage />} />
         <Route path="test" element={<TestPage />} />
         <Route path="search" element={<MainSearch />} />
-        <Route path="group" element={<MyGroupTabPage />} />
-        <Route path="group/post" element={<GroupPostPage />} />
 
+        <Route path="group" element={<MyGroupTabPage />} />
+        <Route path="group/:id/post" element={<GroupPostPage />} />
         <Route path="group/register" element={<GroupRegisterPage />} />
+        <Route path="group/event/register" element={<EventRegisterPage />} />
+        <Route path="group/:id/info" element={<GroupInfoPage />} />
+
         <Route path="post/register" element={<PostRegisterPage />} />
-        <Route path="group/info/:id" element={<GroupInfoPage />} />
+
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />

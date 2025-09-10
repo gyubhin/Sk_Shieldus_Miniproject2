@@ -4,11 +4,14 @@ import { Header } from "@/shared/components/header/Header";
 import { GroupTab } from "@/shared/components/tab/GroupTab";
 import PostItem from "@/features/group/_components/post/PostItem";
 import { PostContentModal } from "@/features/group/_components/post/PostContentModal";
+import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 
 /**
  *@description 모임 게시글 페이지
  */
 function GroupPostPage() {
+  const { onChangeTab, activeKey } = useSetGroupTab();
+
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -18,11 +21,11 @@ function GroupPostPage() {
       <section className={styles.top_tab_view}>
         <GroupTab
           tabs={[
-            { key: "home", name: "홈" },
-            { key: "board", name: "게시판" },
+            { key: "info", name: "모임 정보" },
+            { key: "post", name: "게시판" },
           ]}
-          activeKey={"home"}
-          onChange={() => {}}
+          activeKey={activeKey}
+          onChange={onChangeTab}
         />
       </section>
 

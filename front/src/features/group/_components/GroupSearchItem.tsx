@@ -35,7 +35,7 @@ export function GroupSearchItem({
 
   const onClickGroup = () => {
     const id = 1;
-    navigate(`/group/info/${id}`);
+    navigate(`/group/${id}/info`);
   };
 
   const onKeyDownGroup = (e: React.KeyboardEvent<HTMLDivElement>) => {
