@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
-import { BackHeader } from "@/shared/components/header/BackHeader";
 import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
+import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
+import styles from "./LoginPage.module.scss";
 
 /**
  *@description 로그인 페이지
@@ -37,70 +38,56 @@ function LoginPage() {
 
   return (
     <CommonLayout>
-      <BackHeader title="로그인 페이지" onBack={() => nav(-1)} />
+      <AuthInnerLayout>
+        <form onSubmit={onSubmit} className={styles.form}>
+          <div className={styles.brand}>
+            <img
+              className={styles.image}
+              src={"/images/BigImageLogo.svg"}
+              alt={"big_image_logo"}
+            />
+            
+          </div>
 
-      <form
-        onSubmit={onSubmit}
-        style={{
-          maxWidth: 520,
-          margin: "32px auto",
-          padding: "24px 16px 40px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 8 }}>
-          <img alt="HobbyHub" src="/vite.svg" width={72} height={72} />
-          <h1 style={{ fontSize: 36, fontWeight: 800, margin: "8px 0 0" }}>
-            Hobby<br />Hub
-          </h1>
-        </div>
+          <InputField
+            label="아이디"
+            name="email"
+            placeholder="example.com"
+            type="email"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
+            errorMessage={emailErr}
+            successMessage={emailErr ? undefined : email ? "success" : undefined}
+          />
 
-        <InputField
-          label="아이디"
-          name="email"
-          placeholder="example.com"
-          type="email"
-          value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value)
-          }
-          errorMessage={emailErr}
-          successMessage={emailErr ? undefined : email ? "success" : undefined}
-        />
+          <InputField
+            label="비밀번호"
+            name="password"
+            placeholder="********"
+            type="password"
+            value={pw}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPw(e.target.value)
+            }
+          />
 
-        <InputField
-          label="비밀번호"
-          name="password"
-          placeholder="********"
-          type="password"
-          value={pw}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPw(e.target.value)
-          }
-        />
+          <ActiveButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "로그인 중..." : "로그인"}
+          </ActiveButton>
 
-        <ActiveButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "로그인 중..." : "로그인"}
-        </ActiveButton>
-
-        <div style={{ textAlign: "center", marginTop: 8 }}>
-          <button
-            type="button"
-            onClick={() => nav("/signup")}
-            style={{
-              background: "none",
-              border: 0,
-              color: "#111827",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            회원가입
-          </button>
-        </div>
-      </form>
+          <div className={styles.signupRow}>
+            <button
+              type="button"
+              onClick={() => nav("/signup")}
+              className={styles.signupBtn}
+            >
+              회원가입
+            </button>
+          </div>
+        </form>
+      </AuthInnerLayout>
     </CommonLayout>
   );
 }

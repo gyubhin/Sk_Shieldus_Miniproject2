@@ -13,3 +13,27 @@
     gap: 4rem;
   }
 }
+
+
+.form_error {
+  color: #ef4444; /* 토큰 있으면 교체 */
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: -1rem; /* 위 입력과 살짝 붙이기 */
+}
+
+.policy_row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.policy_link {
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
+  color: #111827; /* 토큰 있으면 교체 */
+}

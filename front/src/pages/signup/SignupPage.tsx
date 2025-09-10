@@ -7,13 +7,10 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
 import styles from "./SignupPage.module.scss";
 
-/**
- *@description 회원가입 페이지
- */
 function SignupPage() {
   const nav = useNavigate();
 
-  // 상태 관리
+  // 입력 상태
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [region, setRegion] = useState("");
@@ -21,46 +18,79 @@ function SignupPage() {
   const [pw2, setPw2] = useState("");
   const [agree, setAgree] = useState(false);
 
-  const [emailErr, setEmailErr] = useState<string>();
-  const [nickErr, setNickErr] = useState<string>();
-  const [pwErr, setPwErr] = useState<string>();
+  // 필드별 에러
+  const [emailErr, setEmailErr] = useState<string | undefined>(undefined);
+  const [pwErr, setPwErr] = useState<string | undefined>(undefined);
+  const [pw2Err, setPw2Err] = useState<string | undefined>(undefined);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isFormValid =
-    /\S+@\S+\.\S+/.test(email) &&
-    nickname.trim().length >= 2 &&
-    pw.length >= 8 &&
-    pw === pw2 &&
-    agree;
-
-
-  // 유효성 검사
-  const validate = () => {
-    const emailOk = /\S+@\S+\.\S+/.test(email);
-    const nickOk = nickname.trim().length >= 2;
-    const pwOk = pw.length >= 8 && pw === pw2;
-
-    setEmailErr(emailOk ? undefined : "이메일 형식이 맞지 않습니다.");
-    setNickErr(nickOk ? undefined : "닉네임이 올바르지 않습니다.");
-    setPwErr(
-      pw.length < 8
-        ? "비밀번호는 8자 이상이어야 합니다."
-        : pw !== pw2
-        ? "비밀번호가 일치하지 않습니다."
-        : undefined
-    );
-
-    return emailOk && nickOk && pwOk && agree;
+  // 변경 시 해당 에러만 즉시 해제
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (emailErr) setEmailErr(undefined);
+  };
+  const onPwChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPw(e.target.value);
+    if (pwErr) setPwErr(undefined);
+    if (pw2Err) setPw2Err(undefined); // 비번 바꾸면 확인도 초기화
+  };
+  const onPw2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPw2(e.target.value);
+    if (pw2Err) setPw2Err(undefined);
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+
+    // 0) 이전 에러 초기화
+    setEmailErr(undefined);
+    setPwErr(undefined);
+    setPw2Err(undefined);
+
+    // 1) 모든 입력값 trim해서 검증(공백 이슈 방지)
+    const emailTrim = email.trim().toLowerCase();
+    const nickTrim = nickname.trim();
+    const pwTrim = pw.trim();
+    const pw2Trim = pw2.trim();
+
+    // 가장 일반적인 이메일 정규식(너무 빡세지 않게)
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    let hasError = false;
+
+    // 이메일 형식
+    if (!EMAIL_RE.test(emailTrim)) {
+      setEmailErr("이메일 형식이 맞지 않습니다.");
+      hasError = true;
+    }
+
+    // (참고) 닉네임/지역 검증이 필요하면 여기서 추가
+
+    // 비밀번호 길이
+    if (pwTrim.length < 8) {
+      setPwErr("비밀번호는 8자 이상이어야 합니다.");
+      hasError = true;
+    }
+
+    // 비밀번호 일치
+    if (pwTrim !== pw2Trim) {
+      setPw2Err("비밀번호가 일치하지 않습니다.");
+      hasError = true;
+    }
+
+    // 개인정보처리방침 동의
+    if (!agree) {
+      // 별도 문구 노출 위치 원하면 styles.policy_row 아래에 표시 가능
+      hasError = true;
+    }
+
+    if (hasError) return;
 
     try {
       setIsSubmitting(true);
-      // TODO: 회원가입 API 연결
-      // await signup({ email, nickname, region, password: pw });
+      // TODO: 회원가입 API
+      // await signup({ email: emailTrim, nickname: nickTrim, region, password: pwTrim });
       nav("/login");
     } finally {
       setIsSubmitting(false);
@@ -71,28 +101,22 @@ function SignupPage() {
     <CommonLayout>
       <AuthInnerLayout>
         <section className={styles.form_wrapper}>
-          {/* 브랜드 로고 */}
-          <img
-            className={styles.image}
-            src={"/images/BigImageLogo.svg"}
-            alt={"big_image_logo"}
-          />
+          <img className={styles.image} src={"/images/BigImageLogo.svg"} alt={"big_image_logo"} />
 
-          {/* 회원가입 폼 */}
           <form onSubmit={onSubmit}>
+            {/* 1) 이메일 + 에러는 이메일 입력 아래 */}
             <InputField
               required
               label="이메일"
               name="email"
-              placeholder="example.com"
+              placeholder="example@domain.com"
               type="email"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
+              onChange={onEmailChange}
               errorMessage={emailErr}
             />
 
+            {/* 닉네임/지역 */}
             <InputField
               required
               label="닉네임"
@@ -100,12 +124,8 @@ function SignupPage() {
               placeholder="ex. 쿠키"
               type="text"
               value={nickname}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setNickname(e.target.value)
-              }
-              errorMessage={nickErr}
+              onChange={(e) => setNickname(e.target.value)}
             />
-
             <InputField
               required
               label="지역"
@@ -113,11 +133,10 @@ function SignupPage() {
               placeholder="서울시"
               type="text"
               value={region}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setRegion(e.target.value)
-              }
+              onChange={(e) => setRegion(e.target.value)}
             />
 
+            {/* 2) 비밀번호 + 에러는 비밀번호 입력 아래 */}
             <InputField
               required
               label="비밀번호"
@@ -125,12 +144,11 @@ function SignupPage() {
               placeholder="비밀번호"
               type="password"
               value={pw}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPw(e.target.value)
-              }
+              onChange={onPwChange}
               errorMessage={pwErr}
             />
 
+            {/* 3) 비밀번호 확인 + 에러는 확인 입력 아래 */}
             <InputField
               required
               label="비밀번호 확인"
@@ -138,21 +156,27 @@ function SignupPage() {
               placeholder="비밀번호 확인"
               type="password"
               value={pw2}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPw2(e.target.value)
-              }
-              errorMessage={pwErr}
+              onChange={onPw2Change}
+              errorMessage={pw2Err}
             />
 
-            {/* 약관 동의 */}
-            <CheckField
-              isCheck={agree}
-              label="개인정보처리방침"
-              onChange={() => setAgree(!agree)}
-            />
+            {/* 개인정보 처리방침: 클릭 시 동의 토글 + 보기 이동 */}
+            <div className={styles.policy_row}>
+              <div onClick={() => setAgree((prev) => !prev)}>
+                <CheckField isCheck={agree} label="개인정보처리방침" />
+              </div>
+              <button
+                type="button"
+                className={styles.policy_link}
+                onClick={() => nav("/privacy")}
+              >
+                보기
+              </button>
+            </div>
 
-            <ActiveButton type="submit" disabled={isSubmitting || !isFormValid}>
-             {isSubmitting ? "가입 중..." : "회원가입"}
+            {/* 제출 중에만 비활성화(검증은 onSubmit에서 수행) */}
+            <ActiveButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "가입 중..." : "회원가입"}
             </ActiveButton>
           </form>
         </section>
