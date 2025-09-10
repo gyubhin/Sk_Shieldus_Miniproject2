@@ -1,10 +1,11 @@
-import { IconButton } from "../../../shared/components/icon/IconButton";
+import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./MypageInnerTab.module.scss";
 import clsx from "clsx";
+import type { MypageTabKey } from "../../_types/base";
 
 type Props = {
-  activeKey: string;
-  onChange: (key: string) => void;
+  activeKey: MypageTabKey;
+  onChange: (key: MypageTabKey) => void;
 };
 
 /**

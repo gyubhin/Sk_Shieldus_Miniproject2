@@ -1,15 +1,30 @@
+import { Dropdown } from "@/shared/components/dropdown/Dropdown";
 import styles from "./FilterList.module.scss";
-import { FilterButton } from "@/shared/components/button/FilterButton";
+import { categoryOptions, regionOptions, sortOptions } from "@/shared/constants/options";
 
 type Props = {};
 function FilterList({}: Props) {
   return (
     <section className={styles.filter_list}>
-      <FilterButton label={"날짜"} />
-      <FilterButton label={"최신순"} />
-      <FilterButton label={"지역"} />
-      <FilterButton label={"찜순"} />
-      <FilterButton label={"카테고리"} />
+      <Dropdown
+        options={sortOptions}
+        defaultValue={sortOptions[0]}
+        onChange={(value) => console.log("선택된 값:", value)}
+      />
+
+      <Dropdown
+        isWideStyle
+        options={regionOptions}
+        defaultValue={regionOptions[0]}
+        onChange={(value) => console.log("선택된 값:", value)}
+      />
+
+      <Dropdown
+        isWideStyle
+        options={categoryOptions}
+        defaultValue={categoryOptions[0]}
+        onChange={(value) => console.log("선택된 값:", value)}
+      />
     </section>
   );
 }

@@ -2,15 +2,21 @@
 @use "@/shared/styles/color" as *;
 
 .button {
-  min-width: 130px;
-  padding: 1rem 1.6rem;
+  min-width: 100px;
+  padding: 1rem 1rem;
   border-radius: 2rem;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
+
+  @include media(sm) {
+    min-width: 130px;
+    padding: 1rem 1.6rem;
+    font-size: 1.4rem;
+  }
 
   &.primary {
     background-color: $color-orange-10;

@@ -2,7 +2,14 @@
 @use "@/shared/styles/mixin" as *;
 
 .top_tab_view {
+  @include flex-row;
+  position: relative;
   margin-bottom: 40px;
+
+  .top_tab_more_btn {
+    position: absolute;
+    right: 0;
+  }
 }
 
 .schedule_view {

@@ -6,11 +6,41 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MainPage.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 /**
  *@description 메인 페이지 > 검색, 추천 그룹 표시, 내가 가입한 모임,
  */
 function MainPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const word = searchParams.get("word");
+
+  const [search, setSearch] = useState(word);
+
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  // 검색 버튼 클릭 이벤트
+  const onSearchMove = () => {
+    navigate(`/search?word=${encodeURIComponent(search ?? "")}`);
+  };
+
+  // 검색어 입력 키다운 이벤트
+  const onSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSearchMove();
+    }
+  };
+
+  // 더보기 클릭 이벤트
+  const onClickMore = (_more: string) => {
+    navigate(`/search?more=${_more}`);
+  };
+
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -18,93 +48,61 @@ function MainPage() {
 
       {/* 검색 뷰 */}
       <section className={styles.search_view}>
-        <SearchInput />
+        <SearchInput value={search ?? ""} onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
 
-        <SmallButton styleType={"black"}>검색</SmallButton>
+        <SmallButton onClick={onSearchMove} styleType={"black"}>
+          검색
+        </SmallButton>
       </section>
 
       {/* 필터 뷰 */}
       <FilterList />
 
       {/* 그룹 리스트 뷰 */}
-      <SectionTitle title={"추천 그룹 표시"} rightActionLabel="더보기" onActionClick={() => {}} />
+      <SectionTitle
+        title={"추천 모임 표시"}
+        rightActionLabel="더보기"
+        onActionClick={() => onClickMore("recommend")}
+      />
 
       <section className={styles.group_view}>
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <GroupSearchItem
+            key={idx}
+            name="파이썬 프로그래밍"
+            description="파이썬 기초부터 실무·AI까지..."
+            region="강남구"
+            maxMembers={6}
+            currentMembers={3}
+            createdAt="2025.02.04"
+            imageUrl="https://placehold.co/600x400"
+            tags={["파이썬", "AI"]}
+            isHeart
+          />
+        ))}
       </section>
 
-      <SectionTitle title={"내가 찜한 모임"} rightActionLabel="더보기" onActionClick={() => {}} />
+      <SectionTitle
+        title={"내가 찜한 모임"}
+        rightActionLabel="더보기"
+        onActionClick={() => onClickMore("recommend")}
+      />
 
       <section className={styles.group_view}>
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
-
-        <GroupSearchItem
-          name="파이썬 프로그래밍"
-          description="파이썬 기초부터 실무·AI까지 함께 학습하는 스터디! 10주간 매일 문제 풀이 & 프로젝트 실습 진행 🚀"
-          region="강남구"
-          maxMembers={6}
-          currentMembers={3}
-          createdAt="2025.02.04"
-          imageUrl="https://placehold.co/600x400"
-          tags={["파이썬", "AI"]}
-          isHeart
-        />
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <GroupSearchItem
+            key={idx}
+            name="파이썬 프로그래밍"
+            description="파이썬 기초부터 실무·AI까지..."
+            region="강남구"
+            maxMembers={6}
+            currentMembers={3}
+            createdAt="2025.02.04"
+            imageUrl="https://placehold.co/600x400"
+            tags={["파이썬", "AI"]}
+            isHeart
+          />
+        ))}
       </section>
     </CommonLayout>
   );

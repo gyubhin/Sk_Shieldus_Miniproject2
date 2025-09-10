@@ -1,0 +1,21 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.top_tab_view {
+  @include flex-row;
+  position: relative;
+  margin-bottom: 40px;
+
+  .top_tab_more_btn {
+    position: absolute;
+    right: 0;
+  }
+}
+
+/* 게시글 목록 래퍼 */
+.posts_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: 40px;
+}

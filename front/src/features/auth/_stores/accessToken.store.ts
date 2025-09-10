@@ -1,8 +1,10 @@
+import { valid } from "@/shared/utils/valid";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 type InitState = {
   accessToken: string | null;
+  isLogin: boolean;
 };
 
 type AccessTokenState = {
@@ -12,6 +14,7 @@ type AccessTokenState = {
 
 const initialState = {
   accessToken: null,
+  isLogin: false,
 };
 
 /**
@@ -24,8 +27,9 @@ export const useAccessTokenStore = create<AccessTokenState>()(
     setToken: (payload) =>
       set(() => ({
         accessToken: payload,
+        isLogin: valid.isJwt(payload),
       })),
 
     reset: () => set((prev) => ({ ...prev, ...initialState })),
-  }))
+  })),
 );

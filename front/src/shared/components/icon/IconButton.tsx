@@ -17,6 +17,9 @@ import {
   BsCheckCircle,
   BsCheckCircleFill,
   BsReply,
+  BsX,
+  BsGear,
+  BsList,
 } from "react-icons/bs";
 import { IoIosMore } from "react-icons/io";
 import { IoHomeOutline } from "react-icons/io5";
@@ -37,6 +40,9 @@ const Icon = {
   StrokeCheckCircle: BsCheckCircle,
   FillCheckCircle: BsCheckCircleFill,
   Share: BsReply,
+  Close: BsX,
+  Setting: BsGear,
+  Menu: BsList,
 } as const;
 
 type IconKey = keyof typeof Icon;

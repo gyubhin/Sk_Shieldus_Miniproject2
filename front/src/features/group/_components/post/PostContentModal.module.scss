@@ -1,0 +1,175 @@
+@use "@/shared/styles/mixin" as *;
+@use "@/shared/styles/color" as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  display: flex;
+  width: 80%;
+  height: 80%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 왼쪽: 게시글 이미지 */
+.image_wrapper {
+  flex: 1;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 오른쪽: 본문 + 댓글 */
+.right {
+  position: relative;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+
+  @include media(sm) {
+    width: 300px;
+  }
+
+  @include media(lg) {
+    width: 400px;
+  }
+}
+
+/* 헤더 (닫기버튼, 작성자) */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  border-bottom: 1px solid $color-grayscale-30;
+
+  @include media(sm) {
+    padding: 2rem;
+  }
+
+  .author_view {
+    @include flex-row;
+    gap: 1.4rem;
+
+    .profile_img {
+      width: 22px;
+      height: 22px;
+      border-radius: 100%;
+      background-color: $color-grayscale-60;
+
+      @include media(sm) {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .author {
+      font-weight: bold;
+      font-size: 1.1rem;
+
+      @include media(sm) {
+        font-size: 1.4rem;
+      }
+    }
+
+    .close {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.main_wrapper {
+  overflow-y: auto;
+  width: 100%;
+  padding-bottom: 70px;
+
+  /* 본문 */
+  .content_wrapper {
+    padding: 1.6rem;
+    border-bottom: 1px solid $color-grayscale-10;
+    min-height: 100px;
+
+    .text {
+      font-size: 1.2rem;
+      margin-bottom: 0.6rem;
+
+      @include media(sm) {
+        font-size: 1.4rem;
+      }
+    }
+
+    .date {
+      font-size: 1.2rem;
+      color: $color-grayscale-60;
+    }
+  }
+}
+
+/* 댓글 래퍼*/
+.comments_wrapper {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+  flex: 1;
+  padding: 1.2rem;
+  overflow-y: auto;
+}
+
+.comment_input {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  border-top: 1px solid $color-grayscale-30;
+  gap: 0.8rem;
+  padding-right: 1rem;
+
+  input {
+    flex: 1;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem;
+    padding-left: 1.4rem;
+    font-size: 1rem;
+
+    @include media(sm) {
+      padding: 2.4rem;
+      font-size: 1.4rem;
+    }
+  }
+
+  button {
+    color: $color-grayscale-90;
+    border: none;
+    font-size: 1rem;
+    padding: 0 1.2rem;
+    cursor: pointer;
+
+    @include media(sm) {
+      font-size: 1.4rem;
+    }
+  }
+}

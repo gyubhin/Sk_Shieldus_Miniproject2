@@ -1,0 +1,67 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.mypost_wrapper {
+  display: flex;
+  padding-bottom: 32px;
+  gap: 5.8rem;
+
+  border-bottom: 1px solid $color-grayscale-60;
+}
+
+.left {
+  & > .post_img {
+    width: 180px;
+    height: 180px;
+    border: 1px solid;
+  }
+}
+
+.right {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  /* 유저 프로필 뷰 */
+  .user_profile_view {
+    @include flex-row;
+    gap: 18px;
+    margin-bottom: 20px;
+
+    .profile_img {
+      width: 34px;
+      height: 34px;
+      border: 1px solid;
+      border-radius: 34px;
+    }
+
+    & > p {
+      color: $color-grayscale-80;
+      font-size: 1.6rem;
+    }
+  }
+
+  /* 제목, 내용 뷰 */
+  .content_view {
+    flex: 1;
+
+    .title {
+      color: $color-grayscale-80;
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .content {
+      color: $color-grayscale-80;
+      font-size: 1.4rem;
+    }
+  }
+
+  .post_sub_info {
+    font-size: 1.4rem;
+    color: $color-grayscale-80;
+    @include flex-row;
+    gap: 2.7rem;
+  }
+}

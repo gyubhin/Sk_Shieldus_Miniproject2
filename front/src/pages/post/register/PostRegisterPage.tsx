@@ -11,7 +11,7 @@ import { BackHeader } from "@/shared/components/header/BackHeader";
 function PostRegisterPage() {
   return (
     <CommonLayout>
-      <BackHeader title={"모임 등록"} onBack={() => {}} />
+      <BackHeader title={"모임 등록"} />
 
       <form className={styles.form}>
         <Card title="게시글 정보">

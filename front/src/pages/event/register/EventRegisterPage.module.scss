@@ -1,0 +1,7 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.button_groups {
+  @include flex-column;
+  gap: 4rem;
+}

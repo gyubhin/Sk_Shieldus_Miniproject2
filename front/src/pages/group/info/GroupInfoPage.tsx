@@ -7,11 +7,23 @@ import { GroupTab } from "@/shared/components/tab/GroupTab";
 import GroupBanner from "@/features/group/_components/info/banner/GroupBanner";
 import GroupInfoContent from "@/features/group/_components/info/content/GroupInfoContent";
 import MemberList from "@/features/group/_components/info/memberList/MemberList";
+import { useNavigate } from "react-router-dom";
+import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
+import { IconButton } from "@/shared/components/icon/IconButton";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
  */
 function GroupInfoPage() {
+  const navigate = useNavigate();
+
+  const { onChangeTab, activeKey } = useSetGroupTab();
+
+  // 모임 일정 등록 페이지로  이동
+  const onMoveRegisterEvent = () => {
+    navigate("/group/event/register");
+  };
+
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -21,12 +33,16 @@ function GroupInfoPage() {
       <section className={styles.top_tab_view}>
         <GroupTab
           tabs={[
-            { key: "home", name: "홈" },
-            { key: "board", name: "게시판" },
+            { key: "info", name: "모임 정보" },
+            { key: "post", name: "게시판" },
           ]}
-          activeKey={"home"}
-          onChange={() => {}}
+          activeKey={activeKey}
+          onChange={onChangeTab}
         />
+
+        <button className={styles.top_tab_more_btn}>
+          <IconButton iconName="More" />
+        </button>
       </section>
 
       {/* 모임 배너 이미지 */}
@@ -34,7 +50,11 @@ function GroupInfoPage() {
 
       <GroupInfoContent />
 
-      <SectionTitle title={"정모 일정 4"} rightActionLabel="+ 일정 생성" />
+      <SectionTitle
+        title={"정모 일정 4"}
+        rightActionLabel="+ 일정 생성"
+        onActionClick={onMoveRegisterEvent}
+      />
 
       <section className={styles.schedule_view}>
         <EventItem

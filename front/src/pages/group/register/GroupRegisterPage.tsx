@@ -11,7 +11,7 @@ import { BackHeader } from "@/shared/components/header/BackHeader";
 function GroupRegisterPage() {
   return (
     <CommonLayout>
-      <BackHeader title={"모임 등록"} onBack={() => {}} />
+      <BackHeader title={"모임 등록"} />
 
       <form className={styles.form}>
         <Card title="기본 정보">
