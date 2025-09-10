@@ -9,6 +9,7 @@ import GroupInfoContent from "@/features/group/_components/info/content/GroupInf
 import MemberList from "@/features/group/_components/info/memberList/MemberList";
 import { useNavigate } from "react-router-dom";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
+import { IconButton } from "@/shared/components/icon/IconButton";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -38,6 +39,10 @@ function GroupInfoPage() {
           activeKey={activeKey}
           onChange={onChangeTab}
         />
+
+        <button className={styles.top_tab_more_btn}>
+          <IconButton iconName="More" />
+        </button>
       </section>
 
       {/* 모임 배너 이미지 */}

@@ -3,12 +3,13 @@ import styles from "./PostItem.module.scss";
 import { useState } from "react";
 import clsx from "clsx";
 
-type Props = {};
-
+type Props = {
+  onContentOpen: () => void;
+};
 /**
  *@description 모임 게시글 항목
  */
-function PostItem() {
+function PostItem({ onContentOpen }: Props) {
   const [isExpandContent, setExpandContent] = useState(false);
 
   return (
@@ -20,17 +21,23 @@ function PostItem() {
         <p>노랭이</p>
 
         <p>1일</p>
+
+        <button className={styles.more_btn}>
+          <IconButton iconName={"More"} />
+        </button>
       </section>
 
       {/* 게시글 이미지 */}
       <section className={styles.img_view}>
-        <img src={"/images/ImagePostDummy.svg"} alt="ImagePostDummy" />
+        <button onClick={onContentOpen}>
+          <img src={"/images/ImagePostDummy.svg"} alt="ImagePostDummy" />
+        </button>
       </section>
 
       {/* 헬퍼 뷰 */}
       <section className={styles.helper_view}>
         {/* 댓글 버튼 */}
-        <IconButton iconName={"Bubble"} />
+        <IconButton iconName={"Bubble"} onClick={onContentOpen} />
 
         {/* 공유하기 버튼 */}
         <IconButton iconName={"Share"} />

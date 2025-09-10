@@ -5,12 +5,22 @@ import { GroupTab } from "@/shared/components/tab/GroupTab";
 import PostItem from "@/features/group/_components/post/PostItem";
 import { PostContentModal } from "@/features/group/_components/post/PostContentModal";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
+import { useState } from "react";
+import { IconButton } from "@/shared/components/icon/IconButton";
 
 /**
- *@description 모임 게시글 페이지
+ *@description 모임 게시글 목록 페이지
  */
 function GroupPostPage() {
   const { onChangeTab, activeKey } = useSetGroupTab();
+  const [isContentModalOpen, setContentModalOpen] = useState(false);
+
+  const dummyComments = Array.from({ length: 15 }, (_, i) => ({
+    id: String(i + 1),
+    author: "tester1",
+    content: "testcontent1",
+    createdAt: "2025.05.01",
+  }));
 
   return (
     <CommonLayout>
@@ -27,12 +37,16 @@ function GroupPostPage() {
           activeKey={activeKey}
           onChange={onChangeTab}
         />
+
+        <button className={styles.top_tab_more_btn}>
+          <IconButton iconName="More" />
+        </button>
       </section>
 
       {/* 게시글 목록 */}
       <section className={styles.posts_wrapper}>
-        <PostItem />
-        <PostItem />
+        <PostItem onContentOpen={() => setContentModalOpen(true)} />
+        <PostItem onContentOpen={() => setContentModalOpen(true)} />
       </section>
 
       <PostContentModal
@@ -41,101 +55,9 @@ function GroupPostPage() {
         content={"testst"}
         createdAt={"20250501"}
         title="title"
-        comments={[
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-          {
-            id: "1",
-            author: "teser1",
-            content: "testcontent1",
-            createdAt: "2025.05.01",
-          },
-        ]}
-        onClose={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        comments={dummyComments}
+        isOpen={isContentModalOpen}
+        onClose={() => setContentModalOpen(false)}
       />
     </CommonLayout>
   );

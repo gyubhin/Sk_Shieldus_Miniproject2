@@ -2,19 +2,16 @@
 @use "@/shared/styles/mixin" as *;
 
 .post_wrapper {
-  width: 400px;
+  width: 100%;
   padding-bottom: 40px;
   border-bottom: 1px solid $color-grayscale-30;
-
-  @include media(sm) {
-    width: 640px;
-  }
 }
 
 /* 상단 뷰 (프로필 이미지, 닉네임, 지난 시간) */
 .top_view {
-  width: 160px;
-  @include flex-row-between;
+  position: relative;
+  width: 100%;
+  @include flex-row;
   gap: 2.5rem;
   margin-bottom: 26px;
 
@@ -29,6 +26,11 @@
     font-weight: bold;
     font-size: 1.6rem;
   }
+
+  & > .more_btn {
+    position: absolute;
+    right: 0;
+  }
 }
 
 /* 게시글 이미지 */
@@ -36,7 +38,7 @@
   width: 100%;
   margin-bottom: 26px;
 
-  & > img {
+  & img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
