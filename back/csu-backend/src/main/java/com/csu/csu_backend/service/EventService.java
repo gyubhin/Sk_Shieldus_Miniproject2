@@ -1,7 +1,7 @@
 package com.csu.csu_backend.service;
 
-import com.csu.csu_backend.dto.EventRequest;
-import com.csu.csu_backend.dto.EventResponse;
+import com.csu.csu_backend.controller.dto.EventRequest;
+import com.csu.csu_backend.controller.dto.EventResponse;
 import com.csu.csu_backend.entity.Event;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.User;
@@ -39,7 +39,7 @@ public class EventService {
         event.setTitle(request.getTitle());
         event.setDescription(request.getDescription());
         event.setMaxAttendees(request.getMaxAttendees());
-        event.setEventDate(request.getEventDate()); // 편의 메소드 사용
+        event.setEventDate(request.getEventDate());
 
         Event savedEvent = eventRepository.save(event);
 

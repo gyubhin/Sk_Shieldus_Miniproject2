@@ -1,6 +1,6 @@
 package com.csu.csu_backend.runner;
 
-import com.csu.csu_backend.dto.EventRequest;
+import com.csu.csu_backend.controller.dto.EventRequest;
 import com.csu.csu_backend.entity.Category;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.User;

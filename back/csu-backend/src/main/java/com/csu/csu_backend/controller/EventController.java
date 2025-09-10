@@ -1,7 +1,7 @@
 package com.csu.csu_backend.controller;
 
-import com.csu.csu_backend.dto.EventRequest;
-import com.csu.csu_backend.dto.EventResponse;
+import com.csu.csu_backend.controller.dto.EventRequest;
+import com.csu.csu_backend.controller.dto.EventResponse;
 import com.csu.csu_backend.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
