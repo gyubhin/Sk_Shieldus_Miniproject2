@@ -22,7 +22,7 @@ export const postGroupsApi = (body: PostGroupsBody) => {
 /**
  *@description 모임 정보 목록 조회 api
  */
-export const getGroupsList = (params: GetGroupsListQuery) => {
+export const getGroupsListApi = (params: GetGroupsListQuery) => {
   return apiCall<GetGroupsListResponse>({
     url: "/groups?page=0&size=10&sort=createdAt,DESC",
     params,
@@ -32,7 +32,7 @@ export const getGroupsList = (params: GetGroupsListQuery) => {
 /**
  *@description 특정 그룹 조회 api
  */
-export const getGroupsOne = (groupId: number) => {
+export const getGroupsOneApi = (groupId: number) => {
   return apiCall<GetGroupsOneResponse>({
     url: `/groups/${groupId}`,
   });
@@ -41,7 +41,7 @@ export const getGroupsOne = (groupId: number) => {
 /**
  *@description 그룹 가입 api
  */
-export const postGroupsJoin = (groupId: number) => {
+export const postGroupsJoinApi = (groupId: number) => {
   return apiCall<GetGroupsOneResponse>({
     url: `/groups/${groupId}/join`,
     method: "POST",
@@ -51,7 +51,7 @@ export const postGroupsJoin = (groupId: number) => {
 /**
  *@description 그룹 탈퇴 api
  */
-export const deleteGroupsLeave = (groupId: number) => {
+export const deleteGroupsLeaveApi = (groupId: number) => {
   return apiCall<undefined>({
     url: `/groups/${groupId}/leave`,
     method: "DELETE",
@@ -61,7 +61,7 @@ export const deleteGroupsLeave = (groupId: number) => {
 /**
  *@description 그룹 멤버 목록 조회 api
  */
-export const getGroupsMembers = (groupId: number) => {
+export const getGroupsMembersApi = (groupId: number) => {
   return apiCall<GetGroupsMemberListResponse>({
     url: `/groups/${groupId}/members`,
   });
@@ -70,7 +70,7 @@ export const getGroupsMembers = (groupId: number) => {
 /**
  *@description 그룹 멤버 강퇴 api
  */
-export const deleteGroupsMember = (groupId: number, userId: number) => {
+export const deleteGroupsMemberApi = (groupId: number, userId: number) => {
   return apiCall<undefined>({
     url: `/groups/${groupId}/members/${userId}`,
     method: "DELETE",

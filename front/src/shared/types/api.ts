@@ -10,4 +10,16 @@ export type MutationResponse = {
  */
 export type PagingQuery = {
   size: number;
+  page: number;
+  sort?: string;
+};
+
+export type PagingResponse = {
+  totalPages: number;
+  totalElements: number;
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  last: boolean;
 };
