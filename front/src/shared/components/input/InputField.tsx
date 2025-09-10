@@ -10,43 +10,37 @@ type Props = {
   required?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-/**
- *@description common input field (with label + input + message)
- * @prop label 입력 필드 라벨 텍스트
- * @prop name input name/id 값 (label과 연결)
- * @prop successMessage 성공 시 표시할
- * @prop errorMessage 에러 시 표시할 메시지
- *
- * @example
- * <InputField
- *   label="이메일"
- *   name="email"
- *   type="email"
- *   placeholder="이메일을 입력하세요"
- *   errorMessage="올바른 이메일 형식이 아닙니다."
- * />
- */
-export function InputField({ label, required, name, successMessage, errorMessage }: Props) {
+export function InputField({
+  label,
+  required,
+  name,
+  successMessage,
+  errorMessage,
+  className,
+  ...rest // <-- 나머지 props (type, value, onChange, placeholder, autoComplete 등)
+}: Props) {
   return (
     <div className={styles.container}>
       <label className={styles.label} htmlFor={name}>
         <span>{label}</span>
-
         {required ? "*" : ""}
       </label>
 
       <input
         id={name}
         name={name}
+        // 외부에서 넣는 className도 병합
         className={clsx(
           styles.input,
           errorMessage && styles.invalid,
           successMessage && styles.success,
+          className
         )}
+        aria-invalid={!!errorMessage}
+        {...rest} // <-- 반드시 넘겨주기!
       />
 
       {successMessage && <span className={styles.success}>{successMessage}</span>}
-
       {errorMessage && <span className={styles.error}>{errorMessage}</span>}
     </div>
   );
