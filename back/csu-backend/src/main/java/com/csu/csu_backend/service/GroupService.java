@@ -7,12 +7,16 @@ import com.csu.csu_backend.entity.Category;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.Membership;
 import com.csu.csu_backend.entity.User;
+import com.csu.csu_backend.exception.DuplicateResourceException;
+import com.csu.csu_backend.exception.ResourceNotFoundException;
+import com.csu.csu_backend.exception.UnauthorizedException;
 import com.csu.csu_backend.repository.CategoryRepository;
 import com.csu.csu_backend.repository.GroupRepository;
 import com.csu.csu_backend.repository.MembershipRepository;
 import com.csu.csu_backend.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +50,10 @@ public class GroupService {
         return group.getId();
     }
 
-    public List<GroupResponse> getAllGroups() {
-        return groupRepository.findAll().stream()
+    // Pageable 파라미터를 받도록 수정
+    public List<GroupResponse> getAllGroups(Pageable pageable) {
+        Page<Group> groupPage = groupRepository.findAll(pageable);
+        return groupPage.stream()
                 .map(GroupResponse::new)
                 .collect(Collectors.toList());
     }
@@ -89,9 +95,8 @@ public class GroupService {
 
     @Transactional
     public void removeMember(Long groupId, Long memberId, Long ownerId) {
-        // [추가된 부분] 강퇴 대상이 그룹장 자신인지 확인
         if (ownerId.equals(memberId)) {
-            throw new IllegalStateException("Owner cannot remove themselves from the group.");
+            throw new UnauthorizedException("그룹장은 자기 자신을 강퇴할 수 없습니다.");
         }
 
         Group group = findGroupById(groupId);
@@ -105,22 +110,22 @@ public class GroupService {
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + userId));
     }
 
     private Group findGroupById(Long groupId) {
         return groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 그룹을 찾을 수 없습니다: " + groupId));
     }
 
     private Category findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 카테고리를 찾을 수 없습니다: " + categoryId));
     }
 
     private Membership findMembershipByUserAndGroup(User user, Group group) {
         return membershipRepository.findByUserAndGroup(user, group)
-                .orElseThrow(() -> new IllegalStateException("Not a member of the group"));
+                .orElseThrow(() -> new UnauthorizedException("사용자가 해당 그룹의 멤버가 아닙니다."));
     }
 
     private void createOwnerMembership(User owner, Group group) {
@@ -143,32 +148,33 @@ public class GroupService {
 
     private void validateGroupNameDuplication(String name) {
         groupRepository.findByName(name).ifPresent(g -> {
-            throw new IllegalArgumentException("Group name already exists");
+            throw new DuplicateResourceException("이미 존재하는 그룹 이름입니다: " + name);
         });
     }
 
     private void validateUserIsAlreadyMember(User user, Group group) {
         if (membershipRepository.existsByUserAndGroup(user, group)) {
-            throw new IllegalStateException("Already a member of the group");
+            throw new DuplicateResourceException("이미 가입된 그룹입니다.");
         }
     }
 
     private void validateGroupCapacity(Group group) {
         long currentMembers = membershipRepository.countByGroup(group);
         if (currentMembers >= group.getMaxMembers()) {
-            throw new IllegalStateException("Group is full");
+            throw new IllegalStateException("그룹 정원이 모두 찼습니다.");
         }
     }
 
     private void validateMemberIsOwner(Membership membership) {
         if (ROLE_OWNER.equals(membership.getRole())) {
-            throw new IllegalStateException("Owner cannot leave the group");
+            throw new UnauthorizedException("그룹장은 그룹을 탈퇴할 수 없습니다.");
         }
     }
 
     private void validateUserIsOwner(Group group, Long userId) {
         if (!group.getOwner().getId().equals(userId)) {
-            throw new IllegalStateException("Only the owner can perform this action");
+            throw new UnauthorizedException("그룹장만 해당 작업을 수행할 수 있습니다.");
         }
     }
 }
+
