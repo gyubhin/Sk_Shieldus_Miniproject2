@@ -1,6 +1,11 @@
-import type { Tab } from "@/shared/types/tabs";
 import styles from "./GroupTab.module.scss";
 import clsx from "clsx";
+
+type Tab = {
+  key: string;
+  name: string;
+  icon?: React.ReactNode;
+};
 
 type Props = {
   tabs: Tab[];

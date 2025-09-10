@@ -5,16 +5,35 @@
   @include flex-row;
   position: relative;
   width: 100%;
-  padding: 1rem 3.2rem;
+  padding: 0.4rem 1.2rem;
   background-color: $color-grayscale-0;
   margin-bottom: 40px;
+
+  @include media(sm) {
+    padding: 1rem 2.2rem;
+  }
+
+  //뒤로가기 아이콘
+  & svg {
+    width: 16px;
+    height: 16px;
+
+    @include media(sm) {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 
 .title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: $color-grayscale-90;
+
+  @include media(sm) {
+    font-size: 1.8rem;
+  }
 }

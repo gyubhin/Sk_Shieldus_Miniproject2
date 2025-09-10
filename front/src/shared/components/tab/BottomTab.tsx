@@ -2,31 +2,44 @@ import styles from "./BottomTab.module.scss";
 import clsx from "clsx";
 import { IconButton } from "../icon/IconButton";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-type ActveKey = "home" | "group" | "mypage";
+type ActveKey = "main" | "group" | "mypage";
 
 /**
  *@description 하단 탭 컴포넌트
  *@param actvieKey 활성화된 탭 키
  */
 export function BottomTab() {
-  const [activeKey, setActvieKey] = useState<ActveKey>();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const [activeKey, setActvieKey] = useState<ActveKey>(() => {
+    if (pathname === "/" || pathname === "/search") {
+      return "main" as ActveKey;
+    } else if (pathname === "/group") {
+      return "group" as ActveKey;
+    } else {
+      return "mypage" as ActveKey;
+    }
+  });
 
   const onTabClick = (_key: ActveKey) => {
     setActvieKey(_key);
+    navigate(_key === "main" ? "/" : `/${_key}`);
   };
 
   return (
     <nav className={styles.tab_bar}>
       <button
-        key={"home"}
-        className={clsx(styles.tab_item, activeKey === "home" && styles.active)}
-        onClick={() => onTabClick("home")}
+        key={"main"}
+        className={clsx(styles.tab_item, activeKey === "main" && styles.active)}
+        onClick={() => onTabClick("main")}
       >
         <IconButton
           size={20}
           iconName={"Home"}
-          fill={activeKey === "home" ? "#f36438" : "#7f838c"}
+          fill={activeKey === "main" ? "#f36438" : "#7f838c"}
         />
         <span className={styles.label}>메인</span>
       </button>
