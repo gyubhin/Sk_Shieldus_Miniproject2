@@ -1,65 +1,61 @@
 package com.csu.csu_backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String username;
+    @Column(nullable = false, unique = true, length = 50)
+    private String nickname;
 
-    // JPA를 위한 기본 생성자
-    public User() {}
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    private String introduction;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Group> ownedGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Membership> memberships = new ArrayList<>();
 
     // DataInitializer에서 사용할 생성자
-    public User(String email, String password, String username) {
+    public User(String email, String password, String nickname) {
         this.email = email;
-        this.password = password;
-        this.username = username;
-    }
-
-    // Getters and Setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        this.password = password; // 실제 프로젝트에서는 암호화 필요
+        this.nickname = nickname;
+        this.createdAt = LocalDateTime.now();
     }
 }

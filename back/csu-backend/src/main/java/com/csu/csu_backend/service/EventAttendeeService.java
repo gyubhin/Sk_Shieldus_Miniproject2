@@ -38,16 +38,14 @@ public class EventAttendeeService {
 
         long confirmedCount = eventAttendeeRepository.countByEventIdAndStatus(eventId, "CONFIRMED");
 
-        EventAttendee attendee = new EventAttendee();
-        attendee.setEvent(event);
-        attendee.setUser(user);
-        attendee.setRole("ATTENDEE");
+        String status = (confirmedCount < event.getMaxAttendees()) ? "CONFIRMED" : "WAITING";
 
-        if (confirmedCount < event.getMaxAttendees()) {
-            attendee.setStatus("CONFIRMED");
-        } else {
-            attendee.setStatus("WAITING");
-        }
+        EventAttendee attendee = EventAttendee.builder()
+                .event(event)
+                .user(user)
+                .role("ATTENDEE")
+                .status(status)
+                .build();
         eventAttendeeRepository.save(attendee);
     }
 
@@ -80,11 +78,12 @@ public class EventAttendeeService {
 
     // 주최자를 참석자로 추가 (내부용)
     public void addHostAttendee(Event event, User user) {
-        EventAttendee hostAttendee = new EventAttendee();
-        hostAttendee.setEvent(event);
-        hostAttendee.setUser(user);
-        hostAttendee.setRole("HOST");
-        hostAttendee.setStatus("CONFIRMED");
+        EventAttendee hostAttendee = EventAttendee.builder()
+                .event(event)
+                .user(user)
+                .role("HOST")
+                .status("CONFIRMED")
+                .build();
         eventAttendeeRepository.save(hostAttendee);
     }
 
@@ -107,7 +106,7 @@ public class EventAttendeeService {
     private EventAttendeeResponse mapToAttendeeResponse(EventAttendee attendee) {
         return EventAttendeeResponse.builder()
                 .userId(attendee.getUser().getId())
-                .username(attendee.getUser().getUsername())
+                .username(attendee.getUser().getNickname())
                 .status(attendee.getStatus())
                 .role(attendee.getRole())
                 .build();

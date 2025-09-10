@@ -33,14 +33,15 @@ public class EventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
-        Event event = new Event();
-        event.setGroup(group);
-        event.setHost(user);
-        event.setTitle(request.getTitle());
-        event.setDescription(request.getDescription());
-        event.setMaxAttendees(request.getMaxAttendees());
-        event.setEventDate(request.getEventDate());
-
+        Event event = Event.builder()
+                .group(group)
+                .host(user)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .maxAttendees(request.getMaxAttendees())
+                .startAt(request.getEventDate())
+                .endAt(request.getEventDate().plusHours(2)) // endAt도 명시적으로 설정
+                .build();
         Event savedEvent = eventRepository.save(event);
 
         eventAttendeeService.addHostAttendee(savedEvent, user);

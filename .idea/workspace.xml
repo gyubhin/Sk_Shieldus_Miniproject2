@@ -6,16 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="9297ca96-bf48-4189-94e9-dd6459d2b9ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/CsuBackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/CsuBackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventAttendeeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventAttendeeDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventAttendeeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventAttendeeResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/controller/dto/EventDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/dto/EventAttendeeResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/dto/EventRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/dto/EventResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/runner/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/runner/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/EventAttendee.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/EventAttendee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventAttendeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventAttendeeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/csu-backend/src/main/java/com/csu/csu_backend/service/EventService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
