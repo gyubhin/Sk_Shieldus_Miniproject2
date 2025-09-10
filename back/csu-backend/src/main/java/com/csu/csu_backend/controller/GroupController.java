@@ -5,6 +5,9 @@ import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -26,9 +29,11 @@ public class GroupController {
         return ResponseEntity.created(URI.create("/api/groups/" + groupId)).build();
     }
 
+    // 페이징 파라미터를 받도록 수정
     @GetMapping
-    public ResponseEntity<List<GroupResponse>> getAllGroups() {
-        return ResponseEntity.ok(groupService.getAllGroups());
+    public ResponseEntity<List<GroupResponse>> getAllGroups(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(groupService.getAllGroups(pageable));
     }
 
     @GetMapping("/{groupId}")
@@ -66,3 +71,4 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
 }
+
