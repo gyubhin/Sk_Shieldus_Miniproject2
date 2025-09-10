@@ -1,11 +1,11 @@
+import type { CommentItem } from "../_types/base";
 import styles from "./CommentItem.module.scss";
+import { getRelativeTime } from "@/libs/time";
 
 type Props = {
-  author: string;
-  content: string;
-  createdAt: string;
   onReply?: () => void;
   onDelete?: () => void;
+  data: CommentItem;
 };
 
 /**
@@ -13,7 +13,7 @@ type Props = {
  *@param onReply 응답 이벤트
  *@param onDelete 삭제 이벤트
  */
-export function CommentItem({ author, content, createdAt, onReply, onDelete }: Props) {
+export function CommentItem({ data, onReply, onDelete }: Props) {
   return (
     <div className={styles.container}>
       {/* 프로필 아이콘 */}
@@ -22,11 +22,11 @@ export function CommentItem({ author, content, createdAt, onReply, onDelete }: P
       {/* 본문 */}
       <div className={styles.body}>
         <p className={styles.text}>
-          <span className={styles.author}>{author}</span> {content}
+          <span className={styles.author}>{data?.authorNickname ?? ""}</span> {data?.content ?? ""}
         </p>
 
         <div className={styles.meta}>
-          <span className={styles.date}>{createdAt}</span>
+          <span className={styles.date}>{getRelativeTime(data.createdAt)}</span>
 
           <button className={styles.action} onClick={onReply}>
             답글달기
