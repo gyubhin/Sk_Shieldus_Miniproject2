@@ -4,7 +4,7 @@ import { getCookie } from "./cookie";
 
 const isMockApi = true;
 export const apiCall = axios.create({
-  baseURL: isMockApi ? "" : process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: isMockApi ? "" : import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
