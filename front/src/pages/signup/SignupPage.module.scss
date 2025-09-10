@@ -10,22 +10,22 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 2.4rem; 
   }
 }
 
-
 .form_error {
-  color: #ef4444; /* 토큰 있으면 교체 */
+  color: #ef4444; 
   font-size: 14px;
   line-height: 1.4;
-  margin-top: -1rem; /* 위 입력과 살짝 붙이기 */
+  margin-top: 0.4rem;
 }
 
 .policy_row {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
+  margin-top: 0.2rem;
 }
 
 .policy_link {
@@ -34,6 +34,8 @@
   text-decoration: underline;
   cursor: pointer;
   font-weight: 600;
-  font-size: 20px;
-  color: #111827; /* 토큰 있으면 교체 */
+  font-size: 16px;
+  color: #111827;
 }
+
+
