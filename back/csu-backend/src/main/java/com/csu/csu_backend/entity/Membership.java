@@ -54,4 +54,10 @@ public class Membership {
         this.role = role;
         this.joinedAt = LocalDateTime.now();
     }
+
+    // 멤버 역할 업데이트 메서드 추가
+    public void updateRole(String role) {
+        this.role = role;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

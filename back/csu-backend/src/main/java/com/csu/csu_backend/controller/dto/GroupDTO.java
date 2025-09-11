@@ -3,11 +3,11 @@ package com.csu.csu_backend.controller.dto;
 import com.csu.csu_backend.entity.Category;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.User;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class GroupDTO {
 
@@ -19,6 +19,9 @@ public class GroupDTO {
         private String description;
         private String region;
         private int maxMembers;
+        private String imageUrl; // 추가
+        private String tags;     // 추가
+
         @NotNull(message = "카테고리는 필수입니다.")
         private Long categoryId;
 
@@ -28,6 +31,8 @@ public class GroupDTO {
                     .description(description)
                     .region(region)
                     .maxMembers(maxMembers)
+                    .imageUrl(imageUrl) // 추가
+                    .tags(tags)         // 추가
                     .owner(owner)
                     .category(category)
                     .build();
@@ -35,6 +40,7 @@ public class GroupDTO {
     }
 
     @Getter
+    @Setter // isLiked 필드를 외부에서 설정하기 위해 추가
     @NoArgsConstructor
     public static class GroupResponse {
         private Long id;
@@ -42,6 +48,10 @@ public class GroupDTO {
         private String description;
         private String region;
         private int maxMembers;
+        private int currentMembers; // 추가
+        private String imageUrl;    // 추가
+        private String tags;        // 추가
+        private boolean isLiked;    // 추가 (찜 여부)
         private Long ownerId;
         private String ownerNickname;
         private Long categoryId;
@@ -53,6 +63,9 @@ public class GroupDTO {
             this.description = group.getDescription();
             this.region = group.getRegion();
             this.maxMembers = group.getMaxMembers();
+            this.currentMembers = group.getCurrentMembers();
+            this.imageUrl = group.getImageUrl();
+            this.tags = group.getTags();
             this.ownerId = group.getOwner().getId();
             this.ownerNickname = group.getOwner().getNickname();
             this.categoryId = group.getCategory().getId();
