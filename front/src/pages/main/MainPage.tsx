@@ -19,8 +19,11 @@ function MainPage() {
 
   const { data: grouopsListData } = useGetGroupsListApi({
     size: 9,
-    page: 1,
+    page: 0,
+    sort: "createdAt,DESC",
   });
+
+  console.log(grouopsListData);
 
   const word = searchParams.get("word");
 
@@ -64,6 +67,18 @@ function MainPage() {
       {/* 필터 뷰 */}
       <FilterList />
 
+      <SectionTitle
+        title={"내가 찜한 모임"}
+        rightActionLabel="더보기"
+        onActionClick={() => onClickMore("recommend")}
+      />
+
+      <section className={styles.group_view}>
+        {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
+        ))}
+      </section>
+
       {/* 그룹 리스트 뷰 */}
       <SectionTitle
         title={"추천 모임 표시"}
@@ -73,20 +88,7 @@ function MainPage() {
 
       <section className={styles.group_view}>
         {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
-        ))}
-      </section>
-
-
-      <SectionTitle
-        title={"내가 찜한 모임"}
-        rightActionLabel="더보기"
-        onActionClick={() => onClickMore("recommend")}
-      />
-
-      <section className={styles.group_view}>
-        {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
         ))}
       </section>
     </CommonLayout>

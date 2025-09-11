@@ -7,26 +7,25 @@ import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MainSearch.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useGetGroupsListApi } from "@/features/group/_hooks/query";
+import { useQueryParams } from "@/shared/hooks/useQueryParameter";
 
 /**
  *@description 메인 페이지 > 검색 내용 페이지 컴포넌트
  */
 function MainSearch() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const query = useQueryParams();
 
-  const word = searchParams.get("word"); // 쿼리 파라미터 : 검색 단어
-  const more = searchParams.get("more"); // 쿼리파라미터 : 더보기로 접근시
-  const page = searchParams.get("page");
+  const word = query.get("word"); //  검색 단어
+  const more = query.get("more"); // 더보기로 접근시
+  const page = query.get("page");
 
   const [search, setSearch] = useState(word);
 
   const { data: grouopsListData } = useGetGroupsListApi({
     size: 9,
-    page: Number(page),
+    page: Number(page) - 1,
     search: word,
   });
 
@@ -36,7 +35,7 @@ function MainSearch() {
 
   // 검색 버튼 클릭 이벤트
   const onSearchMove = () => {
-    navigate(`/search?word=${encodeURIComponent(search ?? "")}`);
+    query.set("word", search ?? "");
   };
 
   // 검색어 입력 키다운 이벤트
@@ -47,8 +46,8 @@ function MainSearch() {
   };
 
   // 페이지 이동 이벤트
-  const onPageMove = (page: number) => {
-    navigate(`/search?word=${encodeURIComponent(search ?? "")}&page=${page}`);
+  const onPageMove = (_page: number) => {
+    query.set("page", _page.toString());
   };
 
   return (
@@ -73,7 +72,7 @@ function MainSearch() {
 
       <section className={styles.group_serach_view}>
         {grouopsListData?.content.map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
         ))}
       </section>
 
