@@ -2,6 +2,9 @@
  *@description 유저 정보 조회 응답
  */
 
+import type { GroupsItem } from "@/features/group/_types/base";
+import type { PagingResponse } from "@/shared/types/api";
+
 export type GetUserInfoResponse = {
   id: number;
   email: string;
@@ -14,14 +17,4 @@ export type GetUserInfoResponse = {
 /**
  *@description 내가 가입한 그룹 조회 응답
  */
-export type GetMyJoinedGroup = {
-  id: number;
-  name: string;
-  description: string;
-  region: string;
-  maxMembers: number;
-  ownerId: number;
-  ownerNickname: string;
-  categoryId: number;
-  categoryName: string;
-};
+export type GetMyJoinedGroupResponse = PagingResponse<GroupsItem>;

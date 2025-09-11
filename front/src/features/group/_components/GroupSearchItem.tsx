@@ -3,33 +3,19 @@ import styles from "./GroupSearchItem.module.scss";
 import React, { useState } from "react";
 import Tag from "@/shared/components/tag/Tag";
 import { useNavigate } from "react-router-dom";
+import type { GroupsItem } from "../_types/base";
+import dayjs from "dayjs";
 
 type Props = {
-  name: string;
-  description: string;
-  region: string;
-  maxMembers: number;
-  currentMembers: number;
-  createdAt: string; // YYYY-MM-DD
-  imageUrl?: string;
   tags?: string[];
   isHeart?: boolean;
+  data: GroupsItem;
 };
 
 /**
  *@description 모임 검색 항목
  */
-export function GroupSearchItem({
-  name,
-  description,
-  region,
-  maxMembers,
-  currentMembers,
-  createdAt,
-  imageUrl,
-  tags = [],
-  isHeart,
-}: Props) {
+export function GroupSearchItem({ tags = [], isHeart, data }: Props) {
   const navigate = useNavigate();
   const [heart, setHeart] = useState(isHeart);
 
@@ -59,12 +45,12 @@ export function GroupSearchItem({
       onKeyDown={onKeyDownGroup}
     >
       {/* 이미지 */}
-      {imageUrl && <img src={imageUrl} alt={name} className={styles.image} />}
+      {data.imageUrl && <img src={data.imageUrl} alt={data.name} className={styles.image} />}
 
       {/* 본문 */}
       <div className={styles.content}>
-        <h3 className={styles.title}>{name}</h3>
-        <p className={styles.description}>{description}</p>
+        <h3 className={styles.title}>{data.name}</h3>
+        <p className={styles.description}>{data.description}</p>
 
         {/* 태그 */}
         <div className={styles.tags}>
@@ -81,19 +67,19 @@ export function GroupSearchItem({
             <IconButton fill="#7f838c" size={18} iconName={"Person"} />
 
             <p>
-              {currentMembers}/{maxMembers}
+              {data.currentMembers}/{data.maxMembers}
             </p>
           </div>
 
           <div className={styles.region}>
             <IconButton fill="#7f838c" size={16} iconName={"Marker"} />
 
-            <p>{region}</p>
+            <p>{data.region}</p>
           </div>
         </div>
 
         {/* 날짜 */}
-        <div className={styles.date}>{createdAt}</div>
+        <div className={styles.date}>{dayjs(data.createdAt).format("YYYY.MM.DD")}</div>
 
         <button className={styles.heart} onClick={onHeartTogggle}>
           <IconButton fill={heart ? "#F36438" : "#C6C8CD"} iconName={"FillHeart"} />

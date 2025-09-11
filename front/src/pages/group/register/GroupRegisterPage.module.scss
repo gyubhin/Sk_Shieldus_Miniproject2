@@ -10,4 +10,12 @@
     @include flex-column;
     gap: 4rem;
   }
+
+  .tags {
+    position: relative;
+    bottom: 30px;
+    width: 100%;
+    gap: 2rem;
+    @include flex-row;
+  }
 }

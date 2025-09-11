@@ -9,6 +9,7 @@ import { SmallButton } from "@/shared/components/button/SmallButton";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { useGetGroupsListApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 메인 페이지 > 검색 내용 페이지 컴포넌트
@@ -17,11 +18,17 @@ function MainSearch() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const word = searchParams.get("word");
-  const more = searchParams.get("more");
+  const word = searchParams.get("word"); // 쿼리 파라미터 : 검색 단어
+  const more = searchParams.get("more"); // 쿼리파라미터 : 더보기로 접근시
   const page = searchParams.get("page");
 
   const [search, setSearch] = useState(word);
+
+  const { data: grouopsListData } = useGetGroupsListApi({
+    size: 9,
+    page: Number(page),
+    search: word,
+  });
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -65,23 +72,16 @@ function MainSearch() {
       {!more && search && <SectionTitle title={`'${word}'으로 검색한 내용`} />}
 
       <section className={styles.group_serach_view}>
-        {Array.from({ length: 8 }).map((_, idx) => (
-          <GroupSearchItem
-            key={idx}
-            name="파이썬 프로그래밍"
-            description="파이썬 기초부터 실무·AI까지..."
-            region="강남구"
-            maxMembers={6}
-            currentMembers={3}
-            createdAt="2025.02.04"
-            imageUrl="https://placehold.co/600x400"
-            tags={["파이썬", "AI"]}
-            isHeart
-          />
+        {grouopsListData?.content.map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
         ))}
       </section>
 
-      <Pagination totalPages={7} currentPage={Number(page ?? 1)} onChange={onPageMove} />
+      <Pagination
+        totalPages={grouopsListData?.totalPages ?? 1}
+        currentPage={Number(page ?? 1)}
+        onChange={onPageMove}
+      />
     </CommonLayout>
   );
 }

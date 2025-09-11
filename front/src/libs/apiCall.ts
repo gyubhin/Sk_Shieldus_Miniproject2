@@ -2,9 +2,9 @@ import { useAccessTokenStore } from "@/features/auth/_stores/accessToken.store";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./cookie";
 
-const isMockApi = true;
+console.log(import.meta.env.VITE_APP_API_URL);
 export const apiCall = axios.create({
-  baseURL: isMockApi ? "" : import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
 
