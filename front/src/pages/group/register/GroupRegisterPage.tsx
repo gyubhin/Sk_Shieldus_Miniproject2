@@ -184,7 +184,7 @@ function GroupRegisterPage() {
         </Card>
 
         <div className={styles.button_groups}>
-          <ActiveButton onClick={onRegister}>둥록</ActiveButton>
+          <ActiveButton onClick={onRegister}>등록</ActiveButton>
 
           <ActiveButton buttonStyle="disabled">취소</ActiveButton>
         </div>

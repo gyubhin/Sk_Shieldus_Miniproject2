@@ -20,6 +20,7 @@ import {
   BsX,
   BsGear,
   BsList,
+  BsChevronRight,
 } from "react-icons/bs";
 import { IoIosMore } from "react-icons/io";
 import { IoHomeOutline } from "react-icons/io5";
@@ -28,6 +29,7 @@ const Icon = {
   Below: BsChevronDown,
   Search: BsSearch,
   Left: BsChevronLeft,
+  Right: BsChevronRight,
   Person: BsFillPersonFill,
   Marker: BsFillGeoAltFill,
   StrokeHeart: BsHeart,
