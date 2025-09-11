@@ -64,7 +64,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
 
           {/* 댓글 입력 */}
           <div className={styles.comment_input}>
-            <input type="text" placeholder="댓글을 입력하세요..." onKeyDown={(e) => {}} />
+            <input type="text" placeholder="댓글을 입력하세요..." onKeyDown={() => {}} />
 
             <button onClick={() => {}}>등록</button>
           </div>

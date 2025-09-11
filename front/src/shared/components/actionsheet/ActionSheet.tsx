@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ActionSheet.module.scss";
 import { ensurePortalRoot } from "@/shared/utils/portal";
@@ -8,11 +8,10 @@ type Props = {
   onClose: () => void;
   onClickFirst?: () => void;
   onClickSecond?: () => void;
-  firstText?: string;   
-  secondText?: string;  
+  firstText?: string;
+  secondText?: string;
   title?: string;
   destructive?: "first" | "second";
-
 };
 
 export default function ActionSheet({
@@ -24,13 +23,12 @@ export default function ActionSheet({
   secondText,
   title,
   destructive,
-
 }: Props) {
   // ---- 하위호환 매핑 ----
   const handleFirst = onClickFirst;
   const handleSecond = onClickSecond;
-  const labelFirst = firstText ;
-  const labelSecond = secondText ;
+  const labelFirst = firstText;
+  const labelSecond = secondText;
 
   useEffect(() => {
     if (!open) return;
@@ -57,9 +55,7 @@ export default function ActionSheet({
         {title && <div className={styles.title}>{title}</div>}
 
         <button
-          className={`${styles.item} ${
-            destructive === "first" ? styles.destructive : ""
-          }`}
+          className={`${styles.item} ${destructive === "first" ? styles.destructive : ""}`}
           type="button"
           onClick={handleFirst}
         >
@@ -67,18 +63,14 @@ export default function ActionSheet({
         </button>
 
         <button
-          className={`${styles.item} ${
-            destructive === "second" ? styles.destructive : ""
-          }`}
+          className={`${styles.item} ${destructive === "second" ? styles.destructive : ""}`}
           type="button"
           onClick={handleSecond}
         >
           {labelSecond}
         </button>
-
-        
       </div>
     </div>,
-    root
+    root,
   );
 }
