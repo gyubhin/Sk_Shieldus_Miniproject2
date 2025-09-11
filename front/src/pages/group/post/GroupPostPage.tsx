@@ -26,6 +26,7 @@ function GroupPostPage() {
   const [isContentModalOpen, setContentModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number>();
 
+  // 그룹 게시글 목록
   const { data: postList, refetch } = useGetPostListApi(1, {
     page: 0,
     size: 9,

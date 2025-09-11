@@ -9,8 +9,7 @@ import GroupInfoContent from "@/features/group/_components/info/content/GroupInf
 import MemberList from "@/features/group/_components/info/memberList/MemberList";
 import { useNavigate, useParams } from "react-router-dom";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
-import { IconButton } from "@/shared/components/icon/IconButton";
-import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
+import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -22,6 +21,8 @@ function GroupInfoPage() {
   const { onChangeTab, activeKey } = useSetGroupTab();
 
   const { data } = useGetGroupsOneApi(groupId);
+
+  const { data: groupMembers } = useGetGroupMemberApi(groupId);
 
   // 모임 일정 등록 페이지로  이동
   const onMoveRegisterEvent = () => {
@@ -83,7 +84,7 @@ function GroupInfoPage() {
         />
       </section>
 
-      <MemberList />
+      {groupMembers?.data && <MemberList groupMembers={groupMembers.data} />}
     </CommonLayout>
   );
 }

@@ -72,7 +72,7 @@ export const deleteGroupsLeaveApi = (groupId: number) => {
 /**
  *@description 그룹 멤버 목록 조회 api
  */
-export const getGroupsMembersApi = (groupId: number) => {
+export const getGroupsMembersApi = (groupId?: string) => {
   return apiCall<GetGroupsMemberListResponse>({
     url: `/groups/${groupId}/members`,
   });

@@ -1,6 +1,6 @@
 import { reactQueryKeys } from "@/shared/constants/reactQueryKeys";
 import { useQuery } from "@tanstack/react-query";
-import { getGroupsListApi, getGroupsOneApi } from "../_apis/group.api";
+import { getGroupsListApi, getGroupsMembersApi, getGroupsOneApi } from "../_apis/group.api";
 import type { GetGroupsListQuery } from "../_types/query";
 import type { PagingQuery } from "@/shared/types/api";
 
@@ -41,5 +41,16 @@ export function useGetMyJoinedGroupsApi(params: PagingQuery) {
     select: (data) => {
       return data.data;
     },
+  });
+}
+
+/**
+ *@description 그룹 멤버 목록 조회
+ */
+export function useGetGroupMemberApi(groupId?: string) {
+  return useQuery({
+    queryKey: [reactQueryKeys.group.getGroupsMembers, groupId],
+    queryFn: () => getGroupsMembersApi(groupId),
+    enabled: !!groupId,
   });
 }

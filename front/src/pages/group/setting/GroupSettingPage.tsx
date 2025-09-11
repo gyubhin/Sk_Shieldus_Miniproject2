@@ -5,8 +5,7 @@ import { GroupTab } from "@/shared/components/tab/GroupTab";
 import MemberList from "@/features/group/_components/info/memberList/MemberList";
 import { useNavigate, useParams } from "react-router-dom";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
-import { IconButton } from "@/shared/components/icon/IconButton";
-import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
+import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import {
   useDeleteGroupsApi,
   useDeleteGroupsMemberApi,
@@ -30,6 +29,8 @@ function GroupSettingPage() {
   const { mutateAsync: mutateKickMember } = useDeleteGroupsMemberApi(groupId);
   const { mutateAsync: mutateDeleteGroup } = useDeleteGroupsApi();
   const { mutateAsync: mutateDelegate } = usePatchDelegateOwner(groupId);
+
+  const { data: groupMembers } = useGetGroupMemberApi(groupId);
 
   // 모임 일정 수정 페이지로  이동
   const onMoveModifyGroup = () => {
@@ -119,7 +120,13 @@ function GroupSettingPage() {
         </button>
       </section>
 
-      <MemberList onKickMember={onKickMember} onDelegateGroup={onDelegateGroup} />
+      {groupMembers?.data && (
+        <MemberList
+          groupMembers={groupMembers.data}
+          onKickMember={onKickMember}
+          onDelegateGroup={onDelegateGroup}
+        />
+      )}
     </CommonLayout>
   );
 }
