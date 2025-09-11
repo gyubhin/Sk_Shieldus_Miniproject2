@@ -43,6 +43,7 @@ function Router() {
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />
         <Route path="mypage/edit" element={<ProfileEditPage />} />
+
       </Routes>
     </BrowserRouter>
   );
