@@ -7,5 +7,5 @@ export type CommentItem = {
   createdAt: string;
   authorNickname: string;
   authorId: number;
-  children: CommentItem[];
+  children?: CommentItem[];
 };

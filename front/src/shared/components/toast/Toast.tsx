@@ -1,54 +1,34 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./Toast.module.scss";
 import clsx from "clsx";
+import { IconButton } from "../icon/IconButton";
+import { useUiStore } from "@/shared/stores/ui.store";
 
-type ToastType = "success" | "error";
-type ToastPosition =
-  | "top-right"
-  | "top-left"
-  | "bottom-right"
-  | "bottom-left"
-  | "top-center"
-  | "bottom-center";
+/**
+ *@description 토스트 ui 컴포넌트
+ */
+export default function Toast() {
+  const { toast, clearToast } = useUiStore();
 
-type ToastProps = {
-  message: string;
-  type: ToastType;            // success / error 필수
-  duration?: number;          // 기본 3000ms
-  position?: ToastPosition;   // 기본 bottom-right
-  onClose: () => void;
-};
-
-export default function Toast({
-  message,
-  type,
-  duration = 3000,
-  position = "bottom-right",
-  onClose,
-}: ToastProps) {
-  // 자동 닫힘 타이머
   useEffect(() => {
-    const t = setTimeout(onClose, duration);
+    if (!toast.show) return;
+    const t = setTimeout(() => clearToast(), 2000);
     return () => clearTimeout(t);
-  }, [duration, onClose]);
+  }, [toast.show, clearToast]);
 
+  if (!toast.show) return null;
 
-  const className = clsx(styles.toast, styles[position], styles[type]);
+  const className = clsx(styles.toast, styles["top-center"], styles[toast.type]);
 
-  // 접근성 분기
-  const ariaRole = type === "error" ? "alert" : "status";
-  const ariaLive = type === "error" ? "assertive" : "polite";
+  const ariaRole = toast.type === "error" ? "alert" : "status";
+  const ariaLive = toast.type === "error" ? "assertive" : "polite";
 
   return (
-    <div className={className} role={ariaRole} aria-live={ariaLive} data-type={type}>
-      <span className={styles.message}>{message}</span>
-      <button
-        className={styles.closeBtn}
-        onClick={onClose}
-        aria-label="닫기"
-        type="button"
-      >
-        ×
+    <div className={className} role={ariaRole} aria-live={ariaLive} data-type={toast.type}>
+      <span className={styles.message}>{toast.message}</span>
+
+      <button className={styles.closeBtn} onClick={clearToast} aria-label="닫기" type="button">
+        <IconButton iconName={"Close"} fill={"#fff"} />
       </button>
     </div>
   );
