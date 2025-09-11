@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes } from "react";
+import { useState, type ChangeEvent, type InputHTMLAttributes } from "react";
 import styles from "./InputField.module.scss";
 import clsx from "clsx";
 
@@ -8,6 +8,7 @@ type Props = {
   successMessage?: string;
   errorMessage?: string;
   required?: boolean;
+  initialPreviewUrl?: string; // 서버에서 받은 기존 이미지 URL
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function InputField({
@@ -17,8 +18,24 @@ export function InputField({
   successMessage,
   errorMessage,
   className,
+  type = "text",
+  initialPreviewUrl,
   ...rest
 }: Props) {
+  const [preview, setPreview] = useState<string | null>(initialPreviewUrl ?? null);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreview(url);
+    } else {
+      setPreview(initialPreviewUrl ?? null); // 파일 없으면 기존 프리뷰 유지
+    }
+
+    rest.onChange?.(e);
+  };
+
   return (
     <div className={styles.container}>
       <label className={styles.label} htmlFor={name}>
@@ -26,19 +43,39 @@ export function InputField({
         {required ? "*" : ""}
       </label>
 
-      <input
-        id={name}
-        name={name}
-        // 외부에서 넣는 className도 병합
-        className={clsx(
-          styles.input,
-          errorMessage && styles.invalid,
-          successMessage && styles.success,
-          className,
-        )}
-        aria-invalid={!!errorMessage}
-        {...rest} // <-- 반드시 넘겨주기!
-      />
+      {type === "file" ? (
+        <>
+          <input
+            id={name}
+            name={name}
+            type="file"
+            accept="image/*"
+            className={styles.hiddenInput}
+            onChange={handleFileChange}
+            {...rest}
+          />
+
+          <label htmlFor={name} className={styles.uploadButton}>
+            이미지 선택
+          </label>
+
+          {preview && <img src={preview} alt="미리보기" className={styles.preview} />}
+        </>
+      ) : (
+        <input
+          id={name}
+          name={name}
+          type={type}
+          className={clsx(
+            styles.input,
+            errorMessage && styles.invalid,
+            successMessage && styles.success,
+            className,
+          )}
+          aria-invalid={!!errorMessage}
+          {...rest}
+        />
+      )}
 
       {successMessage && <span className={styles.success}>{successMessage}</span>}
       {errorMessage && <span className={styles.error}>{errorMessage}</span>}
