@@ -1,16 +1,10 @@
 package com.csu.csu_backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where; // 추가
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +14,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted_at IS NULL") // 추가: 기본적으로 삭제되지 않은 사용자만 조회
 public class User {
 
     @Id
@@ -43,7 +38,7 @@ public class User {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt; // 추가
 
     @OneToMany(mappedBy = "owner")
     private List<Group> ownedGroups = new ArrayList<>();
@@ -54,8 +49,15 @@ public class User {
     // DataInitializer에서 사용할 생성자
     public User(String email, String password, String nickname) {
         this.email = email;
-        this.password = password; // 실제 프로젝트에서는 암호화 필요
+        this.password = password;
         this.nickname = nickname;
         this.createdAt = LocalDateTime.now();
+    }
+
+    /**
+     * 사용자를 논리적으로 삭제 처리합니다.
+     */
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
