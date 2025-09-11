@@ -77,6 +77,7 @@ function MainPage() {
         ))}
       </section>
 
+
       <SectionTitle
         title={"내가 찜한 모임"}
         rightActionLabel="더보기"
