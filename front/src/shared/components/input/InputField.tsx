@@ -17,7 +17,7 @@ export function InputField({
   successMessage,
   errorMessage,
   className,
-  ...rest // <-- 나머지 props (type, value, onChange, placeholder, autoComplete 등)
+  ...rest
 }: Props) {
   return (
     <div className={styles.container}>
@@ -34,7 +34,7 @@ export function InputField({
           styles.input,
           errorMessage && styles.invalid,
           successMessage && styles.success,
-          className
+          className,
         )}
         aria-invalid={!!errorMessage}
         {...rest} // <-- 반드시 넘겨주기!

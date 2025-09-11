@@ -1,9 +1,10 @@
+import type { PagingResponse } from "@/shared/types/api";
 import type { GetGroupsMemberItem, GroupsItem } from "./base";
 
 /**
  *@description 그룹 목록 조회 응답
  */
-export type GetGroupsListResponse = GroupsItem[];
+export type GetGroupsListResponse = PagingResponse<GroupsItem>;
 
 /**
  *@description 특정 그룹 조회 응답

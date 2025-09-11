@@ -18,3 +18,11 @@ export type PostItem = {
 export type PostDetailItem = PostItem & {
   comments: CommentItem[];
 };
+
+/**
+ *@description 게시글 등록 폼 에러 타입
+ */
+export type PostRegisterFormError = {
+  title?: string;
+  content?: string;
+};

@@ -14,12 +14,26 @@ export type PagingQuery = {
   sort?: string;
 };
 
-export type PagingResponse = {
+export type PagingResponse<T> = {
+  content: T[];
   totalPages: number;
   totalElements: number;
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
+  size: number;
+  page: number;
   last: boolean;
+};
+
+/**
+ *@description createdAt, updatedAt, deletedAt field
+ */
+export type TimeResponse = {
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};
+
+export type ErrorResponse = {
+  code: string;
+  message: string;
+  field?: string;
 };

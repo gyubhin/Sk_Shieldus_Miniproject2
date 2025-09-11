@@ -7,7 +7,7 @@ import type { GetPostDetailResponse, GetPostListResponse } from "../_types/respo
 /**
  *@description 게시글 생성 api
  */
-export const creaetPostsApi = (groupId: number, body: CreatePostBody) => {
+export const createPostsApi = (groupId: number, body: CreatePostBody) => {
   return apiCall<MutationResponse>({
     url: `/groups/${groupId}/posts`,
     data: body,

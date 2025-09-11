@@ -2,14 +2,17 @@ import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./PostItem.module.scss";
 import { useState } from "react";
 import clsx from "clsx";
+import type { PostItem as PostItemType } from "@/features/post/_types/base";
+import { getRelativeTime } from "@/libs/time";
 
 type Props = {
   onContentOpen: () => void;
+  data: PostItemType;
 };
 /**
  *@description 모임 게시글 항목
  */
-function PostItem({ onContentOpen }: Props) {
+function PostItem({ onContentOpen, data }: Props) {
   const [isExpandContent, setExpandContent] = useState(false);
 
   return (
@@ -18,9 +21,9 @@ function PostItem({ onContentOpen }: Props) {
       <section className={styles.top_view}>
         <div className={styles.profile_image} />
 
-        <p>노랭이</p>
+        <p>{data.authorNickname}</p>
 
-        <p>1일</p>
+        <p>{getRelativeTime(data.createdAt)}</p>
 
         <button className={styles.more_btn}>
           <IconButton iconName={"More"} />
@@ -45,11 +48,7 @@ function PostItem({ onContentOpen }: Props) {
 
       {/* 내용 */}
       <section className={styles.content_view}>
-        <p className={clsx(!isExpandContent && styles.hide_text)}>
-          신작 소식지 전해드립니다.신작 소식지 전해드립니다.신작 소식지 전해드립니다.신작 소식지
-          전해드립니다. 신작 소식지 전해드립니다.신작 소식지 전해드립니다.신작 소식지
-          전해드립니다.신작 소식지 전해드립니다.
-        </p>
+        <p className={clsx(!isExpandContent && styles.hide_text)}>{data.content}</p>
 
         <button onClick={() => setExpandContent(!isExpandContent)}>더보기</button>
       </section>

@@ -1,9 +1,11 @@
 import { Dropdown } from "@/shared/components/dropdown/Dropdown";
 import styles from "./FilterList.module.scss";
 import { categoryOptions, regionOptions, sortOptions } from "@/shared/constants/options";
+import { useGetCategoriesApi } from "@/features/category/_hooks/query";
 
-type Props = {};
-function FilterList({}: Props) {
+function FilterList() {
+  const { data: categoriesData } = useGetCategoriesApi();
+
   return (
     <section className={styles.filter_list}>
       <Dropdown
@@ -21,7 +23,7 @@ function FilterList({}: Props) {
 
       <Dropdown
         isWideStyle
-        options={categoryOptions}
+        options={categoriesData ?? []}
         defaultValue={categoryOptions[0]}
         onChange={(value) => console.log("선택된 값:", value)}
       />

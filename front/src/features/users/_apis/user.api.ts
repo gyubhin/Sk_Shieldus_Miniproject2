@@ -1,6 +1,6 @@
 import { apiCall } from "@/libs/apiCall";
-import { type GetUserInfoResponse } from "../_types/response";
-import type { MutationResponse } from "@/shared/types/api";
+import { type GetMyJoinedGroupResponse, type GetUserInfoResponse } from "../_types/response";
+import type { MutationResponse, PagingQuery } from "@/shared/types/api";
 
 /**
  *@description user 정보 조회 api
@@ -24,8 +24,9 @@ export const patchUser = () => {
 /**
  *@description 내가 가입한 그룹 목록 조회
  */
-export const getMyJoinedGroup = () => {
-  return apiCall<MutationResponse>({
+export const getMyJoinedGroup = (query: PagingQuery) => {
+  return apiCall<GetMyJoinedGroupResponse>({
     url: "/users/me/groups",
+    params: query,
   });
 };

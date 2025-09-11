@@ -1,0 +1,46 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.dropdown_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.dropdown_label {
+  font-weight: 600;
+  font-size: 14px;
+  color: $color-grayscale-90;
+}
+
+.required {
+  margin-left: 2px;
+}
+
+.dropdown_select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid $color-grayscale-40;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  background: white;
+
+  &:focus {
+    border-color: $color-positive-10;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+}
+
+.success {
+  font-size: 1.3rem;
+  color: $color-positive-10;
+  margin-top: 2px;
+}
+
+.error {
+  font-size: 1.3rem;
+  color: $color-negative-10;
+  margin-top: 2px;
+}
