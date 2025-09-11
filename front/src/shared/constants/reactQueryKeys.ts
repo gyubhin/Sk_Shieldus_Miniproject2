@@ -1,6 +1,7 @@
 export const reactQueryKeys = {
   group: {
     getGroupsList: "get group list",
+    getMyJoinedGroup: "get my joined group",
   },
   categories: {
     getCategories: "get categories",

@@ -1,5 +1,4 @@
 export const regionOptions = [
-  { label: "지역", value: "" },
   { label: "서울특별시", value: "seoul" },
   { label: "부산광역시", value: "busan" },
   { label: "대구광역시", value: "daegu" },
@@ -11,7 +10,7 @@ export const regionOptions = [
 ];
 
 export const sortOptions = [
-  { label: "최신순", value: "latest" },
+  { label: "최신순", value: "desc" },
   { label: "이름순", value: "name" },
   { label: "찜순", value: "favorite" },
 ];

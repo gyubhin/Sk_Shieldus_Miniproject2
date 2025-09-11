@@ -9,8 +9,9 @@ export const groupSchema = z.object({
   categoryId: z.number().min(1, "카테고리를 선택해주세요."),
   region: z.string().min(1, "지역을 선택해주세요."),
   maxMembers: z.number("최대 인원은 숫자여야 합니다.").min(2, "최대 인원은 2명 이상이어야 합니다."),
-  tags: z.array(z.string()).max(5, "태그는 최대 5개까지만 추가할 수 있습니다.").optional(),
-  image: z.string().optional(), // 파일 업로드는 나중에 처리
+  tags: z.string(),
+  // tags: z.array(z.string()).max(5, "태그는 최대 5개까지 등록할 수 있습니다."),
+  // imageUrl: z.instanceof(File).optional(),
 });
 
 // 등록/수정용 타입

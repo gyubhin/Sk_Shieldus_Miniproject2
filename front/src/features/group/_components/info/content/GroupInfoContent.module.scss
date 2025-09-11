@@ -6,10 +6,15 @@
     @include flex-row-between; /* 모임 이름*/
     margin-bottom: 18px;
 
-    h2 {
-      color: $color-grayscale-90;
-      font-size: 2.4rem;
-      font-weight: bold;
+    .top_view_left {
+      @include flex-row-between;
+      gap: 1rem;
+
+      h2 {
+        color: $color-grayscale-90;
+        font-size: 2.4rem;
+        font-weight: bold;
+      }
     }
 
     /* 탈퇴하기 버튼 */
@@ -26,14 +31,14 @@
     color: $color-grayscale-90;
 
     @include flex-row;
-    gap: 1rem;
+    gap: 2rem;
     margin-bottom: 18px;
   }
 
   /* 태그 */
   .tags_view {
     @include flex-row;
-    gap: 1.4rem;
+    gap: 1.6rem;
     margin-bottom: 40px;
   }
 
@@ -52,6 +57,9 @@
       color: $color-grayscale-80;
       font-size: 1.6rem;
       line-height: 3.2rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
     }
   }
 }

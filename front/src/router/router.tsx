@@ -16,6 +16,7 @@ import SettingPage from "@/pages/mypage/setting/SettingPage";
 import NoticePage from "@/pages/mypage/setting/notice/NoticePage";
 import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
 import EventRegisterPage from "@/pages/event/register/EventRegisterPage";
+import GroupSettingPage from "@/pages/group/setting/GroupSettingPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -37,8 +38,10 @@ function Router() {
         <Route path="group/:groupId/post/register" element={<PostRegisterPage />} />
         <Route path="group/:groupId/post/register/:postId" element={<PostRegisterPage />} />
         <Route path="group/register" element={<GroupRegisterPage />} />
+        <Route path="group/register/:groupId" element={<GroupRegisterPage />} />
         <Route path="group/event/register" element={<EventRegisterPage />} />
         <Route path="group/:groupId/info" element={<GroupInfoPage />} />
+        <Route path="group/:groupId/setting" element={<GroupSettingPage />} />
 
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />

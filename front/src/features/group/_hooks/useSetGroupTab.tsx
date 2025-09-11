@@ -18,9 +18,11 @@ function useSetGroupTab() {
     if (pathname.indexOf("/info") !== -1) {
       //info 탭
       setActiveKey("info");
-    } else {
+    } else if (pathname.indexOf("/post") !== -1) {
       //post 탭
       setActiveKey("post");
+    } else {
+      setActiveKey("setting");
     }
   }, [pathname]);
   return {

@@ -5,14 +5,15 @@ import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { BackHeader } from "@/shared/components/header/BackHeader";
 import { useState } from "react";
-import type { CreatePostBody } from "@/features/post/_types/body";
+import type { CreatePostForm } from "@/features/post/_types/body";
 import type { PostRegisterFormError } from "@/features/post/_types/base";
 import { useNavigate, useParams, type ErrorResponse } from "react-router-dom";
 import { useCreatePostsApi, usePutPostApi } from "@/features/post/_hooks/mutation";
 import { postSchema } from "@/features/post/_schemas/post.schema";
 import z from "zod";
-import { isAxiosError } from "axios";
 import { usePostDetailApi } from "@/features/post/_hooks/query";
+import { useUiStore } from "@/shared/stores/ui.store";
+import { isAxiosError } from "axios";
 
 /**
  *@description 게시글 등록/수정 페이지
@@ -24,18 +25,20 @@ function PostRegisterPage() {
     content: undefined,
   };
 
-  const initForm: CreatePostBody = {
+  const initForm: CreatePostForm = {
     title: "",
     content: "",
   };
 
   const { groupId, postId } = useParams<{ groupId: string; postId: string }>();
+  const { showToast } = useUiStore();
 
   const { data } = usePostDetailApi(Number(groupId), Number(postId));
+  console.log(data);
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMesage] = useState(initError);
-  const [form, setForm] = useState<CreatePostBody>(
+  const [form, setForm] = useState<CreatePostForm>(
     postId
       ? {
           title: data?.title ?? "",
@@ -43,6 +46,7 @@ function PostRegisterPage() {
         }
       : initForm,
   );
+  const [imageFile, setImageFile] = useState<File>();
 
   const { mutateAsync: createMutate } = useCreatePostsApi(Number(groupId));
   const { mutateAsync: updateMutate } = usePutPostApi(Number(groupId), Number(postId));
@@ -65,18 +69,28 @@ function PostRegisterPage() {
       // 검증 실행
       const validated = postSchema.parse({ ...form });
 
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("content", form.content);
+      formData.append("image", form.content);
+
+      if (imageFile instanceof File) {
+        // TODO 서버가 이미지 로직 추가하면 추가할 예정
+        // formData.append("image", imageFile);
+      }
+
       if (postId) {
         // 수정 모드
-        const res = await updateMutate(validated);
+        const res = await updateMutate(formData);
         if (res.status === 200) {
           alert("수정 성공했습니다.");
           navigate(`/group/${groupId}/post/`, { replace: true }); // 수정 후 상세로
         }
       } else {
         // 등록 모드
-        const res = await createMutate(validated);
+        const res = await createMutate(formData);
         if (res.status === 201) {
-          alert("등록 성공했습니다.");
+          showToast({ message: "등록 성공했습니다.", type: "success" });
           navigate(`/group/${groupId}/post`, { replace: true }); // 등록 후 목록으로
         }
       }
@@ -87,8 +101,8 @@ function PostRegisterPage() {
         setErrorMesage({ ...initError, [path]: message });
         return;
       } else if (isAxiosError<ErrorResponse>(error)) {
-        const errData = error.response?.data;
-        alert(errData);
+        const message = error.message;
+        showToast({ message: message ?? "", type: "error" });
       }
     }
   };
@@ -130,6 +144,12 @@ function PostRegisterPage() {
             name={"image"}
             placeholder="이미지 업로드하기"
             type="file"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImageFile(file);
+              }
+            }}
           />
         </Card>
 

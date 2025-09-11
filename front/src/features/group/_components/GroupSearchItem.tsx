@@ -5,19 +5,19 @@ import Tag from "@/shared/components/tag/Tag";
 import { useNavigate } from "react-router-dom";
 import type { GroupsItem } from "../_types/base";
 import dayjs from "dayjs";
+import LikeButton from "@/shared/components/button/LikeButton";
 
 type Props = {
   tags?: string[];
-  isHeart?: boolean;
   data: GroupsItem;
 };
 
 /**
  *@description 모임 검색 항목
  */
-export function GroupSearchItem({ tags = [], isHeart, data }: Props) {
+export function GroupSearchItem({ tags = [], data }: Props) {
   const navigate = useNavigate();
-  const [heart, setHeart] = useState(isHeart);
+  const [liked, setLiked] = useState(data.liked);
 
   const onClickGroup = () => {
     navigate(`/group/${data.id}/info`);
@@ -32,7 +32,7 @@ export function GroupSearchItem({ tags = [], isHeart, data }: Props) {
   const onHeartTogggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
 
-    setHeart((prev) => !prev);
+    setLiked((prev) => !prev);
   };
 
   return (
@@ -81,7 +81,7 @@ export function GroupSearchItem({ tags = [], isHeart, data }: Props) {
         <div className={styles.date}>{dayjs(data.createdAt).format("YYYY.MM.DD")}</div>
 
         <button className={styles.heart} onClick={onHeartTogggle}>
-          <IconButton fill={heart ? "#F36438" : "#C6C8CD"} iconName={"FillHeart"} />
+          <LikeButton isLike={liked} />
         </button>
       </div>
     </div>

@@ -7,17 +7,21 @@ import { GroupTab } from "@/shared/components/tab/GroupTab";
 import GroupBanner from "@/features/group/_components/info/banner/GroupBanner";
 import GroupInfoContent from "@/features/group/_components/info/content/GroupInfoContent";
 import MemberList from "@/features/group/_components/info/memberList/MemberList";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { IconButton } from "@/shared/components/icon/IconButton";
+import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
  */
 function GroupInfoPage() {
   const navigate = useNavigate();
+  const { groupId } = useParams<{ groupId: string }>();
 
   const { onChangeTab, activeKey } = useSetGroupTab();
+
+  const { data } = useGetGroupsOneApi(groupId);
 
   // 모임 일정 등록 페이지로  이동
   const onMoveRegisterEvent = () => {
@@ -35,20 +39,17 @@ function GroupInfoPage() {
           tabs={[
             { key: "info", name: "모임 정보" },
             { key: "post", name: "게시판" },
+            { key: "setting", name: "모임 설정" },
           ]}
           activeKey={activeKey}
           onChange={onChangeTab}
         />
-
-        <button className={styles.top_tab_more_btn}>
-          <IconButton iconName="More" />
-        </button>
       </section>
 
       {/* 모임 배너 이미지 */}
       <GroupBanner url="aaa" />
 
-      <GroupInfoContent />
+      {data && <GroupInfoContent data={data} />}
 
       <SectionTitle
         title={"정모 일정 4"}
