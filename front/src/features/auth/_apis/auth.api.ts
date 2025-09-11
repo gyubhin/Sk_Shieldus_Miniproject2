@@ -1,12 +1,13 @@
 import { apiCall } from "@/libs/apiCall";
 import type { LoginApiBody, SignupApiBody } from "../_types/body";
 import type { MutationResponse } from "@/shared/types/api";
+import type { LoginApiResponse, SignupApiResponse } from "../_types";
 
 /**
  *@description login api
  */
 export const postLoginApi = (body: LoginApiBody) => {
-  return apiCall<MutationResponse>({
+  return apiCall<LoginApiResponse>({
     url: "/auth/login",
     method: "POST",
     data: body,
@@ -17,7 +18,7 @@ export const postLoginApi = (body: LoginApiBody) => {
  *@description signup api
  */
 export const postSignupApi = (body: SignupApiBody) => {
-  return apiCall<MutationResponse>({
+  return apiCall<SignupApiResponse>({
     url: "/auth/signup",
     method: "POST",
     data: body,

@@ -17,10 +17,6 @@ function PrivacyPage() {
 
       <AuthInnerLayout>
         <div className={styles.container}>
-          <div className={styles.brand}>
-            <img alt="HobbyHub" src="/images/BigImageLogo.svg" className={styles.brand__img} />
-          </div>
-
           <section className={styles.card}>
             <article className={styles.article}>
               {/* TODO: 실제 개인정보처리방침 전문으로 교체 */}

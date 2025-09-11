@@ -8,6 +8,10 @@
   & > p {
     color: $color-grayscale-80;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.4rem;
+
+    @include media(sm) {
+      font-size: 1.8rem;
+    }
   }
 }
