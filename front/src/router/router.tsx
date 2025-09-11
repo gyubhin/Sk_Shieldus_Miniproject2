@@ -17,9 +17,6 @@ import NoticePage from "@/pages/mypage/setting/notice/NoticePage";
 import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
 import EventRegisterPage from "@/pages/event/register/EventRegisterPage";
 
-
-
-
 /**
  *@description 페이지 라우팅 관리
  */
@@ -47,11 +44,6 @@ function Router() {
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />
         <Route path="mypage/edit" element={<ProfileEditPage />} />
-
-
-       
-
-
 
       </Routes>
     </BrowserRouter>

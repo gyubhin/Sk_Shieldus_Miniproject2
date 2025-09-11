@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import styles from "./Toast.module.scss";
+import clsx from "clsx";
 
 type ToastType = "success" | "error";
 type ToastPosition =
@@ -12,7 +13,7 @@ type ToastPosition =
 
 type ToastProps = {
   message: string;
-  type: ToastType;           
+  type: ToastType;            // success / error 필수
   duration?: number;          // 기본 3000ms
   position?: ToastPosition;   // 기본 bottom-right
   onClose: () => void;
@@ -20,7 +21,7 @@ type ToastProps = {
 
 export default function Toast({
   message,
-  type,                       
+  type,
   duration = 3000,
   position = "bottom-right",
   onClose,
@@ -31,14 +32,10 @@ export default function Toast({
     return () => clearTimeout(t);
   }, [duration, onClose]);
 
-  // 위치/타입 클래스 합성 (빈 값 제거)
-  const className = useMemo(() => {
-    const posClass = styles[position];
-    const typeClass = styles[type];
-    return [styles.toast, posClass, typeClass].filter(Boolean).join(" ");
-  }, [position, type]);
 
-  // 접근성: 에러는 alert/assertive, 성공은 status/polite
+  const className = clsx(styles.toast, styles[position], styles[type]);
+
+  // 접근성 분기
   const ariaRole = type === "error" ? "alert" : "status";
   const ariaLive = type === "error" ? "assertive" : "polite";
 
