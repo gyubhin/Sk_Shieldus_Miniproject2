@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ModalConfirm.module.scss";
 import { ensurePortalRoot } from "@/shared/utils/portal";
@@ -57,12 +57,7 @@ export default function ModalConfirm({
         <p className={styles.title}>{title}</p>
 
         <div className={styles.actions}>
-          <button
-            ref={firstBtnRef}
-            className={styles.primary}
-            type="button"
-            onClick={onConfirm}
-          >
+          <button ref={firstBtnRef} className={styles.primary} type="button" onClick={onConfirm}>
             {confirmText}
           </button>
           <button className={styles.ghost} type="button" onClick={onClose}>
@@ -71,6 +66,6 @@ export default function ModalConfirm({
         </div>
       </div>
     </div>,
-    root
+    root,
   );
 }
