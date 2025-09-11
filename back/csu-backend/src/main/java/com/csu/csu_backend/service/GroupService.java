@@ -2,19 +2,12 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
-import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
-import com.csu.csu_backend.entity.Category;
-import com.csu.csu_backend.entity.Group;
-import com.csu.csu_backend.entity.Membership;
-import com.csu.csu_backend.entity.User;
+import com.csu.csu_backend.entity.*;
 import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.GroupFullException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.exception.UnauthorizedException;
-import com.csu.csu_backend.repository.CategoryRepository;
-import com.csu.csu_backend.repository.GroupRepository;
-import com.csu.csu_backend.repository.MembershipRepository;
-import com.csu.csu_backend.repository.UserRepository;
+import com.csu.csu_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +30,7 @@ public class GroupService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final MembershipRepository membershipRepository;
+    private final GroupLikeRepository groupLikeRepository; // 추가
 
     @Transactional
     public Long createGroup(CreateGroupRequest request, Long ownerId) {
@@ -51,11 +46,16 @@ public class GroupService {
         return group.getId();
     }
 
-    // Pageable 파라미터를 받도록 수정
-    public List<GroupResponse> getAllGroups(Pageable pageable) {
+    public List<GroupResponse> getAllGroups(Pageable pageable, Long userId) {
         Page<Group> groupPage = groupRepository.findAll(pageable);
+        Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
+
         return groupPage.stream()
-                .map(GroupResponse::new)
+                .map(group -> {
+                    GroupResponse response = new GroupResponse(group);
+                    response.setLiked(likedGroupIds.contains(group.getId()));
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -87,13 +87,6 @@ public class GroupService {
         membershipRepository.delete(membership);
     }
 
-    public List<MemberResponse> getGroupMembers(Long groupId) {
-        Group group = findGroupById(groupId);
-        return membershipRepository.findByGroup(group).stream()
-                .map(MemberResponse::new)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void removeMember(Long groupId, Long memberId, Long ownerId) {
         if (ownerId.equals(memberId)) {
@@ -109,6 +102,30 @@ public class GroupService {
         membershipRepository.delete(membership);
     }
 
+    /**
+     * 현재 사용자가 가입한 모든 모임 목록을 조회합니다.
+     * @param userId 현재 사용자 ID
+     * @return 가입한 모임 목록
+     */
+    public List<GroupResponse> getMyGroups(Long userId) {
+        User user = findUserById(userId);
+        List<Membership> memberships = membershipRepository.findByUser(user);
+
+        Set<Long> likedGroupIds = memberships.stream()
+                .map(m -> m.getGroup().getId())
+                .collect(Collectors.toSet());
+
+        return memberships.stream()
+                .map(Membership::getGroup)
+                .map(group -> {
+                    GroupResponse response = new GroupResponse(group);
+                    response.setLiked(likedGroupIds.contains(group.getId()));
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // ... (이하 private 헬퍼 메서드들은 기존과 동일)
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + userId));

@@ -1,20 +1,11 @@
 package com.csu.csu_backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 
@@ -41,6 +32,17 @@ public class Group {
     @Column(name = "max_members")
     private int maxMembers;
 
+    // --- 수정 및 추가된 필드 ---
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(length = 255)
+    private String tags;
+
+    @Formula("(SELECT COUNT(1) FROM memberships m WHERE m.group_id = group_id)")
+    private int currentMembers;
+    // --- 여기까지 ---
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
@@ -54,11 +56,13 @@ public class Group {
     private Category category;
 
     @Builder
-    public Group(String name, String description, String region, int maxMembers, User owner, Category category) {
+    public Group(String name, String description, String region, int maxMembers, String imageUrl, String tags, User owner, Category category) {
         this.name = name;
         this.description = description;
         this.region = region;
         this.maxMembers = maxMembers;
+        this.imageUrl = imageUrl;
+        this.tags = tags;
         this.owner = owner;
         this.category = category;
         this.createdAt = LocalDateTime.now();
