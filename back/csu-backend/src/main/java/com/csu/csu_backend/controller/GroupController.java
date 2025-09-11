@@ -59,6 +59,23 @@ public class GroupController {
         return ResponseEntity.ok(myGroups);
     }
 
+    // 그룹 논리적 삭제 API 추가
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<Void> deleteGroup(@PathVariable Long groupId,
+                                            @AuthenticationPrincipal UserPrincipal currentUser) {
+        groupService.deleteGroup(groupId, currentUser.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    // 그룹장 위임 API 추가
+    @PatchMapping("/{groupId}/delegate-owner/{newOwnerId}")
+    public ResponseEntity<Void> delegateGroupOwner(@PathVariable Long groupId,
+                                                   @PathVariable Long newOwnerId,
+                                                   @AuthenticationPrincipal UserPrincipal currentUser) {
+        groupService.delegateGroupOwner(groupId, newOwnerId, currentUser.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{groupId}/join")
     public ResponseEntity<String> joinGroup(@PathVariable Long groupId,
                                             @AuthenticationPrincipal UserPrincipal currentUser) {

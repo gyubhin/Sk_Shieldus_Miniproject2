@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted_at IS NULL") // 소프트 삭제 적용
 public class Group {
 
     @Id
@@ -32,7 +34,6 @@ public class Group {
     @Column(name = "max_members")
     private int maxMembers;
 
-    // --- 수정 및 추가된 필드 ---
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -41,7 +42,6 @@ public class Group {
 
     @Formula("(SELECT COUNT(1) FROM memberships m WHERE m.group_id = group_id)")
     private int currentMembers;
-    // --- 여기까지 ---
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -66,5 +66,15 @@ public class Group {
         this.owner = owner;
         this.category = category;
         this.createdAt = LocalDateTime.now();
+    }
+
+    // 그룹 논리적 삭제 메서드
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    // 그룹장 위임을 위한 메서드
+    public void delegateOwner(User newOwner) {
+        this.owner = newOwner;
     }
 }

@@ -30,7 +30,7 @@ public class GroupService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final MembershipRepository membershipRepository;
-    private final GroupLikeRepository groupLikeRepository; // 추가
+    private final GroupLikeRepository groupLikeRepository;
 
     @Transactional
     public Long createGroup(CreateGroupRequest request, Long ownerId) {
@@ -102,11 +102,6 @@ public class GroupService {
         membershipRepository.delete(membership);
     }
 
-    /**
-     * 현재 사용자가 가입한 모든 모임 목록을 조회합니다.
-     * @param userId 현재 사용자 ID
-     * @return 가입한 모임 목록
-     */
     public List<GroupResponse> getMyGroups(Long userId) {
         User user = findUserById(userId);
         List<Membership> memberships = membershipRepository.findByUser(user);
@@ -123,6 +118,38 @@ public class GroupService {
                     return response;
                 })
                 .collect(Collectors.toList());
+    }
+
+    // 그룹 논리적 삭제 메서드 추가
+    @Transactional
+    public void deleteGroup(Long groupId, Long ownerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, ownerId);
+        group.delete();
+    }
+
+    // 그룹장 위임 메서드 추가
+    @Transactional
+    public void delegateGroupOwner(Long groupId, Long newOwnerId, Long currentOwnerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, currentOwnerId);
+
+        if (currentOwnerId.equals(newOwnerId)) {
+            throw new IllegalArgumentException("그룹장을 자기 자신에게 위임할 수 없습니다.");
+        }
+
+        User newOwner = findUserById(newOwnerId);
+        Membership newOwnerMembership = findMembershipByUserAndGroup(newOwner, group);
+
+        // 기존 그룹장 멤버십을 일반 멤버로 변경
+        Membership currentOwnerMembership = findMembershipByUserAndGroup(findUserById(currentOwnerId), group);
+        currentOwnerMembership.updateRole(ROLE_MEMBER);
+
+        // 새로운 그룹장 멤버십을 그룹장으로 변경
+        newOwnerMembership.updateRole(ROLE_OWNER);
+
+        // 그룹 엔티티의 owner 정보 업데이트
+        group.delegateOwner(newOwner);
     }
 
     // ... (이하 private 헬퍼 메서드들은 기존과 동일)
