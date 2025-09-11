@@ -2,6 +2,7 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse; // DTO 임포트 추가
 import com.csu.csu_backend.entity.*;
 import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.GroupFullException;
@@ -64,6 +65,20 @@ public class GroupService {
         return new GroupResponse(group);
     }
 
+    /**
+     * 특정 그룹에 속한 모든 멤버 목록을 조회합니다.
+     * @param groupId 멤버를 조회할 그룹의 ID
+     * @return 해당 그룹의 멤버 목록 (DTO)
+     */
+    public List<MemberResponse> getGroupMembers(Long groupId) {
+        Group group = findGroupById(groupId);
+        List<Membership> memberships = membershipRepository.findByGroup(group);
+
+        return memberships.stream()
+                .map(MemberResponse::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void joinGroup(Long groupId, Long userId) {
         User user = findUserById(userId);
@@ -120,7 +135,6 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
-    // 그룹 논리적 삭제 메서드 추가
     @Transactional
     public void deleteGroup(Long groupId, Long ownerId) {
         Group group = findGroupById(groupId);
@@ -128,7 +142,6 @@ public class GroupService {
         group.delete();
     }
 
-    // 그룹장 위임 메서드 추가
     @Transactional
     public void delegateGroupOwner(Long groupId, Long newOwnerId, Long currentOwnerId) {
         Group group = findGroupById(groupId);
@@ -141,18 +154,14 @@ public class GroupService {
         User newOwner = findUserById(newOwnerId);
         Membership newOwnerMembership = findMembershipByUserAndGroup(newOwner, group);
 
-        // 기존 그룹장 멤버십을 일반 멤버로 변경
         Membership currentOwnerMembership = findMembershipByUserAndGroup(findUserById(currentOwnerId), group);
         currentOwnerMembership.updateRole(ROLE_MEMBER);
 
-        // 새로운 그룹장 멤버십을 그룹장으로 변경
         newOwnerMembership.updateRole(ROLE_OWNER);
 
-        // 그룹 엔티티의 owner 정보 업데이트
         group.delegateOwner(newOwner);
     }
 
-    // ... (이하 private 헬퍼 메서드들은 기존과 동일)
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + userId));
