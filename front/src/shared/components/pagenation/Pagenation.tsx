@@ -1,3 +1,4 @@
+import { IconButton } from "../icon/IconButton";
 import styles from "./Pagination.module.scss";
 import clsx from "clsx";
 
@@ -38,6 +39,10 @@ export function Pagination({ totalPages, currentPage, onChange }: Props) {
 
   return (
     <div className={styles.container}>
+      <button onClick={() => onChange(1)}>
+        <IconButton iconName={"Left"} />
+      </button>
+
       {pages.map((page) => (
         <button
           key={page}
@@ -47,6 +52,9 @@ export function Pagination({ totalPages, currentPage, onChange }: Props) {
           {page}
         </button>
       ))}
+      <button onClick={() => onChange(totalPages)}>
+        <IconButton iconName={"Right"} />
+      </button>
     </div>
   );
 }

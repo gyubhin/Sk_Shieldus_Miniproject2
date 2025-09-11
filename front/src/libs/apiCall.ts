@@ -2,7 +2,6 @@ import { useAccessTokenStore } from "@/features/auth/_stores/accessToken.store";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./cookie";
 
-console.log(import.meta.env.VITE_APP_API_URL);
 export const apiCall = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,

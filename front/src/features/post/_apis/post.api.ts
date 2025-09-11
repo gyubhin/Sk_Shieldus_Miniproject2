@@ -28,7 +28,7 @@ export const getPostListApi = (groupId: number, query: GetPostListQuery) => {
 /**
  *@description 게시글 상세 조회 api
  */
-export const getPostDetailApi = (groupId: number, postId: number) => {
+export const getPostDetailApi = (groupId: number, postId?: number) => {
   return apiCall<GetPostDetailResponse>({
     url: `/groups/${groupId}/posts/${postId}`,
   });

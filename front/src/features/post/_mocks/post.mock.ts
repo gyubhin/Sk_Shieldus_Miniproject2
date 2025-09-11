@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { mswUtils } from "@/libs/msw";
 import dayjs from "dayjs";
 import type { PostItem } from "../_types/base";
-import type { CreatePostBody } from "../_types/body";
+import type { CreatePostBody, PutPostBody } from "../_types/body";
 
 let postData = Array.from({ length: 124 }, (_, i) => ({
   id: i + 1,
@@ -87,5 +87,50 @@ export const postHandlers = [
       },
       { status: 201 },
     );
+  }),
+
+  // 게시글 수정 요청
+  http.put(mswUtils.getUrl("/groups/:groupId/posts/:postId"), async ({ request, params }) => {
+    const body = (await request.json()) as PutPostBody;
+    const { postId } = params;
+
+    const id = Number(postId);
+    const index = postData.findIndex((post) => post.id === id);
+
+    if (index === -1) {
+      return HttpResponse.json(
+        { success: false, message: "게시글을 찾을 수 없습니다." },
+        { status: 404 },
+      );
+    }
+
+    // 기존 데이터 업데이트
+    postData[index] = {
+      ...postData[index],
+      title: body.title,
+      content: body.content,
+    };
+
+    return HttpResponse.json({ success: true }, { status: 200 });
+  }),
+
+  // 게시글 삭제 요청
+  http.delete(mswUtils.getUrl("/groups/:groupId/posts/:postId"), async ({ params }) => {
+    const { postId } = params;
+    const id = Number(postId);
+
+    const index = postData.findIndex((post) => post.id === id);
+
+    if (index === -1) {
+      return HttpResponse.json(
+        { success: false, message: "게시글을 찾을 수 없습니다." },
+        { status: 404 },
+      );
+    }
+
+    // 배열에서 해당 게시글 삭제
+    postData.splice(index, 1);
+
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
