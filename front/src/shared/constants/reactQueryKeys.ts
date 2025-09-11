@@ -17,4 +17,8 @@ export const reactQueryKeys = {
     getPostList: "get post list",
     getPostDetail: "get post detail",
   },
+
+  comment: {
+    getComments: "get comments",
+  },
 } as const;

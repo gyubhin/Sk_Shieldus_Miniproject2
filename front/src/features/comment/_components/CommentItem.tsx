@@ -5,6 +5,7 @@ import { getRelativeTime } from "@/libs/time";
 type Props = {
   onReply?: () => void;
   onDelete?: () => void;
+  onEdit?: () => void;
   data: CommentItem;
 };
 
@@ -13,7 +14,7 @@ type Props = {
  *@param onReply 응답 이벤트
  *@param onDelete 삭제 이벤트
  */
-export function CommentItem({ data, onReply, onDelete }: Props) {
+export function CommentItem({ data, onReply, onDelete, onEdit }: Props) {
   return (
     <div className={styles.container}>
       {/* 프로필 아이콘 */}
@@ -30,6 +31,10 @@ export function CommentItem({ data, onReply, onDelete }: Props) {
 
           <button className={styles.action} onClick={onReply}>
             답글달기
+          </button>
+
+          <button className={styles.action} onClick={onEdit}>
+            수정
           </button>
 
           <button className={styles.action} onClick={onDelete}>

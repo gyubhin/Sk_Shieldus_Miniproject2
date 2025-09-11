@@ -3,6 +3,17 @@ import styles from "./PostContentModal.module.scss";
 import { IconButton } from "@/shared/components/icon/IconButton";
 import { usePostDetailApi } from "@/features/post/_hooks/query";
 import dayjs from "dayjs";
+import {
+  useDeleteCommentApi,
+  usePostCommentApi,
+  usePutCommentApi,
+} from "@/features/comment/_hooks/mutation";
+import { useState } from "react";
+import { isAxiosError } from "@/libs/typeGuard";
+import type { ErrorResponse } from "react-router-dom";
+import { useUiStore } from "@/shared/stores/ui.store";
+import ModalConfirm from "@/shared/components/modal/ModalConfirm";
+import { useGetCommentsApi } from "@/features/comment/_hooks/query";
 
 type Props = {
   groupId?: number;
@@ -18,7 +29,109 @@ type Props = {
 export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }: Props) {
   if (!isOpen || !groupId || !postId) return;
 
-  const { data } = usePostDetailApi(groupId, postId);
+  const showToast = useUiStore((s) => s.showToast);
+
+  const { data, refetch } = usePostDetailApi(groupId, postId);
+
+  // TODO API 나오면 연동하기
+  const { data: commentList } = useGetCommentsApi(postId, {
+    page: 0,
+    size: 10,
+  });
+  const { mutateAsync: createCommentMutate } = usePostCommentApi(groupId, postId);
+  const { mutateAsync: updateCommentMutate } = usePutCommentApi(groupId, postId);
+  const { mutateAsync: deleteCommentMutate } = useDeleteCommentApi(groupId, postId);
+  const [comment, setComment] = useState("");
+
+  const [isDeletePopupShow, setDeletePopupShow] = useState(false);
+  const initSelectedId = { delete: null, recomment: null, edit: null };
+  const [selectedId, setSelectedCommentId] = useState({
+    recomment: null as null | number,
+    delete: null as null | number,
+    edit: null as null | number,
+  });
+
+  // 댓글 등록/수정/답글
+  const onSubmitComment = async () => {
+    if (comment.length === 0) {
+      showToast({ message: "댓글을 입력해주세요.", type: "error" });
+      return;
+    }
+
+    if (comment.length > 200) {
+      showToast({ message: "댓글은 최대 200자까지 입력가능합니다.", type: "error" });
+      return;
+    }
+
+    try {
+      if (selectedId.edit) {
+        // ===== 댓글 수정 =====
+        const res = await updateCommentMutate({
+          commentId: selectedId.edit,
+          body: { content: comment },
+        });
+
+        if (res.status === 200) {
+          refetch();
+          showToast({ message: "댓글이 수정되었습니다.", type: "success" });
+          setSelectedCommentId(initSelectedId);
+          setComment("");
+        }
+      } else {
+        // ===== 댓글 등록 / 답글 등록 =====
+        const res = await createCommentMutate({
+          content: comment,
+          parentId: selectedId.recomment ?? null, // ★ parentId 세팅
+        });
+
+        if (res.status === 201) {
+          refetch();
+          showToast({
+            message: selectedId.recomment ? "답글이 등록되었습니다." : "댓글이 등록되었습니다.",
+            type: "success",
+          });
+          setSelectedCommentId(initSelectedId);
+          setComment("");
+        }
+      }
+    } catch (error) {
+      if (isAxiosError<ErrorResponse>(error)) {
+        showToast({ message: error.message ?? "", type: "error" });
+      }
+    }
+  };
+
+  /**
+   *@description 댓글 삭제 확정 이벤트
+   */
+  const onConfirmDeleteComment = (deletedId: number | null) => {
+    if (deletedId === null) return;
+
+    deleteCommentMutate(deletedId)
+      .then((res) => {
+        if (res.status === 204) {
+          refetch();
+
+          showToast({
+            message: "댓글이 삭제되었습니다.",
+            type: "success",
+          });
+
+          setSelectedCommentId(initSelectedId);
+        }
+      })
+      .catch((error) => {
+        if (isAxiosError<ErrorResponse>(error)) {
+          showToast({
+            message: error.message ?? "",
+            type: "error",
+          });
+        }
+      })
+      .finally(() => {
+        setDeletePopupShow(false);
+      });
+  };
 
   return (
     <div className={styles.overlay}>
@@ -57,19 +170,54 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
             {/* 댓글 리스트 */}
             <div className={styles.comments_wrapper}>
               {data?.comments.map((c) => (
-                <CommentItem key={c.id} data={c} />
+                <CommentItem
+                  key={c.id}
+                  data={c}
+                  onReply={() => {
+                    setSelectedCommentId({ ...initSelectedId, recomment: c.id }); // 답글 대상 지정
+                    setComment(""); // 새 입력
+                  }}
+                  onDelete={() => {
+                    setDeletePopupShow(true);
+                    setSelectedCommentId({ ...initSelectedId, delete: c.id });
+                  }}
+                  onEdit={() => {
+                    setSelectedCommentId({ ...initSelectedId, edit: c.id });
+                    setComment(c.content);
+                  }}
+                />
               ))}
             </div>
           </div>
 
           {/* 댓글 입력 */}
           <div className={styles.comment_input}>
-            <input type="text" placeholder="댓글을 입력하세요..." onKeyDown={() => {}} />
+            <input
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder={
+                selectedId.recomment
+                  ? "답글을 입력하세요..."
+                  : selectedId.edit
+                    ? "댓글을 수정하세요..."
+                    : "댓글을 입력하세요..."
+              }
+              onKeyDown={(e) => e.key === "Enter" && onSubmitComment()}
+            />
 
-            <button onClick={() => {}}>등록</button>
+            <button onClick={onSubmitComment}>
+              {selectedId.edit ? "수정" : selectedId.recomment ? "답글 등록" : "등록"}
+            </button>
           </div>
         </div>
       </div>
+
+      <ModalConfirm
+        open={isDeletePopupShow}
+        onConfirm={() => onConfirmDeleteComment(selectedId.delete)}
+        onClose={() => setDeletePopupShow(false)}
+      />
     </div>
   );
 }
