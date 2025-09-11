@@ -8,10 +8,11 @@ import { useState } from "react";
 import type { CreatePostBody } from "@/features/post/_types/body";
 import type { PostRegisterFormError } from "@/features/post/_types/base";
 import { useNavigate, useParams, type ErrorResponse } from "react-router-dom";
-import { useCreatePostsApi } from "@/features/post/_hooks/mutation";
+import { useCreatePostsApi, usePutPostApi } from "@/features/post/_hooks/mutation";
 import { postSchema } from "@/features/post/_schemas/post.schema";
 import z from "zod";
 import { isAxiosError } from "axios";
+import { usePostDetailApi } from "@/features/post/_hooks/query";
 
 /**
  *@description 게시글 등록/수정 페이지
@@ -28,13 +29,23 @@ function PostRegisterPage() {
     content: "",
   };
 
-  const { groupId } = useParams<{ groupId: string }>();
+  const { groupId, postId } = useParams<{ groupId: string; postId: string }>();
+
+  const { data } = usePostDetailApi(Number(groupId), Number(postId));
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMesage] = useState(initError);
-  const [form, setForm] = useState<CreatePostBody>(initForm);
+  const [form, setForm] = useState<CreatePostBody>(
+    postId
+      ? {
+          title: data?.title ?? "",
+          content: data?.content ?? "",
+        }
+      : initForm,
+  );
 
-  const { mutateAsync } = useCreatePostsApi(Number(groupId));
+  const { mutateAsync: createMutate } = useCreatePostsApi(Number(groupId));
+  const { mutateAsync: updateMutate } = usePutPostApi(Number(groupId), Number(postId));
 
   // 폼 수정 이벤트
   const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,37 +58,51 @@ function PostRegisterPage() {
   };
 
   /**
-   *@description 등록 이벤트
+   *@description 등록/수정 이벤트
    */
-  const onRegister = async () => {
+  const onSubmit = async () => {
     try {
       // 검증 실행
       const validated = postSchema.parse({ ...form });
-      const res = await mutateAsync(validated);
 
-      if (res.status === 201) {
-        alert("성공했습니다.");
-        navigate(`/group/${groupId}/post`, { replace: true });
+      if (postId) {
+        // 수정 모드
+        const res = await updateMutate(validated);
+        if (res.status === 200) {
+          alert("수정 성공했습니다.");
+          navigate(`/group/${groupId}/post/`, { replace: true }); // 수정 후 상세로
+        }
+      } else {
+        // 등록 모드
+        const res = await createMutate(validated);
+        if (res.status === 201) {
+          alert("등록 성공했습니다.");
+          navigate(`/group/${groupId}/post`, { replace: true }); // 등록 후 목록으로
+        }
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
         const zodError = error;
-
         const [message, path] = [zodError.issues[0].message, zodError.issues[0].path[0]];
         setErrorMesage({ ...initError, [path]: message });
-
         return;
       } else if (isAxiosError<ErrorResponse>(error)) {
-        //
         const errData = error.response?.data;
         alert(errData);
       }
     }
   };
 
+  /**
+   *@description 등록 취소 클릭 이벤트
+   */
+  const onCancel = () => {
+    navigate(`/group/${groupId}/post`, { replace: true });
+  };
+
   return (
     <CommonLayout>
-      <BackHeader title={"모임 등록"} />
+      <BackHeader title={`모임 ${postId ? "수정" : "등록"}`} />
 
       <section className={styles.form}>
         <Card title="게시글 정보">
@@ -86,6 +111,7 @@ function PostRegisterPage() {
             label={"제목"}
             name={"title"}
             placeholder="제목을 입력하세요."
+            value={form.title}
             onChange={onChangeForm}
             errorMessage={errorMessage["title"]}
           />
@@ -93,6 +119,7 @@ function PostRegisterPage() {
             required
             label={"내용"}
             name={"content"}
+            value={form.content}
             placeholder="내용을 입력하세요."
             onChange={onChangeForm}
             errorMessage={errorMessage["content"]}
@@ -107,8 +134,10 @@ function PostRegisterPage() {
         </Card>
 
         <div className={styles.buttons}>
-          <ActiveButton onClick={onRegister}>등록</ActiveButton>
-          <ActiveButton buttonStyle="disabled">취소</ActiveButton>
+          <ActiveButton onClick={onSubmit}>{`${postId ? "수정" : "등록"}`}</ActiveButton>
+          <ActiveButton onClick={onCancel} buttonStyle="disabled">
+            취소
+          </ActiveButton>
         </div>
       </section>
     </CommonLayout>

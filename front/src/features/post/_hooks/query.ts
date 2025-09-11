@@ -19,12 +19,13 @@ export function useGetPostListApi(groupId: number, query: GetPostListQuery) {
 /**
  *@description 게시글 목록 조회 훅
  */
-export function usePostDetailApi(groupId: number, postId: number) {
+export function usePostDetailApi(groupId: number, postId?: number) {
   return useQuery({
     queryKey: [reactQueryKeys.post.getPostList, { groupId, postId }],
     queryFn: () => getPostDetailApi(groupId, postId),
     select: (data) => {
       return data.data;
     },
+    enabled: !!postId,
   });
 }

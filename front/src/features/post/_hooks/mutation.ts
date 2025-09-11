@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import type { CreatePostBody } from "../_types/body";
-import { createPostsApi } from "../_apis/post.api";
+import type { CreatePostBody, PutPostBody } from "../_types/body";
+import { createPostsApi, deletePostApi, putPostApi } from "../_apis/post.api";
 
 /**
  *@description 게시글 등록 훅
@@ -8,5 +8,23 @@ import { createPostsApi } from "../_apis/post.api";
 export function useCreatePostsApi(groupId: number) {
   return useMutation({
     mutationFn: (body: CreatePostBody) => createPostsApi(groupId, body),
+  });
+}
+
+/**
+ *@description 게시글 수정 훅
+ */
+export function usePutPostApi(groupId: number, postId: number) {
+  return useMutation({
+    mutationFn: (body: PutPostBody) => putPostApi(groupId, postId, body),
+  });
+}
+
+/**
+ *@description 게시글 삭제 훅
+ */
+export function useDeletePostApi(groupId: number) {
+  return useMutation({
+    mutationFn: (postId: number) => deletePostApi(groupId, postId),
   });
 }

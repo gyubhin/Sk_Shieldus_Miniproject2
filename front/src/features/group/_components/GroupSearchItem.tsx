@@ -20,8 +20,7 @@ export function GroupSearchItem({ tags = [], isHeart, data }: Props) {
   const [heart, setHeart] = useState(isHeart);
 
   const onClickGroup = () => {
-    const id = 1;
-    navigate(`/group/${id}/info`);
+    navigate(`/group/${data.id}/info`);
   };
 
   const onKeyDownGroup = (e: React.KeyboardEvent<HTMLDivElement>) => {
