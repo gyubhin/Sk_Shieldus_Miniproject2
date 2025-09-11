@@ -5,6 +5,8 @@ import { useAccessTokenStore } from "@/features/auth";
 import useIsMobile from "@/shared/hooks/useIsMobile";
 import { IconButton } from "../icon/IconButton";
 import { useState } from "react";
+import { usePostLogoutApi } from "@/features/auth/_hooks/mutation";
+import { useUiStore } from "@/shared/stores/ui.store";
 
 /**
  *@description 헤더 컴포넌트
@@ -13,8 +15,10 @@ import { useState } from "react";
  */
 export function Header() {
   const navigate = useNavigate();
-  const { isLogin } = useAccessTokenStore();
+  const { isLogin, reset } = useAccessTokenStore();
+  const { mutateAsync } = usePostLogoutApi();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { showToast } = useUiStore();
 
   const isMobile = useIsMobile();
 
@@ -24,6 +28,15 @@ export function Header() {
   const onLoginButtonClick = () => {
     if (isLogin) {
       // 로그인된 상태 -> 로그아웃 api 호출
+      mutateAsync()
+        .then(() => {
+          showToast({ message: "로그아웃되었습니다.", type: "success" });
+          reset(); // 토큰 삭제
+          navigate("/login");
+        })
+        .catch(() => {
+          showToast({ message: "잘못된 접근입니다.", type: "error" });
+        });
     } else {
       // 로그아웃된 상태 -> 로그인 페이지 이동
       navigate("/login");
