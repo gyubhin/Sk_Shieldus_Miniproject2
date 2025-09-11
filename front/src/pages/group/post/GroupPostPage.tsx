@@ -8,6 +8,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetPostListApi } from "@/features/post/_hooks/query";
 import PostItem from "@/features/group/_components/post/PostItem";
+import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
+import { useDeletePostApi } from "@/features/post/_hooks/mutation";
 
 /**
  *@description 모임 게시글 목록 페이지
@@ -15,18 +17,40 @@ import PostItem from "@/features/group/_components/post/PostItem";
 function GroupPostPage() {
   const navigate = useNavigate();
   const { groupId } = useParams<{ groupId: string }>();
+  const [isMoreOpen, setMoreOpen] = useState(false);
+
   const { onChangeTab, activeKey } = useSetGroupTab();
   const [isContentModalOpen, setContentModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number>();
 
-  const { data: postList } = useGetPostListApi(1, {
+  const { data: postList, refetch } = useGetPostListApi(1, {
     page: 0,
     size: 9,
   });
 
-  // 게시글 등록 페이지 이동
-  const onMoveRegisterPage = () => {
-    navigate(`/group/${groupId}/post/register`);
+  const { mutateAsync: deleteMutate } = useDeletePostApi(Number(groupId));
+
+  // 게시글 삭제
+  const onDeletePost = () => {
+    deleteMutate(Number(selectedPostId))
+      .then(() => {
+        refetch();
+      })
+      .finally(() => {
+        setMoreOpen(false);
+        setSelectedPostId(undefined);
+      });
+  };
+
+  // 게시글 더보기 오픈 이벤트
+  const onMoreOpen = (postId: number) => {
+    setSelectedPostId(postId);
+    setMoreOpen(true);
+  };
+
+  // 게시글 등록/수정 페이지 이동
+  const onMoveRegisterPage = (postId?: number) => {
+    navigate(`/group/${groupId}/post/register${postId ? `/${postId}` : ""}`);
   };
 
   return (
@@ -45,7 +69,7 @@ function GroupPostPage() {
           onChange={onChangeTab}
         />
 
-        <button onClick={onMoveRegisterPage} className={styles.top_tab_more_btn}>
+        <button onClick={() => onMoveRegisterPage()} className={styles.top_tab_more_btn}>
           글 작성
         </button>
       </section>
@@ -54,6 +78,7 @@ function GroupPostPage() {
       <section className={styles.posts_wrapper}>
         {(postList?.content ?? []).map((item) => (
           <PostItem
+            onMoreOpen={onMoreOpen}
             key={item.id}
             data={item}
             onContentOpen={() => {
@@ -63,6 +88,16 @@ function GroupPostPage() {
           />
         ))}
       </section>
+
+      <ActionSheet
+        open={isMoreOpen}
+        onClose={() => setMoreOpen(false)}
+        onClickFirst={() => onMoveRegisterPage(selectedPostId)}
+        onClickSecond={onDeletePost}
+        firstText="수정하기"
+        secondText="삭제하기"
+        destructive="second"
+      />
 
       <PostContentModal
         groupId={Number(groupId)}

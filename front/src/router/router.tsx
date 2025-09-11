@@ -35,6 +35,7 @@ function Router() {
         <Route path="group" element={<MyGroupTabPage />} />
         <Route path="group/:groupId/post" element={<GroupPostPage />} />
         <Route path="group/:groupId/post/register" element={<PostRegisterPage />} />
+        <Route path="group/:groupId/post/register/:postId" element={<PostRegisterPage />} />
         <Route path="group/register" element={<GroupRegisterPage />} />
         <Route path="group/event/register" element={<EventRegisterPage />} />
         <Route path="group/:groupId/info" element={<GroupInfoPage />} />
@@ -43,7 +44,6 @@ function Router() {
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />
         <Route path="mypage/edit" element={<ProfileEditPage />} />
-
       </Routes>
     </BrowserRouter>
   );

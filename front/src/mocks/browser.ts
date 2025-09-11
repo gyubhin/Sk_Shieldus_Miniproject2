@@ -4,6 +4,7 @@ import { categoriesHandlers } from "@/features/category/_mocks/category.mock";
 import { userHandlers } from "@/features/users/_mocks/user.mock";
 import { eventHandlers } from "@/features/event/_mocks/event.mock";
 import { postHandlers } from "@/features/post/_mocks/post.mock";
+import { authHandlers } from "@/features/auth";
 
 export const worker = setupWorker(
   ...groupHandlers,
@@ -11,4 +12,5 @@ export const worker = setupWorker(
   ...userHandlers,
   ...eventHandlers,
   ...postHandlers,
+  ...authHandlers,
 );

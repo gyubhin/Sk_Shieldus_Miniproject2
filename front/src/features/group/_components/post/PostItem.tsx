@@ -8,11 +8,12 @@ import { getRelativeTime } from "@/libs/time";
 type Props = {
   onContentOpen: () => void;
   data: PostItemType;
+  onMoreOpen: (postId: number) => void;
 };
 /**
  *@description 모임 게시글 항목
  */
-function PostItem({ onContentOpen, data }: Props) {
+function PostItem({ onContentOpen, data, onMoreOpen }: Props) {
   const [isExpandContent, setExpandContent] = useState(false);
 
   return (
@@ -25,7 +26,8 @@ function PostItem({ onContentOpen, data }: Props) {
 
         <p>{getRelativeTime(data.createdAt)}</p>
 
-        <button className={styles.more_btn}>
+        {/* TODO 나중에 유저 정보랑 작성자 정보 비교해서 보여질지 여부 로직 추가 */}
+        <button className={styles.more_btn} onClick={() => onMoreOpen(data.id)}>
           <IconButton iconName={"More"} />
         </button>
       </section>

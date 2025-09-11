@@ -7,11 +7,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 function useSetGroupTab() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ groupId: string }>();
   const [activeKey, setActiveKey] = useState("info");
 
   const onChangeTab = (_key: string) => {
-    navigate(`/group/${params.id}/${_key}`);
+    navigate(`/group/${params.groupId}/${_key}`);
   };
 
   useEffect(() => {
