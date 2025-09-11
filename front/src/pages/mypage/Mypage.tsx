@@ -2,7 +2,6 @@ import clsx from "clsx";
 import styles from "./Mypage.module.scss";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { Header } from "@/shared/components/header/Header";
-import { GroupSearchItem } from "@/features/group/_components/GroupSearchItem";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import { useState } from "react";
 import type { MypageTabKey } from "@/features/users/_types/base";
@@ -44,7 +43,7 @@ function Mypage() {
     navigate(`/mypage?page=${page}`);
   };
 
-  const wishGroups = Array.from({ length: 5 });
+  // const wishGroups = Array.from({ length: 5 });
 
   return (
     <CommonLayout>
@@ -65,7 +64,7 @@ function Mypage() {
 
       {tab === "wish" && (
         <section className={clsx(styles.item_container, styles[`${tab}_container`])}>
-          {wishGroups.map((_, idx) => (
+          {/* {wishGroups.map((_, idx) => (
             <GroupSearchItem
               key={idx}
               name="파이썬 프로그래밍"
@@ -78,7 +77,7 @@ function Mypage() {
               tags={["파이썬", "AI"]}
               isHeart
             />
-          ))}
+          ))} */}
         </section>
       )}
 
