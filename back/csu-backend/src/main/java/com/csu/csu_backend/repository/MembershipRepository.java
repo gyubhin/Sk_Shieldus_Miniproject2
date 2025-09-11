@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface MembershipRepository extends JpaRepository<Membership, Long> {
     boolean existsByUserAndGroup(User user, Group group);
-    long countByGroup(Group group); // countBy... 메서드를 추가합니다.
+    long countByGroup(Group group);
     List<Membership> findByGroup(Group group);
     Optional<Membership> findByUserAndGroup(User user, Group group);
+    List<Membership> findByUser(User user); // 추가
 }
