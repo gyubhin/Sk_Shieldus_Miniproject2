@@ -11,7 +11,7 @@ type Props = {
 function Tag({ name, onDelete }: Props) {
   return (
     <span className={styles.tag} onClick={onDelete}>
-      #{name}
+      # {name}
       {onDelete && <span className={styles.delete_button}>x</span>}
     </span>
   );
