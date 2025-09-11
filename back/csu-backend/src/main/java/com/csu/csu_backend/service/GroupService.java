@@ -2,6 +2,7 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.*;
 import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.GroupFullException;
@@ -46,17 +47,17 @@ public class GroupService {
         return group.getId();
     }
 
-    public List<GroupResponse> getAllGroups(Pageable pageable, Long userId) {
+    public PagingResponse<GroupResponse> getAllGroups(Pageable pageable, Long userId) {
         Page<Group> groupPage = groupRepository.findAll(pageable);
         Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
 
-        return groupPage.stream()
-                .map(group -> {
-                    GroupResponse response = new GroupResponse(group);
-                    response.setLiked(likedGroupIds.contains(group.getId()));
-                    return response;
-                })
-                .collect(Collectors.toList());
+        Page<GroupResponse> dtoPage = groupPage.map(group -> {
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(likedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(dtoPage);
     }
 
     public GroupResponse getGroup(Long groupId) {

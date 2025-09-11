@@ -2,6 +2,7 @@ package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.GroupService;
 import jakarta.validation.Valid;
@@ -32,12 +33,11 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupResponse>> getAllGroups(
+    public PagingResponse<GroupResponse> getAllGroups(
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
-        List<GroupResponse> groups = groupService.getAllGroups(pageable, userId);
-        return ResponseEntity.ok(groups);
+        return groupService.getAllGroups(pageable, userId);
     }
 
     @GetMapping("/{groupId}")
