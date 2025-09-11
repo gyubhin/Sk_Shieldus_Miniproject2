@@ -43,4 +43,17 @@ export const userHandlers = [
       { status: 200 },
     );
   }),
+
+  // 회원정보 수정 api
+  http.patch(mswUtils.getUrl("/users/me"), async ({ request }) => {
+    const body = await request.json();
+    console.log(body);
+
+    return HttpResponse.json({ success: true }, { status: 200 });
+  }),
+
+  // 회원 탈퇴 api
+  http.delete(mswUtils.getUrl("/users/me"), () => {
+    return HttpResponse.json(undefined, { status: 200 });
+  }),
 ];
