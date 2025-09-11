@@ -4,11 +4,9 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
+import axios from "axios"; 
 import styles from "./LoginPage.module.scss";
 
-/**
- *@description 로그인 페이지
- */
 function LoginPage() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
@@ -25,11 +23,30 @@ function LoginPage() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+
     try {
       setIsSubmitting(true);
-      // TODO: 로그인 API 호출
-      nav("/"); // 성공시 이동
+
+      
+      const res = await axios.post(
+        `${import.meta.env.VITE_APP_API_URL}/auth/login`,
+        {
+          email,
+          password: pw,
+        }
+      );
+
+      console.log("로그인 응답:", res.data);
+
+      if (res.data?.accessToken) {
+        // TODO: zustand store에 accessToken 저장 (추후 연결 가능)
+        alert("로그인 성공!");
+        nav("/"); // 성공 시 홈으로 이동
+      } else {
+        setEmailErr("로그인 실패: 토큰이 반환되지 않았습니다.");
+      }
     } catch (err) {
+      console.error(err);
       setEmailErr("이메일 또는 비밀번호가 올바르지 않습니다.");
     } finally {
       setIsSubmitting(false);
@@ -46,7 +63,6 @@ function LoginPage() {
               src={"/images/BigImageLogo.svg"}
               alt={"big_image_logo"}
             />
-            
           </div>
 
           <InputField
@@ -55,9 +71,7 @@ function LoginPage() {
             placeholder="example.com"
             type="email"
             value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
             errorMessage={emailErr}
             successMessage={emailErr ? undefined : email ? "success" : undefined}
           />
@@ -68,9 +82,7 @@ function LoginPage() {
             placeholder="********"
             type="password"
             value={pw}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPw(e.target.value)
-            }
+            onChange={(e) => setPw(e.target.value)}
           />
 
           <ActiveButton type="submit" disabled={isSubmitting}>

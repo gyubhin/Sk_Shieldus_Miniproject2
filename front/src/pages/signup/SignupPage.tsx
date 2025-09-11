@@ -5,8 +5,10 @@ import CheckField from "@/shared/components/check/CheckField";
 import { InputField } from "@/shared/components/input/InputField";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
+import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
+import { regionOptions } from "@/shared/constants/options";
+import axios from "axios"; 
 import styles from "./SignupPage.module.scss";
-import ModalConfirm from "@/shared/components/modal/ModalConfirm";
 
 // 보이지 않는 문자/공백 정리
 const sanitize = (v: string) =>
@@ -30,28 +32,10 @@ function SignupPage() {
   const [agreeErr, setAgreeErr] = useState<string | undefined>(undefined);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false);
-
-  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (emailErr) setEmailErr(undefined);
-  };
-  const onPwChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPw(e.target.value);
-    if (pwErr) setPwErr(undefined);
-    if (pw2Err) setPw2Err(undefined);
-  };
-  const onPw2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPw2(e.target.value);
-    if (pw2Err) setPw2Err(undefined);
-  };
-  const onAgreeClick = () => {
-    setAgree((prev) => !prev);
-    if (agreeErr) setAgreeErr(undefined);
-  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setEmailErr(undefined);
     setPwErr(undefined);
     setPw2Err(undefined);
@@ -83,9 +67,29 @@ function SignupPage() {
 
     try {
       setIsSubmitting(true);
-      // await signup({ email: emailSan, nickname: sanitize(nickname), region: sanitize(region), password: pwSan });
-      await new Promise((r) => setTimeout(r, 600));
-      setOpenSuccess(true);
+
+      
+      const res = await axios.post(
+        `${import.meta.env.VITE_APP_API_URL}/auth/signup`,
+        {
+          email: emailSan,
+          password: pwSan,
+          nickname: sanitize(nickname),
+          region: sanitize(region),
+        }
+      );
+
+      console.log("회원가입 응답:", res.data);
+
+      if (res.status === 201) {
+        alert("회원가입이 완료되었습니다! 🎉");
+        nav("/login"); // 가입 후 로그인 페이지로 이동
+      } else {
+        alert("회원가입 실패");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("회원가입 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
@@ -95,7 +99,11 @@ function SignupPage() {
     <CommonLayout>
       <AuthInnerLayout>
         <section className={styles.form_wrapper}>
-          <img className={styles.image} src={"/images/BigImageLogo.svg"} alt={"big_image_logo"} />
+          <img
+            className={styles.image}
+            src={"/images/BigImageLogo.svg"}
+            alt={"big_image_logo"}
+          />
 
           <form onSubmit={onSubmit} noValidate>
             <InputField
@@ -106,7 +114,7 @@ function SignupPage() {
               placeholder="example@domain.com"
               autoComplete="email"
               value={email}
-              onChange={onEmailChange}
+              onChange={(e) => setEmail(e.target.value)}
               errorMessage={emailErr}
             />
 
@@ -120,16 +128,14 @@ function SignupPage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-
-            <InputField
+                        
+            <LabeledDropdown
               required
               label="지역"
-              name="region"
-              type="text"
-              placeholder="서울시"
-              autoComplete="address-level2"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              placeholder="지역을 선택해주세요"
+              options={regionOptions}
+              onChange={(val) => setRegion(val)}
+              errorMessage={agreeErr}
             />
 
             <InputField
@@ -140,7 +146,7 @@ function SignupPage() {
               placeholder="8자 이상 입력"
               autoComplete="new-password"
               value={pw}
-              onChange={onPwChange}
+              onChange={(e) => setPw(e.target.value)}
               errorMessage={pwErr}
             />
 
@@ -152,13 +158,13 @@ function SignupPage() {
               placeholder="비밀번호 확인"
               autoComplete="new-password"
               value={pw2}
-              onChange={onPw2Change}
+              onChange={(e) => setPw2(e.target.value)}
               errorMessage={pw2Err}
             />
 
             <div>
               <div className={styles.policy_row}>
-                <div onClick={onAgreeClick} style={{ cursor: "pointer" }}>
+                <div onClick={() => setAgree((prev) => !prev)} style={{ cursor: "pointer" }}>
                   <CheckField isCheck={agree} label="개인정보처리방침" />
                 </div>
                 <button
@@ -175,21 +181,6 @@ function SignupPage() {
             <ActiveButton type="submit" disabled={isSubmitting}>
               {isSubmitting ? "가입 중..." : "회원가입"}
             </ActiveButton>
-
-            <ModalConfirm
-              open={openSuccess}
-              title="회원가입이 완료되었습니다!"
-              confirmText="확인"
-              cancelText="닫기"
-              onConfirm={() => {
-                setOpenSuccess(false);
-                nav("/login");
-              }}
-              onClose={() => {
-                setOpenSuccess(false);
-                nav("/login");
-              }}
-            />
           </form>
         </section>
       </AuthInnerLayout>
