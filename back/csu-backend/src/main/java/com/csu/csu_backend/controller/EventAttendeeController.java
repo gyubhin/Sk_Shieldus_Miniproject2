@@ -3,6 +3,8 @@ package com.csu.csu_backend.controller;
 import com.csu.csu_backend.controller.dto.EventAttendeeResponse;
 import com.csu.csu_backend.service.EventAttendeeService;
 import lombok.RequiredArgsConstructor;
+import com.csu.csu_backend.security.UserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +19,8 @@ public class EventAttendeeController {
     private final EventAttendeeService eventAttendeeService;
 
     @PostMapping
-    public ResponseEntity<String> applyToEvent(@PathVariable Long eventId) {
-        // TODO: Get user ID from security context
-        Long currentUserId = 1L;
+    public ResponseEntity<String> applyToEvent(@PathVariable Long eventId, @AuthenticationPrincipal UserPrincipal currentUser) {
+        Long currentUserId = currentUser.getId(); // 실제 로그인한 유저 ID를 가져옴
         eventAttendeeService.applyToEvent(eventId, currentUserId);
         return ResponseEntity.ok("Successfully applied to the event.");
     }

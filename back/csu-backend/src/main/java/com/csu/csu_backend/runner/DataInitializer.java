@@ -27,12 +27,18 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0) {
             // 1. 테스트용 사용자 데이터 생성 (비밀번호 암호화)
             User owner = new User("owner@test.com", passwordEncoder.encode("password123"), "그룹장");
-            User member = new User("member@test.com", passwordEncoder.encode("password123"), "일반멤버");
+            User member1 = new User("member@test.com", passwordEncoder.encode("password123"), "일반멤버1");
+            User member2 = new User("test@test.com", passwordEncoder.encode("password123"), "일반멤버2");
+            User admin = new User("admin@test.com", passwordEncoder.encode("password123"), "관리자");
 
             userRepository.save(owner);
-            userRepository.save(member);
+            userRepository.save(member1);
+            userRepository.save(member2);
+            userRepository.save(admin);
+
             System.out.println("테스트 사용자 데이터 생성 완료.");
         }
+
 
         if (categoryRepository.count() == 0) {
             // 2. 고정 카테고리 8개 생성

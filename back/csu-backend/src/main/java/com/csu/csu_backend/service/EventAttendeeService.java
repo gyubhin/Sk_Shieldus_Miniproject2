@@ -25,19 +25,22 @@ public class EventAttendeeService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    // 이벤트 참석 신청
+    // 이벤트 참석 신청 (동시성 문제 해결)
     public void applyToEvent(Long eventId, Long userId) {
-        Event event = eventRepository.findById(eventId)
+        // 1. 비관적 락을 사용하여 이벤트를 조회합니다.
+        Event event = eventRepository.findByIdWithLock(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
         if (eventAttendeeRepository.findByEventIdAndUserId(eventId, userId).isPresent()) {
-            throw new IllegalStateException("You have already applied to this event.");
+            // 이미 참여한 사용자는 아무 작업도 하지 않음
+            return;
         }
 
         long confirmedCount = eventAttendeeRepository.countByEventIdAndStatus(eventId, "CONFIRMED");
 
+        // 2. 락이 걸린 상태에서 인원 수를 확인하고 상태를 결정합니다.
         String status = (confirmedCount < event.getMaxAttendees()) ? "CONFIRMED" : "WAITING";
 
         EventAttendee attendee = EventAttendee.builder()
