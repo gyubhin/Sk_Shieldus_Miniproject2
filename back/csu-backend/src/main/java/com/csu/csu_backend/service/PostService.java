@@ -68,12 +68,6 @@ public class PostService {
         post.delete();
     }
 
-    /**
-     * 전체 게시글을 대상으로 제목, 내용, 작성자 닉네임으로 검색합니다.
-     * @param keyword 검색어
-     * @param pageable 페이지 정보
-     * @return 검색된 게시글 목록
-     */
     public List<PostResponse> searchPosts(String keyword, Pageable pageable) {
         Page<Post> postsPage = postRepository.search(keyword, pageable);
         return postsPage.stream()

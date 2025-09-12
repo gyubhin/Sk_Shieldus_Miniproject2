@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where; // 추가
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "deleted_at IS NULL") // 추가: 기본적으로 삭제되지 않은 사용자만 조회
+@Where(clause = "deleted_at IS NULL")
 public class User {
 
     @Id
@@ -37,8 +37,7 @@ public class User {
     private String introduction;
 
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt; // 추가
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "owner")
     private List<Group> ownedGroups = new ArrayList<>();
@@ -46,7 +45,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
 
-    // DataInitializer에서 사용할 생성자
     public User(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
@@ -54,9 +52,6 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    /**
-     * 사용자를 논리적으로 삭제 처리합니다.
-     */
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }

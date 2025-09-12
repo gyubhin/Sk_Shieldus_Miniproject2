@@ -49,7 +49,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, User user, Group group) {
+    public Post(String title, String content, String imageUrl, User user, Group group) { // imageUrl 추가
         this.title = title;
         this.content = content;
         this.user = user;
