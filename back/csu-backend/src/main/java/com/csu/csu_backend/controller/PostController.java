@@ -5,6 +5,7 @@ import com.csu.csu_backend.controller.dto.PostDTO.PostDetailResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.PostResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.UpdatePostRequest;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
+import com.csu.csu_backend.controller.dto.Response.CursorPagingResponse;
 import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.PostService;
@@ -94,5 +95,16 @@ public class PostController {
                                                        @AuthenticationPrincipal UserPrincipal currentUser) {
         postService.deletePostImage(groupId, postId, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok());
+    }
+
+    @Operation(summary = "그룹의 게시글 무한스크롤 조회 API (커서 기반)")
+    @GetMapping("/infinite")
+    public ResponseEntity<CursorPagingResponse<PostResponse>> getPostsByGroupWithCursor(
+            @PathVariable Long groupId,
+            @RequestParam(required = false) String cursor, // 마지막 createdAt
+            @RequestParam(defaultValue = "10") int size) {
+
+        CursorPagingResponse<PostResponse> posts = postService.getPostsByGroupWithCursor(groupId, cursor, size);
+        return ResponseEntity.ok(posts);
     }
 }

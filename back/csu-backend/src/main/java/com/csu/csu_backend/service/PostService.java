@@ -4,6 +4,7 @@ import com.csu.csu_backend.controller.dto.PostDTO.CreatePostRequest;
 import com.csu.csu_backend.controller.dto.PostDTO.PostDetailResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.PostResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.UpdatePostRequest;
+import com.csu.csu_backend.controller.dto.Response.CursorPagingResponse;
 import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.Post;
@@ -15,11 +16,13 @@ import com.csu.csu_backend.repository.PostRepository;
 import com.csu.csu_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,6 +99,34 @@ public class PostService {
         post.setImageUrl(null);
         postRepository.save(post);
     }
+
+    /**
+     * 게시글 목록 조회 (커서 방식)
+     * @param cursor 마지막 커서 id
+     */
+    public CursorPagingResponse<PostResponse> getPostsByGroupWithCursor(Long groupId, String cursor, int size) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("그룹을 찾을 수 없습니다."));
+
+        LocalDateTime cursorTime = (cursor == null) ? null : LocalDateTime.parse(cursor);
+
+        List<Post> posts = postRepository.findPostsByGroupWithCursor(group, cursorTime, PageRequest.of(0, size + 1));
+
+        boolean hasNext = posts.size() > size;
+
+        // size+1 개 가져왔으면 마지막 하나 버려서 hasNext 판정
+        if (hasNext) {
+            posts = posts.subList(0, size);
+        }
+
+        List<PostResponse> dtoList = posts.stream().map(PostResponse::new).toList();
+
+        String nextCursor = posts.isEmpty() ? null :
+                posts.get(posts.size() - 1).getCreatedAt().toString();
+
+        return new CursorPagingResponse<>(dtoList, nextCursor, hasNext);
+    }
+
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
