@@ -72,7 +72,7 @@ function MainSearch() {
 
       <section className={styles.group_serach_view}>
         {grouopsListData?.content.map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>
 

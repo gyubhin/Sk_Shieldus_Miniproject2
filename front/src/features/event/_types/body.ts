@@ -11,11 +11,12 @@ export type PostEventBody = {
 /**
  *@description 일정 수정 요청 바디
  */
-export type PatchEventBody = Omit<PostEventBody, "description">;
+export type PatchEventBody = Omit<PostEventBody, "description"> & { eventId: number };
 
 /**
  *@description 참석 상태 변경 바디
  */
 export type PatchAttendeeStatusBody = {
   status: "CANCELLED" | "GOING" | "WAITING";
+  userId: number;
 };

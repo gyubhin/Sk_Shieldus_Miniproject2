@@ -7,28 +7,28 @@ import {
 import type { PatchAttendeeStatusBody } from "../../_types/body";
 
 /**
- *@description attendees 참석자 신청 훅
+ *@description attendees 참가 신청 훅 (참석자)
  */
-export function usePostEventsApi(eventId: number) {
+export function usePostEventsAttendeeApi() {
   return useMutation({
-    mutationFn: () => postEventAttendeeApi(eventId),
+    mutationFn: (eventId: number) => postEventAttendeeApi(eventId),
   });
 }
 
 /**
- *@description attendees 참석자 신청 훅
+ *@description attendees 참가 취소 훅 (참석자)
  */
-export function useDeleteCancelEventAttendeeApi(eventId: number) {
+export function useDeleteCancelEventAttendeeApi() {
   return useMutation({
-    mutationFn: () => deleteCancelEventAttendeeApi(eventId),
+    mutationFn: (eventId: number) => deleteCancelEventAttendeeApi(eventId),
   });
 }
 
 /**
- *@description attendees 참석자 신청 훅
+ *@description attendees 참석자 관리 훅 (관리자)
  */
-export function usePatchAttendeeStatusApi(eventId: number, userId: number) {
+export function usePatchAttendeeStatusApi(eventId: number) {
   return useMutation({
-    mutationFn: (body: PatchAttendeeStatusBody) => patchAttendeeStatusApi(eventId, userId, body),
+    mutationFn: (props: PatchAttendeeStatusBody) => patchAttendeeStatusApi(eventId, props),
   });
 }

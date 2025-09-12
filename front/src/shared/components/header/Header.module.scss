@@ -2,6 +2,7 @@
 @use "@/shared/styles/color" as *;
 
 .header {
+  width: 100%;
   @include flex-row-between;
   background-color: $color-grayscale-0;
   margin-bottom: 40px;

@@ -10,6 +10,15 @@ import MemberList from "@/features/group/_components/info/memberList/MemberList"
 import { useNavigate, useParams } from "react-router-dom";
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
+import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
+import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
+import { useState } from "react";
+import {
+  useDeleteCancelEventAttendeeApi,
+  usePostEventsAttendeeApi,
+} from "@/features/event/_hooks/attendee/mutation";
+import { useUiStore } from "@/shared/stores/ui.store";
+import { isAxiosError } from "axios";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -18,15 +27,116 @@ function GroupInfoPage() {
   const navigate = useNavigate();
   const { groupId } = useParams<{ groupId: string }>();
 
+  const [isEventMoreOpen, setEventMoreOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<number>();
+  const { showToast } = useUiStore();
+
+  // 이벤트(일정) 목록 state
+  const { data: eventsList } = useGetEventsListApi(groupId);
+
+  // 탭 활성화 이벤트, state
   const { onChangeTab, activeKey } = useSetGroupTab();
 
+  // 그룹 상세정보 state
   const { data } = useGetGroupsOneApi(groupId);
 
+  // 그룹 멤버 state
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
+
+  const { mutateAsync: mutateAttend } = usePostEventsAttendeeApi();
+  const { mutateAsync: mutateDelete } = useDeleteCancelEventAttendeeApi();
+
+  // 탈퇴
+  const onWithdrawl = (eventId?: number) => {
+    if (!eventId) {
+      showToast({
+        message: "잘못된 접근입니다.",
+        type: "error",
+      });
+      return;
+    }
+
+    mutateDelete(eventId)
+      .then((response) => {
+        if (response.status === 200) {
+          showToast({
+            message: "일정에 나갔습니다.",
+            type: "success",
+          });
+        }
+      })
+      .catch((error) => {
+        let message = "";
+        if (isAxiosError(error)) {
+          if (error.status === 409) {
+            message = "이미 일정에 나갔습니다.";
+          } else if (error.status === 500) {
+            message = "관리자에게 문의 부탁드립니다.";
+          } else {
+            message = "잘못된 접근입니다.";
+          }
+        }
+
+        showToast({
+          message: message,
+          type: "error",
+        });
+      });
+
+    setEventMoreOpen(false);
+  };
+
+  // 참석
+  const onAttend = (eventId?: number) => {
+    if (!eventId) {
+      showToast({
+        message: "잘못된 접근입니다.",
+        type: "error",
+      });
+      return;
+    }
+
+    mutateAttend(eventId)
+      .then((response) => {
+        if (response.status === 200) {
+          showToast({
+            message: "일정에 참석되었습니다.",
+            type: "success",
+          });
+        }
+      })
+      .catch((error) => {
+        let message = "";
+        if (isAxiosError(error)) {
+          if (error.status === 409) {
+            message = "일정에 참석되었습니다.";
+          } else if (error.status === 400) {
+            message = "일정이 초과되었습니다.";
+          } else if (error.status === 500) {
+            message = "관리자에게 문의 부탁드립니다.";
+          } else {
+            message = "잘못된 접근입니다.";
+          }
+        }
+
+        showToast({
+          message: message,
+          type: "error",
+        });
+      });
+
+    setEventMoreOpen(false);
+  };
 
   // 모임 일정 등록 페이지로  이동
   const onMoveRegisterEvent = () => {
     navigate("/group/event/register");
+  };
+
+  // 이벤트(일정) more 선택
+  const onSelectedEvent = (_eventId: number) => {
+    setSelectedEvent(_eventId);
+    setEventMoreOpen(true);
   };
 
   return (
@@ -59,32 +169,36 @@ function GroupInfoPage() {
       />
 
       <section className={styles.schedule_view}>
-        <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
-        />
+        {(eventsList?.content ?? []).map((event) => (
+          <EventItem data={event} onMoreClick={() => onSelectedEvent(event.id)} />
+        ))}
 
         <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
-        />
-
-        <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
+          data={{
+            id: 1,
+            title: "title1",
+            eventDate: "250912",
+            maxAttendees: 10,
+            attendeesCount: 2,
+            imageUrl: "",
+            location: "서울시",
+          }}
+          onMoreClick={() => onSelectedEvent(1)}
         />
       </section>
 
+      {/* TODO 더미 데이터로 나중에 제거해야함 */}
       {groupMembers?.data && <MemberList groupMembers={groupMembers.data} />}
+
+      <ActionSheet
+        open={isEventMoreOpen}
+        firstText="참여"
+        secondText="취소"
+        onClickFirst={() => onAttend(selectedEvent)}
+        onClickSecond={() => onWithdrawl(selectedEvent)}
+        onClose={() => setEventMoreOpen(false)}
+        destructive="second"
+      />
     </CommonLayout>
   );
 }

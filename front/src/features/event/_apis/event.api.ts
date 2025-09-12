@@ -6,7 +6,7 @@ import type { GetEventListResponse, GetEventsDetail } from "../_types/response";
 /**
  *@description events 일정 목록 조회 api
  */
-export const getEventsListApi = (groupId: number, query: PagingQuery) => {
+export const getEventsListApi = (groupId?: string, query?: PagingQuery) => {
   return apiCall<GetEventListResponse>({
     url: `/groups/${groupId}/events`,
     params: query,

@@ -7,6 +7,8 @@ export type EventItem = {
   eventDate: string;
   maxAttendees: number; // 최대 참석자수
   attendeesCount: number; // 현재 참석자수
+  imageUrl?: string | null;
+  location: string;
 };
 
 /**

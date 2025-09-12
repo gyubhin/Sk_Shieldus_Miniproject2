@@ -75,7 +75,7 @@ function MainPage() {
 
       <section className={styles.group_view}>
         {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>
 
@@ -88,7 +88,7 @@ function MainPage() {
 
       <section className={styles.group_view}>
         {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isLiked />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>
     </CommonLayout>

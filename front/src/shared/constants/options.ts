@@ -12,7 +12,6 @@ export const regionOptions = [
 export const sortOptions = [
   { label: "최신순", value: "desc" },
   { label: "이름순", value: "name" },
-  { label: "찜순", value: "favorite" },
 ];
 
 // 카테고리 필터 TODO 나중에 api로 대체될 수 있음

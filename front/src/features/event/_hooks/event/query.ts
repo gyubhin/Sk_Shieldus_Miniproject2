@@ -6,13 +6,14 @@ import { getEventsAttendeesApi, getEventsDetailApi, getEventsListApi } from "../
 /**
  *@description 일정 목록 조회 훅
  */
-export function useGetEventsListApi(groupId: number, query: PagingQuery) {
+export function useGetEventsListApi(groupId?: string, query?: PagingQuery) {
   return useQuery({
     queryKey: [reactQueryKeys.event.getEventsList, query],
     queryFn: () => getEventsListApi(groupId, query),
     select: (data) => {
       return data.data;
     },
+    enabled: !!groupId,
   });
 }
 
