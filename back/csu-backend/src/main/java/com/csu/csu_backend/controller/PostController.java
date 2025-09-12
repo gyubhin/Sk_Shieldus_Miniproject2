@@ -49,7 +49,7 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @Operation(summary = "그룹의 게시글 목록 조회 API")
+    @Operation(summary = "그룹의 상세 게시글 조회 API")
     @GetMapping("/{postId}")
     public ResponseEntity<PostDetailResponse> getPost(@PathVariable Long groupId, @PathVariable Long postId) {
         PostDetailResponse post = postService.getPost(groupId, postId);
