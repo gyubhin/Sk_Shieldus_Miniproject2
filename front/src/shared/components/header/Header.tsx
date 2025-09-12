@@ -29,10 +29,12 @@ export function Header() {
     if (isLogin) {
       // 로그인된 상태 -> 로그아웃 api 호출
       mutateAsync()
-        .then(() => {
-          showToast({ message: "로그아웃되었습니다.", type: "success" });
-          reset(); // 토큰 삭제
-          navigate("/login");
+        .then((res) => {
+          if (res.status === 200) {
+            showToast({ message: "로그아웃되었습니다.", type: "success" });
+            reset(); // 토큰 삭제
+            navigate("/login");
+          }
         })
         .catch(() => {
           showToast({ message: "잘못된 접근입니다.", type: "error" });

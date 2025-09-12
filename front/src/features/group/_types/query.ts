@@ -5,4 +5,5 @@ import type { PagingQuery } from "@/shared/types/api";
  */
 export type GetGroupsListQuery = PagingQuery & {
   search?: string | null;
+  region?: string | null;
 };

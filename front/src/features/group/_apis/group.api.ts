@@ -7,6 +7,7 @@ import type {
   GetGroupsOneResponse,
 } from "../_types/response";
 import type { GetGroupsListQuery } from "../_types/query";
+import type { GroupsItem } from "../_types/base";
 
 /**
  *@description 모임 생성 api
@@ -34,7 +35,7 @@ export const getGroupsListApi = (params: GetGroupsListQuery) => {
  *@description 내가 가입한 모든 모임 목록 조회 api
  */
 export const getMyJoinedGroupsApi = (params: PagingQuery) => {
-  return apiCall<GetGroupsListResponse>({
+  return apiCall<GroupsItem[]>({
     url: "/groups/my",
     params,
   });

@@ -12,4 +12,14 @@
     height: 370px;
     object-fit: cover;
   }
+
+  .placeholder {
+    @include flex-center;
+    border-radius: 2.4rem;
+    width: 100%;
+    height: 370px;
+    border: 1px solid $color-grayscale-40;
+    font-size: 1.8rem;
+    color: $color-grayscale-70;
+  }
 }

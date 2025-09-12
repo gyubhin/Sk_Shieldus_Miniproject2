@@ -11,7 +11,7 @@ export type MutationResponse = {
 export type PagingQuery = {
   size: number;
   page: number;
-  sort?: string;
+  sort?: string | null;
 };
 
 export type PagingResponse<T> = {

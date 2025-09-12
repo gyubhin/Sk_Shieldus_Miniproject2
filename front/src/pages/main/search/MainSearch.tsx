@@ -20,6 +20,8 @@ function MainSearch() {
   const word = query.get("word"); //  검색 단어
   const more = query.get("more"); // 더보기로 접근시
   const page = query.get("page");
+  const region = query.get("region");
+  const sort = query.get("sort");
 
   const [search, setSearch] = useState(word);
 
@@ -27,6 +29,8 @@ function MainSearch() {
     size: 9,
     page: Number(page) - 1,
     search: word,
+    region,
+    sort,
   });
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +75,7 @@ function MainSearch() {
       {!more && search && <SectionTitle title={`'${word}'으로 검색한 내용`} />}
 
       <section className={styles.group_serach_view}>
-        {grouopsListData?.content.map((_item, idx) => (
+        {(grouopsListData?.content ?? []).map((_item, idx) => (
           <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>

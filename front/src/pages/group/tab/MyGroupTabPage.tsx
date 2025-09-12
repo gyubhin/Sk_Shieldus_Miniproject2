@@ -43,7 +43,7 @@ function MyGroupTabPage() {
       <SectionTitle title={"참여중인 모임"} />
 
       <section className={styles.my_group_view}>
-        {myJoinedGroups?.content.map((_item, idx) => (
+        {(myJoinedGroups?.content ?? []).map((_item, idx) => (
           <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>

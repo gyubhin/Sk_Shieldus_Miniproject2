@@ -18,6 +18,7 @@ export type GroupsItem = {
   imageUrl: string;
   tags: string;
   liked: boolean;
+  joined?: boolean;
 } & TimeResponse;
 
 /**

@@ -8,7 +8,7 @@ import styles from "./MainPage.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { useGetGroupsListApi } from "@/features/group/_hooks/query";
+import { useGetGroupsListApi, useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 메인 페이지 > 검색, 추천 그룹 표시, 내가 가입한 모임,
@@ -23,7 +23,10 @@ function MainPage() {
     sort: "createdAt,DESC",
   });
 
-  console.log(grouopsListData);
+  const { data: myJoinedGroups } = useGetMyJoinedGroupsApi({
+    page: 0,
+    size: 9,
+  });
 
   const word = searchParams.get("word");
 

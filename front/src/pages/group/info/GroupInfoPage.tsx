@@ -158,7 +158,7 @@ function GroupInfoPage() {
       </section>
 
       {/* 모임 배너 이미지 */}
-      <GroupBanner url="aaa" />
+      <GroupBanner url={data?.imageUrl} />
 
       {data && <GroupInfoContent data={data} />}
 
