@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // 특정 게시글의 모든 댓글 + 답글 (작성 시간순)
     List<Comment> findByPostOrderByCreatedAtAsc(Post post);
+
+    long countByUserId(Long userId);
 }

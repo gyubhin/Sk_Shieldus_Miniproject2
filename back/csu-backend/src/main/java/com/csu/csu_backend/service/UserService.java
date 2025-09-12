@@ -3,6 +3,8 @@ package com.csu.csu_backend.service;
 import com.csu.csu_backend.controller.dto.UserDTO; // 추가
 import com.csu.csu_backend.entity.User;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
+import com.csu.csu_backend.repository.CommentRepository;
+import com.csu.csu_backend.repository.PostRepository;
 import com.csu.csu_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     // --- 아래 메서드를 새로 추가 ---
     public UserDTO.UserDetailResponse getUserDetail(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
-        return new UserDTO.UserDetailResponse(user);
+
+        long postCount = postRepository.countByUserId(userId);
+        long commentCount = commentRepository.countByUserId(userId);
+
+        return new UserDTO.UserDetailResponse(user, postCount, commentCount);
     }
 
     @Transactional

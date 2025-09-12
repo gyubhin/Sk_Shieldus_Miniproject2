@@ -37,4 +37,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                           @Param("cursor") LocalDateTime cursor,
                                           Pageable pageable);
 
+    long countByUserId(Long userId);
 }
