@@ -1,5 +1,6 @@
 package com.csu.csu_backend.controller;
 
+import com.csu.csu_backend.controller.dto.CommentDTO;
 import com.csu.csu_backend.controller.dto.CommentDTO.CreateCommentRequest;
 import com.csu.csu_backend.controller.dto.CommentDTO.UpdateCommentRequest;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @Tag(name = "댓글 API", description = "댓글 CRUD API")
 @RestController
@@ -53,4 +55,11 @@ public class CommentController {
         commentService.deleteComment(commentId, userId);
         return ResponseEntity.ok(ApiResponse.ok());
     }
+
+    @Operation(summary = "댓글 + 답글 조회 API ")
+    @GetMapping
+    public ResponseEntity<List<CommentDTO.CommentResponse>> getComments(@PathVariable Long postId) {
+        return ResponseEntity.ok(commentService.getComments(postId));
+    }
+
 }
