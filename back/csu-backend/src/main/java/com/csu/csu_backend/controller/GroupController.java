@@ -8,6 +8,7 @@ import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -36,10 +37,20 @@ public class GroupController {
 
     @GetMapping
     public ResponseEntity<List<GroupResponse>> getAllGroups(
-            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(required = false) String region,
+            @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
+            @PageableDefault(size = 20) Pageable pageable,
             @AuthenticationPrincipal UserPrincipal currentUser) {
-        Long userId = currentUser.getId();
-        List<GroupResponse> groups = groupService.getAllGroups(pageable, userId);
+
+        Pageable finalPageable;
+        if ("name".equals(sort)) {
+            finalPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
+        } else { // "latest" or any other value
+            finalPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
+        }
+
+        Long userId = (currentUser != null) ? currentUser.getId() : null;
+        List<GroupResponse> groups = groupService.getAllGroups(region, finalPageable, userId);
         return ResponseEntity.ok(groups);
     }
 

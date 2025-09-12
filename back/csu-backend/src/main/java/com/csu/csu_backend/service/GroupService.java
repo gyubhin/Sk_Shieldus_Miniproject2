@@ -9,13 +9,18 @@ import com.csu.csu_backend.exception.GroupFullException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.exception.UnauthorizedException;
 import com.csu.csu_backend.repository.*;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,9 +54,18 @@ public class GroupService {
         return group.getId();
     }
 
-    public List<GroupResponse> getAllGroups(Pageable pageable, Long userId) {
-        Page<Group> groupPage = groupRepository.findAll(pageable);
-        Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
+    public List<GroupResponse> getAllGroups(String region, Pageable pageable, Long userId) {
+        Specification<Group> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(region)) {
+                predicates.add(criteriaBuilder.equal(root.get("region"), region));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<Group> groupPage = groupRepository.findAll(spec, pageable);
+
+        Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
 
         return groupPage.stream()
                 .map(group -> {
