@@ -10,6 +10,8 @@ import { useGetPostListApi } from "@/features/post/_hooks/query";
 import PostItem from "@/features/group/_components/post/PostItem";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
 import { useDeletePostApi } from "@/features/post/_hooks/mutation";
+import { useUiStore } from "@/shared/stores/ui.store";
+import { isAxiosError } from "axios";
 
 /**
  *@description 모임 게시글 목록 페이지
@@ -18,11 +20,13 @@ function GroupPostPage() {
   const navigate = useNavigate();
   const { groupId } = useParams<{ groupId: string }>();
   const [isMoreOpen, setMoreOpen] = useState(false);
+  const { showToast } = useUiStore();
 
   const { onChangeTab, activeKey } = useSetGroupTab();
   const [isContentModalOpen, setContentModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number>();
 
+  // 그룹 게시글 목록
   const { data: postList, refetch } = useGetPostListApi(1, {
     page: 0,
     size: 9,
@@ -34,7 +38,19 @@ function GroupPostPage() {
   const onDeletePost = () => {
     deleteMutate(Number(selectedPostId))
       .then(() => {
+        showToast({ message: "게시글이 삭제 완료되었습니다.", type: "success" });
         refetch();
+      })
+      .catch((error) => {
+        if (isAxiosError(error)) {
+          if (error.status === 404) {
+            showToast({ message: "이미 삭제된 게시글입니다.", type: "success" });
+          } else if (error.status === 500) {
+            showToast({ message: "관리자에게 문의부탁드립니다.", type: "success" });
+          } else {
+            showToast({ message: "잘못된 접근입니다.", type: "success" });
+          }
+        }
       })
       .finally(() => {
         setMoreOpen(false);
@@ -64,6 +80,7 @@ function GroupPostPage() {
           tabs={[
             { key: "info", name: "모임 정보" },
             { key: "post", name: "게시판" },
+            { key: "setting", name: "모임 설정" },
           ]}
           activeKey={activeKey}
           onChange={onChangeTab}

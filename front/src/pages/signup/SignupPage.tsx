@@ -7,12 +7,18 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
 import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
-import axios from "axios"; 
+import axios from "axios";
 import styles from "./SignupPage.module.scss";
+import { postSignupApi, useAccessTokenStore } from "@/features/auth";
+import { useUiStore } from "@/shared/stores/ui.store";
 
 // 보이지 않는 문자/공백 정리
 const sanitize = (v: string) =>
-  v.normalize("NFC").replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim();
+  v
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
@@ -30,6 +36,8 @@ function SignupPage() {
   const [pwErr, setPwErr] = useState<string | undefined>(undefined);
   const [pw2Err, setPw2Err] = useState<string | undefined>(undefined);
   const [agreeErr, setAgreeErr] = useState<string | undefined>(undefined);
+  const { showToast } = useUiStore();
+  const { setToken } = useAccessTokenStore();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,22 +76,17 @@ function SignupPage() {
     try {
       setIsSubmitting(true);
 
-      
-      const res = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/auth/signup`,
-        {
-          email: emailSan,
-          password: pwSan,
-          nickname: sanitize(nickname),
-          region: sanitize(region),
-        }
-      );
-
-      console.log("회원가입 응답:", res.data);
+      const res = await postSignupApi({
+        email: emailSan,
+        password: pwSan,
+        nickname: sanitize(nickname),
+        region: sanitize(region),
+      });
 
       if (res.status === 201) {
-        alert("회원가입이 완료되었습니다! 🎉");
-        nav("/login"); // 가입 후 로그인 페이지로 이동
+        setToken(res.data.accessToken);
+        showToast({ message: "회원가입이 완료되었습니다!", type: "success" });
+        nav("/"); // 가입 후 로그인 페이지로 이동
       } else {
         alert("회원가입 실패");
       }
@@ -99,11 +102,7 @@ function SignupPage() {
     <CommonLayout>
       <AuthInnerLayout>
         <section className={styles.form_wrapper}>
-          <img
-            className={styles.image}
-            src={"/images/BigImageLogo.svg"}
-            alt={"big_image_logo"}
-          />
+          <img className={styles.image} src={"/images/BigImageLogo.svg"} alt={"big_image_logo"} />
 
           <form onSubmit={onSubmit} noValidate>
             <InputField
@@ -128,7 +127,7 @@ function SignupPage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-                        
+
             <LabeledDropdown
               required
               label="지역"

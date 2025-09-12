@@ -1,6 +1,8 @@
 export const reactQueryKeys = {
   group: {
     getGroupsList: "get group list",
+    getMyJoinedGroup: "get my joined group",
+    getGroupsMembers: "get groups members",
   },
   categories: {
     getCategories: "get categories",
@@ -11,6 +13,12 @@ export const reactQueryKeys = {
 
   event: {
     getEventsList: "get events list",
+    getEventsDetail: "get events detail",
+    getEventsAttendees: "get events attendees",
+  },
+
+  attendee: {
+    getEventAttendee: "get event attendee",
   },
 
   post: {

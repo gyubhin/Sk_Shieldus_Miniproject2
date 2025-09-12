@@ -6,7 +6,7 @@ import styles from "./MyGroupTabPage.module.scss";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import EventItem from "@/features/group/_components/EventItem";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useGetMyJoinedGroup } from "@/features/users/_hooks/query";
+import { useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
@@ -16,7 +16,7 @@ function MyGroupTabPage() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page");
 
-  const { data: myJoinedGroups } = useGetMyJoinedGroup({
+  const { data: myJoinedGroups } = useGetMyJoinedGroupsApi({
     page: Number(page),
     size: 9,
   });
@@ -63,7 +63,7 @@ function MyGroupTabPage() {
 
       <section className={styles.my_group_view}>
         {myJoinedGroups?.content.map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} isHeart />
+          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>
 

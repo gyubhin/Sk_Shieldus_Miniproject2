@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import type { CreatePostBody, PutPostBody } from "../_types/body";
 import { createPostsApi, deletePostApi, putPostApi } from "../_apis/post.api";
 
 /**
@@ -7,7 +6,7 @@ import { createPostsApi, deletePostApi, putPostApi } from "../_apis/post.api";
  */
 export function useCreatePostsApi(groupId: number) {
   return useMutation({
-    mutationFn: (body: CreatePostBody) => createPostsApi(groupId, body),
+    mutationFn: (body: FormData) => createPostsApi(groupId, body),
   });
 }
 
@@ -16,7 +15,7 @@ export function useCreatePostsApi(groupId: number) {
  */
 export function usePutPostApi(groupId: number, postId: number) {
   return useMutation({
-    mutationFn: (body: PutPostBody) => putPostApi(groupId, postId, body),
+    mutationFn: (body: FormData) => putPostApi(groupId, postId, body),
   });
 }
 

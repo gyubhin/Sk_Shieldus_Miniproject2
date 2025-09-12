@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { mswUtils } from "@/libs/msw";
 import dayjs from "dayjs";
 import type { PostItem } from "../_types/base";
-import type { CreatePostBody, PutPostBody } from "../_types/body";
+import type { CreatePostForm, PutPostForm } from "../_types/body";
 
 let postData = Array.from({ length: 124 }, (_, i) => ({
   id: i + 1,
@@ -66,7 +66,7 @@ export const postHandlers = [
 
   // 게시글 등록 요청
   http.post(mswUtils.getUrl("/groups/:groupId/posts"), async ({ request }) => {
-    const body = (await request.json()) as CreatePostBody;
+    const body = (await request.json()) as CreatePostForm;
     console.log(body);
 
     const id = postData.length + 1;
@@ -91,7 +91,7 @@ export const postHandlers = [
 
   // 게시글 수정 요청
   http.put(mswUtils.getUrl("/groups/:groupId/posts/:postId"), async ({ request, params }) => {
-    const body = (await request.json()) as PutPostBody;
+    const body = (await request.json()) as PutPostForm;
     const { postId } = params;
 
     const id = Number(postId);

@@ -6,8 +6,12 @@ export type EventItem = {
   title: string;
   eventDate: string;
   maxAttendees: number; // 최대 참석자수
+  attendeesCount: number; // 현재 참석자수
 };
 
+/**
+ *@description 이벤트 참석자
+ */
 export type EventAttendee = {
   userId: number;
   nickname: string;

@@ -1,13 +1,12 @@
 import { apiCall } from "@/libs/apiCall";
 import type { MutationResponse } from "@/shared/types/api";
-import type { CreatePostBody, PutPostBody } from "../_types/body";
 import type { GetPostListQuery } from "../_types/query";
 import type { GetPostDetailResponse, GetPostListResponse } from "../_types/response";
 
 /**
  *@description 게시글 생성 api
  */
-export const createPostsApi = (groupId: number, body: CreatePostBody) => {
+export const createPostsApi = (groupId: number, body: FormData) => {
   return apiCall<MutationResponse>({
     url: `/groups/${groupId}/posts`,
     data: body,
@@ -37,7 +36,7 @@ export const getPostDetailApi = (groupId: number, postId?: number) => {
 /**
  *@description 게시글 수정 api
  */
-export const putPostApi = (groupId: number, postId: number, body: PutPostBody) => {
+export const putPostApi = (groupId: number, postId: number, body: FormData) => {
   return apiCall<undefined>({
     url: `/groups/${groupId}/posts/${postId}`,
     method: "PUT",

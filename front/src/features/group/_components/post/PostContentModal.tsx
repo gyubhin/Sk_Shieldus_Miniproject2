@@ -9,11 +9,11 @@ import {
   usePutCommentApi,
 } from "@/features/comment/_hooks/mutation";
 import { useState } from "react";
-import { isAxiosError } from "@/libs/typeGuard";
 import type { ErrorResponse } from "react-router-dom";
 import { useUiStore } from "@/shared/stores/ui.store";
 import ModalConfirm from "@/shared/components/modal/ModalConfirm";
 import { useGetCommentsApi } from "@/features/comment/_hooks/query";
+import { isAxiosError } from "axios";
 
 type Props = {
   groupId?: number;

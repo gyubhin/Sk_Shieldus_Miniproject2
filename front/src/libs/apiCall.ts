@@ -3,6 +3,7 @@ import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./cookie";
 
 export const apiCall = axios.create({
+  // baseURL: import.meta.env.VITE_APP_LIVE_API_URL,
   baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
