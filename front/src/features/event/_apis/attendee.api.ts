@@ -1,6 +1,6 @@
 import { apiCall } from "@/libs/apiCall";
 import type { PatchAttendeeStatusBody } from "../_types/body";
-import type { getEventsAttendeesResponse } from "../_types/response";
+import type { GetEventsAttendeesResponse } from "../_types/response";
 import type { MutationResponse } from "@/shared/types/api";
 
 // /**
@@ -17,8 +17,8 @@ import type { MutationResponse } from "@/shared/types/api";
 /**
  *@description attendees 참석자 목록 조회 api (참석자 + 대기자)
  */
-export const getEventAttendeeApi = (eventId: number) => {
-  return apiCall<getEventsAttendeesResponse>({
+export const getEventAttendeeApi = (eventId?: number) => {
+  return apiCall<GetEventsAttendeesResponse>({
     url: `/events/${eventId}/attendees`,
   });
 };
@@ -46,14 +46,10 @@ export const deleteCancelEventAttendeeApi = (eventId: number) => {
 /**
  *@description attendees 참석자 상태 변경 (관리자/주최자 권한) api
  */
-export const patchAttendeeStatusApi = (
-  eventId: number,
-  userId: number,
-  body: PatchAttendeeStatusBody,
-) => {
+export const patchAttendeeStatusApi = (eventId: number, body: PatchAttendeeStatusBody) => {
   return apiCall<MutationResponse>({
-    url: `/events/${eventId}/attendees/${userId}`,
+    url: `/events/${eventId}/attendees/${body.userId}`,
     method: "PATCH",
-    data: body,
+    data: { status: body.status },
   });
 };

@@ -7,6 +7,7 @@ import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import EventItem from "@/features/group/_components/EventItem";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
+import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
@@ -34,29 +35,9 @@ function MyGroupTabPage() {
       <SectionTitle title={"다가오는 정모 일정 4"} />
 
       <section className={styles.schedule_view}>
-        <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
-        />
-
-        <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
-        />
-
-        <EventItem
-          title="토요일 스터디 모임"
-          time="내일 오전 11:00"
-          location="당산역 커피점"
-          imageUrl="https://placehold.co/100x100"
-          onMoreClick={() => console.log("더보기 클릭")}
-        />
+        {/* {(eventsList?.content ?? []).map((event) => (
+          <EventItem data={event} onMoreClick={() => console.log("더보기 클릭")} />
+        ))} */}
       </section>
 
       <SectionTitle title={"참여중인 모임"} />

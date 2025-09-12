@@ -24,7 +24,7 @@ export type GetEventsDetail = {
 /**
  *@description 일정 참석자/대기자 목록
  */
-export type getEventsAttendeesResponse = {
+export type GetEventsAttendeesResponse = {
   confirmed: EventAttendee[];
 
   waiting: EventAttendee[];

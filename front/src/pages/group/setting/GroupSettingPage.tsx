@@ -14,15 +14,21 @@ import {
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import type { ErrorResponse } from "@/shared/types/api";
+import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
+import EventItem from "@/features/group/_components/EventItem";
+import { useState } from "react";
+import { useGetEventAttendeeApi } from "@/features/event/_hooks/attendee/query";
+import { EventAttendeesModal } from "@/features/event/_components/attendee/EventAttendeesModal";
 
 /**
- *@description 내 모임 탭 > 모임 정보 페이지
+ *@description 내 모임 탭 > 모임 설정 페이지
  */
 function GroupSettingPage() {
   const navigate = useNavigate();
   const { groupId } = useParams<{ groupId: string }>();
 
   const { onChangeTab, activeKey } = useSetGroupTab();
+  const [isOpenEventAttendeeModal, setOpenEventAttendeeModal] = useState(false);
   const { showToast } = useUiStore();
 
   const { data } = useGetGroupsOneApi(groupId);
@@ -31,6 +37,11 @@ function GroupSettingPage() {
   const { mutateAsync: mutateDelegate } = usePatchDelegateOwner(groupId);
 
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
+
+  // 이벤트(일정) 목록 state
+  const { data: eventsList } = useGetEventsListApi(groupId);
+
+  const [selectedEvent, setSelectedEvent] = useState<number>();
 
   // 모임 일정 수정 페이지로  이동
   const onMoveModifyGroup = () => {
@@ -92,6 +103,12 @@ function GroupSettingPage() {
     }
   };
 
+  // 이벤트(일정) more 선택
+  const onSelectedEvent = (_eventId: number) => {
+    setSelectedEvent(_eventId);
+    setOpenEventAttendeeModal(true);
+  };
+
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -120,13 +137,31 @@ function GroupSettingPage() {
         </button>
       </section>
 
-      {groupMembers?.data && (
-        <MemberList
-          groupMembers={groupMembers.data}
-          onKickMember={onKickMember}
-          onDelegateGroup={onDelegateGroup}
-        />
-      )}
+      <section className={styles.member_list}>
+        <h3>멤버 목록</h3>
+
+        {groupMembers?.data && (
+          <MemberList
+            groupMembers={groupMembers.data}
+            onKickMember={onKickMember}
+            onDelegateGroup={onDelegateGroup}
+          />
+        )}
+      </section>
+
+      <section className={styles.event_list}>
+        <h3>일정 목록</h3>
+
+        {(eventsList?.content ?? []).map((event) => (
+          <EventItem data={event} onMoreClick={() => onSelectedEvent(event.id)} />
+        ))}
+      </section>
+
+      <EventAttendeesModal
+        isOpen={isOpenEventAttendeeModal}
+        onClose={() => setOpenEventAttendeeModal(false)}
+        eventId={selectedEvent}
+      />
     </CommonLayout>
   );
 }

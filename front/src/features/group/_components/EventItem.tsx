@@ -1,11 +1,9 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./EventItem.module.scss";
+import type { EventItem } from "@/features/event/_types/base";
 
 type Props = {
-  title: string;
-  time: string;
-  location: string;
-  imageUrl?: string;
+  data: EventItem;
   onMoreClick?: () => void;
 };
 
@@ -23,18 +21,22 @@ type Props = {
  *   onMoreClick={() => console.log("더보기 클릭")}
  * />
  */
-export default function EventItem({ title, time, location, imageUrl, onMoreClick }: Props) {
+export default function EventItem({ data, onMoreClick }: Props) {
   return (
     <div className={styles.card}>
       {/* 썸네일 */}
       <div className={styles.thumbnail}>
-        {imageUrl ? <img src={imageUrl} alt={title} /> : <div className={styles.placeholder} />}
+        {data?.imageUrl ? (
+          <img src={data?.imageUrl} alt={data.title} />
+        ) : (
+          <div className={styles.placeholder} />
+        )}
       </div>
 
       {/* 정보 */}
       <div className={styles.content}>
         <div className={styles.header}>
-          <h3 className={styles.title}>{title}</h3>
+          <h3 className={styles.title}>{data?.title ?? ""}</h3>
 
           <button className={styles.more_btn} onClick={onMoreClick}>
             <IconButton iconName="More" size={18} />
@@ -42,8 +44,8 @@ export default function EventItem({ title, time, location, imageUrl, onMoreClick
         </div>
 
         <div className={styles.info}>
-          <p className={styles.time}>{time}</p>
-          <p className={styles.location}>{location}</p>
+          <p className={styles.time}>{data?.eventDate ?? ""}</p>
+          <p className={styles.location}>{data?.location ?? ""}</p>
         </div>
       </div>
     </div>

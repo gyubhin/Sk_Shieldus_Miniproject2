@@ -1,6 +1,7 @@
 @use "@/shared/styles/color" as *;
 @use "@/shared/styles/mixin" as *;
 
+// 상단 탭 뷰
 .top_tab_view {
   @include flex-row;
   position: relative;
@@ -12,6 +13,23 @@
   }
 }
 
+// 멤버, 일정 목록 리스트
+.member_list,
+.event_list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+  width: 100%;
+  padding: 3rem 0;
+
+  & > h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+}
+
+// 수정하기, 등록하기 버튼
 .actions_wrapper {
   display: flex;
   justify-content: flex-end;

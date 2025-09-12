@@ -18,4 +18,5 @@ export type PatchEventBody = Omit<PostEventBody, "description">;
  */
 export type PatchAttendeeStatusBody = {
   status: "CANCELLED" | "GOING" | "WAITING";
+  userId: number;
 };
