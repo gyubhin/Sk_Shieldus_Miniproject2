@@ -2,7 +2,7 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
-import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse; // DTO 임포트 추가
+import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.entity.*;
 import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.GroupFullException;
@@ -54,9 +54,15 @@ public class GroupService {
         return group.getId();
     }
 
-    public List<GroupResponse> getAllGroups(String region, Pageable pageable, Long userId) {
+    public List<GroupResponse> getAllGroups(Long categoryId, String region, Pageable pageable, Long userId) {
+        // Specification을 사용하여 동적 쿼리 생성
         Specification<Group> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            // categoryId가 있으면 카테고리 필터 조건 추가
+            if (categoryId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
+            }
+            // region이 있으면 지역 필터 조건 추가
             if (StringUtils.hasText(region)) {
                 predicates.add(criteriaBuilder.equal(root.get("region"), region));
             }
@@ -66,11 +72,13 @@ public class GroupService {
         Page<Group> groupPage = groupRepository.findAll(spec, pageable);
 
         Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
+        Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
 
         return groupPage.stream()
                 .map(group -> {
                     GroupResponse response = new GroupResponse(group);
                     response.setLiked(likedGroupIds.contains(group.getId()));
+                    response.setJoined(joinedGroupIds.contains(group.getId()));
                     return response;
                 })
                 .collect(Collectors.toList());
@@ -81,11 +89,6 @@ public class GroupService {
         return new GroupResponse(group);
     }
 
-    /**
-     * 특정 그룹에 속한 모든 멤버 목록을 조회합니다.
-     * @param groupId 멤버를 조회할 그룹의 ID
-     * @return 해당 그룹의 멤버 목록 (DTO)
-     */
     public List<MemberResponse> getGroupMembers(Long groupId) {
         Group group = findGroupById(groupId);
         List<Membership> memberships = membershipRepository.findByGroup(group);
@@ -137,7 +140,8 @@ public class GroupService {
         User user = findUserById(userId);
         List<Membership> memberships = membershipRepository.findByUser(user);
 
-        Set<Long> likedGroupIds = memberships.stream()
+        Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
+        Set<Long> joinedGroupIds = memberships.stream()
                 .map(m -> m.getGroup().getId())
                 .collect(Collectors.toSet());
 
@@ -146,6 +150,7 @@ public class GroupService {
                 .map(group -> {
                     GroupResponse response = new GroupResponse(group);
                     response.setLiked(likedGroupIds.contains(group.getId()));
+                    response.setJoined(joinedGroupIds.contains(group.getId()));
                     return response;
                 })
                 .collect(Collectors.toList());
@@ -176,6 +181,27 @@ public class GroupService {
         newOwnerMembership.updateRole(ROLE_OWNER);
 
         group.delegateOwner(newOwner);
+    }
+
+    @Transactional
+    public String updateCoverImage(Long groupId, MultipartFile file) {
+        Group group = findGroupById(groupId);
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+        String path = fileStorageService.saveFile(file, "groups");
+        group.setCoverImageUrl(path);
+        groupRepository.save(group);
+        return path;
+    }
+
+    @Transactional
+    public void deleteCoverImage(Long groupId, Long userId) {
+        Group group = findGroupById(groupId);
+        if (!group.getOwner().getId().equals(userId)) {
+            throw new UnauthorizedException("그룹장만 커버 이미지를 삭제할 수 있습니다.");
+        }
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+        group.setCoverImageUrl(null);
+        groupRepository.save(group);
     }
 
     private User findUserById(Long userId) {
@@ -246,34 +272,4 @@ public class GroupService {
             throw new UnauthorizedException("그룹장만 해당 작업을 수행할 수 있습니다.");
         }
     }
-
-    @Transactional
-    public String updateCoverImage(Long groupId, MultipartFile file) {
-        Group group = findGroupById(groupId);
-
-
-        fileStorageService.deleteFile(group.getCoverImageUrl());
-
-
-        String path = fileStorageService.saveFile(file, "groups");
-        group.setCoverImageUrl(path);
-
-        groupRepository.save(group);
-        return path;
-    }
-
-    @Transactional
-    public void deleteCoverImage(Long groupId, Long userId) {
-        Group group = findGroupById(groupId);
-
-        if (!group.getOwner().getId().equals(userId)) {
-            throw new UnauthorizedException("그룹장만 커버 이미지를 삭제할 수 있습니다.");
-        }
-
-        fileStorageService.deleteFile(group.getCoverImageUrl());
-        group.setCoverImageUrl(null);
-        groupRepository.save(group);
-    }
-
-
 }

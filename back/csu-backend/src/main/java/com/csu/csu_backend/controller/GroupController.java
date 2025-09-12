@@ -2,7 +2,7 @@ package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
-import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse; // DTO 임포트 추가
+import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.GroupService;
@@ -37,6 +37,7 @@ public class GroupController {
 
     @GetMapping
     public ResponseEntity<List<GroupResponse>> getAllGroups(
+            @RequestParam(required = false) Long categoryId, // categoryId 파라미터 추가
             @RequestParam(required = false) String region,
             @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
             @PageableDefault(size = 20) Pageable pageable,
@@ -50,7 +51,7 @@ public class GroupController {
         }
 
         Long userId = (currentUser != null) ? currentUser.getId() : null;
-        List<GroupResponse> groups = groupService.getAllGroups(region, finalPageable, userId);
+        List<GroupResponse> groups = groupService.getAllGroups(categoryId, region, finalPageable, userId); // 서비스에 categoryId 전달
         return ResponseEntity.ok(groups);
     }
 
@@ -68,11 +69,6 @@ public class GroupController {
         return ResponseEntity.ok(myGroups);
     }
 
-    /**
-     * 특정 그룹의 모든 멤버 목록을 조회합니다.
-     * @param groupId 조회할 그룹의 ID
-     * @return 그룹 멤버 목록을 포함한 200 OK 응답
-     */
     @GetMapping("/{groupId}/members")
     public ResponseEntity<List<MemberResponse>> getGroupMembers(@PathVariable Long groupId) {
         List<MemberResponse> members = groupService.getGroupMembers(groupId);
@@ -81,15 +77,15 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}")
     public ResponseEntity<ApiResponse> deleteGroup(@PathVariable Long groupId,
-                                            @AuthenticationPrincipal UserPrincipal currentUser) {
+                                                   @AuthenticationPrincipal UserPrincipal currentUser) {
         groupService.deleteGroup(groupId, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
     @PatchMapping("/{groupId}/delegate-owner/{newOwnerId}")
     public ResponseEntity<ApiResponse> delegateGroupOwner(@PathVariable Long groupId,
-                                                   @PathVariable Long newOwnerId,
-                                                   @AuthenticationPrincipal UserPrincipal currentUser) {
+                                                          @PathVariable Long newOwnerId,
+                                                          @AuthenticationPrincipal UserPrincipal currentUser) {
         groupService.delegateGroupOwner(groupId, newOwnerId, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok());
     }
@@ -104,7 +100,7 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}/leave")
     public ResponseEntity<ApiResponse> leaveGroup(@PathVariable Long groupId,
-                                           @AuthenticationPrincipal UserPrincipal currentUser) {
+                                                  @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
         groupService.leaveGroup(groupId, userId);
         return ResponseEntity.ok(ApiResponse.ok());
@@ -112,7 +108,7 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}/members/{userId}")
     public ResponseEntity<ApiResponse> removeMember(@PathVariable Long groupId, @PathVariable Long userId,
-                                             @AuthenticationPrincipal UserPrincipal currentUser) {
+                                                    @AuthenticationPrincipal UserPrincipal currentUser) {
         Long ownerId = currentUser.getId();
         groupService.removeMember(groupId, userId, ownerId);
         return ResponseEntity.ok(ApiResponse.ok());
@@ -131,5 +127,4 @@ public class GroupController {
         groupService.deleteCoverImage(groupId, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok());
     }
-
 }
