@@ -34,6 +34,9 @@ public class User {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
+    @Column(name = "refresh_token") // 추가: 리프레시 토큰 필드
+    private String refreshToken;
+
     private String introduction;
 
     private LocalDateTime createdAt;
@@ -54,5 +57,14 @@ public class User {
 
     public void delete() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    // 추가: 리프레시 토큰 업데이트 메서드
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

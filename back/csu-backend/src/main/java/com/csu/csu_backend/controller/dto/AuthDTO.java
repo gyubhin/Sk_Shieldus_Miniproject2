@@ -38,13 +38,14 @@ public class AuthDTO {
 
     @Getter
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class TokenResponse {
         private String accessToken;
+        private String refreshToken; // 추가
         private String tokenType = "Bearer";
 
-        public TokenResponse(String accessToken) {
+        public TokenResponse(String accessToken, String refreshToken) {
             this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
         }
     }
 }

@@ -3,8 +3,10 @@ package com.csu.csu_backend.service;
 import com.csu.csu_backend.controller.dto.AuthDTO;
 import com.csu.csu_backend.controller.dto.AuthDTO.LoginRequest;
 import com.csu.csu_backend.controller.dto.AuthDTO.SignUpRequest;
+import com.csu.csu_backend.controller.dto.AuthDTO.TokenResponse;
 import com.csu.csu_backend.entity.User;
 import com.csu.csu_backend.exception.DuplicateResourceException;
+import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.repository.UserRepository;
 import com.csu.csu_backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,35 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.generateToken(authentication);
-        return new AuthDTO.TokenResponse(jwt);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
+
+        // 데이터베이스에 리프레시 토큰 저장
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
+        user.updateRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return new AuthDTO.TokenResponse(jwt, refreshToken);
+    }
+
+    // 추가: 리프레시 토큰 재발급 메서드
+    @Transactional
+    public AuthDTO.TokenResponse refresh(String refreshToken) {
+        if (!tokenProvider.validateRefreshToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.");
+        }
+
+        User user = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new ResourceNotFoundException("리프레시 토큰에 해당하는 사용자를 찾을 수 없습니다."));
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+
+        String newAccessToken = tokenProvider.generateToken(authentication);
+        String newRefreshToken = tokenProvider.generateRefreshToken(authentication);
+
+        user.updateRefreshToken(newRefreshToken);
+        userRepository.save(user);
+
+        return new AuthDTO.TokenResponse(newAccessToken, newRefreshToken);
     }
 }
