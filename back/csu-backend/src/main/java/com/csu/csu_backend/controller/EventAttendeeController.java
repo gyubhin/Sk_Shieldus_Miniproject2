@@ -1,6 +1,7 @@
 package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.EventAttendeeResponse;
+import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.service.EventAttendeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,11 @@ public class EventAttendeeController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> cancelAttendance(@PathVariable Long eventId) {
+    public ResponseEntity<ApiResponse> cancelAttendance(@PathVariable Long eventId) {
         // TODO: Get user ID from security context
         Long currentUserId = 1L;
         eventAttendeeService.cancelAttendance(eventId, currentUserId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 
     @GetMapping

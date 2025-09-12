@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class GroupService {
     private final UserRepository userRepository;
     private final MembershipRepository membershipRepository;
     private final GroupLikeRepository groupLikeRepository;
+    private final FileStorageService fileStorageService;
 
     @Transactional
     public Long createGroup(CreateGroupRequest request, Long ownerId) {
@@ -230,4 +232,34 @@ public class GroupService {
             throw new UnauthorizedException("그룹장만 해당 작업을 수행할 수 있습니다.");
         }
     }
+
+    @Transactional
+    public String updateCoverImage(Long groupId, MultipartFile file) {
+        Group group = findGroupById(groupId);
+
+
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+
+
+        String path = fileStorageService.saveFile(file, "groups");
+        group.setCoverImageUrl(path);
+
+        groupRepository.save(group);
+        return path;
+    }
+
+    @Transactional
+    public void deleteCoverImage(Long groupId, Long userId) {
+        Group group = findGroupById(groupId);
+
+        if (!group.getOwner().getId().equals(userId)) {
+            throw new UnauthorizedException("그룹장만 커버 이미지를 삭제할 수 있습니다.");
+        }
+
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+        group.setCoverImageUrl(null);
+        groupRepository.save(group);
+    }
+
+
 }

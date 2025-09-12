@@ -3,6 +3,7 @@ package com.csu.csu_backend.controller;
 import com.csu.csu_backend.controller.dto.PostDTO.CreatePostRequest;
 import com.csu.csu_backend.controller.dto.PostDTO.PostResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.UpdatePostRequest;
+import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.PostService;
 import jakarta.validation.Valid;
@@ -35,4 +36,22 @@ public class PostController {
 
     // 이하 생략... 기존 PostController의 나머지 메서드들을 여기에 포함시켜야 합니다.
     // ...
+
+    @PostMapping("/{postId}/image")
+    public ResponseEntity<String> uploadPostImage(@PathVariable Long groupId,
+                                                  @PathVariable Long postId,
+                                                  @AuthenticationPrincipal UserPrincipal currentUser,
+                                                  @RequestParam("file") MultipartFile file) {
+        String path = postService.updatePostImage(groupId, postId, currentUser.getId(), file);
+        return ResponseEntity.ok(path);
+    }
+
+    @DeleteMapping("/{postId}/image")
+    public ResponseEntity<ApiResponse> deletePostImage(@PathVariable Long groupId,
+                                                       @PathVariable Long postId,
+                                                       @AuthenticationPrincipal UserPrincipal currentUser) {
+        postService.deletePostImage(groupId, postId, currentUser.getId());
+        return ResponseEntity.ok(ApiResponse.ok());
+    }
+
 }

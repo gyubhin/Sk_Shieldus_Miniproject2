@@ -1,10 +1,7 @@
 package com.csu.csu_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
@@ -67,4 +64,9 @@ public class Post {
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    @Setter
+    @Column(name = "image_url")
+    private String imageUrl;
+
 }

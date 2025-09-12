@@ -1,10 +1,7 @@
 package com.csu.csu_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
 
@@ -77,4 +74,9 @@ public class Group {
     public void delegateOwner(User newOwner) {
         this.owner = newOwner;
     }
+
+    @Setter
+    @Column(name = "cover_image_url")
+    private String coverImageUrl;
+
 }
