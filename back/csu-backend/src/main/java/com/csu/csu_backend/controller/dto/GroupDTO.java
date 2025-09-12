@@ -51,7 +51,7 @@ public class GroupDTO {
         private int currentMembers;
         private String imageUrl;
         private String tags;
-        private boolean isLiked;
+        private boolean Liked;
         private boolean isJoined; // 추가
         private Long ownerId;
         private String ownerNickname;
@@ -67,7 +67,7 @@ public class GroupDTO {
             this.currentMembers = group.getCurrentMembers();
             this.imageUrl = group.getImageUrl();
             this.tags = group.getTags();
-            this.isLiked = false; // 기본값, 서비스 레이어에서 최종 결정
+            this.Liked = false; // 기본값, 서비스 레이어에서 최종 결정
             this.isJoined = false; // 기본값, 서비스 레이어에서 최종 결정
             this.ownerId = group.getOwner().getId();
             this.ownerNickname = group.getOwner().getNickname();
