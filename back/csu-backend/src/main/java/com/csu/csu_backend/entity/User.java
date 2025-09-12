@@ -31,11 +31,15 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 50)
     private String nickname;
+
+    @Column(length = 50) // 추가
+    private String region; // 추가
+
     @Setter
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    @Column(name = "refresh_token") // 추가: 리프레시 토큰 필드
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     private String introduction;
@@ -49,11 +53,18 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
 
-    public User(String email, String password, String nickname) {
+    // 생성자 수정
+    public User(String email, String password, String nickname, String region) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.region = region; // 추가
         this.createdAt = LocalDateTime.now();
+    }
+
+    // DataInitializer에서 사용할 레거시 생성자 (region이 null로 들어감)
+    public User(String email, String password, String nickname) {
+        this(email, password, nickname, null);
     }
 
     public void delete() {
@@ -64,7 +75,6 @@ public class User {
         this.profileImageUrl = profileImageUrl;
     }
 
-    // 추가: 리프레시 토큰 업데이트 메서드
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
