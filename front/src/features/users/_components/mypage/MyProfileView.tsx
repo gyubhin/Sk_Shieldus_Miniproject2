@@ -20,7 +20,9 @@ export function MyProfileView({ onEditProfile, onSettings, userData }: Props) {
           <img
             src={userData?.profileImageUrl ?? "/images/ImageProfileDefault.svg"}
             alt="프로필"
-            className={avatarUrl ? styles.profile_image : styles.profile_default_image}
+            className={
+              userData?.profileImageUrl ? styles.profile_image : styles.profile_default_image
+            }
           />
         </div>
 
