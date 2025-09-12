@@ -24,7 +24,7 @@ public class AuthDTO {
         @NotBlank(message = "닉네임은 필수입니다.")
         private String nickname;
 
-        private String region; // 추가
+        private String region;
     }
 
     @Getter
@@ -49,5 +49,13 @@ public class AuthDTO {
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
         }
+    }
+
+    // --- 아래 DTO를 새로 추가 ---
+    @Getter
+    @NoArgsConstructor
+    public static class RefreshRequest {
+        @NotBlank(message = "리프레시 토큰은 필수입니다.")
+        private String refreshToken;
     }
 }

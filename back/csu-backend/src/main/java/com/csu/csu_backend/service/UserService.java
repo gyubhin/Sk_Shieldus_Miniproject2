@@ -1,5 +1,6 @@
 package com.csu.csu_backend.service;
 
+import com.csu.csu_backend.controller.dto.UserDTO; // 추가
 import com.csu.csu_backend.entity.User;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.repository.UserRepository;
@@ -15,6 +16,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
+
+    // --- 아래 메서드를 새로 추가 ---
+    public UserDTO.UserDetailResponse getUserDetail(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
+        return new UserDTO.UserDetailResponse(user);
+    }
 
     @Transactional
     public void deleteUser(Long userId) {
@@ -36,9 +44,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-
         fileStorageService.deleteFile(user.getProfileImageUrl());
-
 
         String path = fileStorageService.saveFile(file, "users");
         user.setProfileImageUrl(path);
@@ -57,5 +63,4 @@ public class UserService {
 
         userRepository.save(user);
     }
-
 }

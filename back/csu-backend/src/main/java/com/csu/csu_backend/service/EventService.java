@@ -16,6 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -59,6 +63,15 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
         return mapToEventResponse(event);
+    }
+
+    // --- 아래 메서드를 새로 추가 ---
+    @Transactional(readOnly = true)
+    public List<EventResponse> getUpcomingEventsForUser(Long userId) {
+        List<Event> upcomingEvents = eventRepository.findUpcomingEventsByUserId(userId, LocalDateTime.now());
+        return upcomingEvents.stream()
+                .map(this::mapToEventResponse)
+                .collect(Collectors.toList());
     }
 
     public EventResponse updateEvent(Long eventId, EventRequest request) {

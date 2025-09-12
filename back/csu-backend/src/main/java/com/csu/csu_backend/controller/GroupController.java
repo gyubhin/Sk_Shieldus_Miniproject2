@@ -56,9 +56,12 @@ public class GroupController {
         return ResponseEntity.ok(groups);
     }
 
+    // --- 메서드 시그니처 수정 ---
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId) {
-        GroupResponse group = groupService.getGroup(groupId);
+    public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId,
+                                                  @AuthenticationPrincipal UserPrincipal currentUser) {
+        Long userId = (currentUser != null) ? currentUser.getId() : null;
+        GroupResponse group = groupService.getGroup(groupId, userId);
         return ResponseEntity.ok(group);
     }
 
@@ -115,10 +118,10 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
-    @PostMapping("/{groupid}/cover-image")
-    public ResponseEntity<String> uploadCoverImage(@PathVariable Long id,
+    @PostMapping("/{groupId}/cover-image") // groupid -> groupId 로 수정
+    public ResponseEntity<String> uploadCoverImage(@PathVariable Long groupId,
                                                    @RequestParam("file") MultipartFile file) {
-        String path = groupService.updateCoverImage(id, file);
+        String path = groupService.updateCoverImage(groupId, file);
         return ResponseEntity.ok(path);
     }
 
