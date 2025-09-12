@@ -1,10 +1,12 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./EventItem.module.scss";
 import type { EventItem } from "@/features/event/_types/base";
+import { SmallButton } from "@/shared/components/button/SmallButton";
 
 type Props = {
   data: EventItem;
-  onMoreClick?: () => void;
+  onDelete?: () => void;
+  onManage?: () => void;
 };
 
 /**
@@ -21,7 +23,7 @@ type Props = {
  *   onMoreClick={() => console.log("더보기 클릭")}
  * />
  */
-export default function EventItem({ data, onMoreClick }: Props) {
+export default function EventItem({ data, onDelete, onManage }: Props) {
   return (
     <div className={styles.card}>
       {/* 썸네일 */}
@@ -35,18 +37,22 @@ export default function EventItem({ data, onMoreClick }: Props) {
 
       {/* 정보 */}
       <div className={styles.content}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>{data?.title ?? ""}</h3>
-
-          <button className={styles.more_btn} onClick={onMoreClick}>
-            <IconButton iconName="More" size={18} />
-          </button>
-        </div>
+        <h3 className={styles.title}>{data?.title ?? ""}</h3>
 
         <div className={styles.info}>
           <p className={styles.time}>{data?.eventDate ?? ""}</p>
           <p className={styles.location}>{data?.location ?? ""}</p>
         </div>
+      </div>
+
+      <div className={styles.actions}>
+        <SmallButton onClick={onDelete} styleType={"outline"}>
+          삭제
+        </SmallButton>
+
+        <SmallButton onClick={onManage} styleType={"outline"}>
+          모임원 관리
+        </SmallButton>
       </div>
     </div>
   );

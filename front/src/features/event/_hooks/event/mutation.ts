@@ -23,8 +23,8 @@ export function usePatchEventsApi(eventId: number) {
 /**
  *@description events 일정 삭제  훅
  */
-export function useDeleteEventEventsApi(eventId: number) {
+export function useDeleteEventEventsApi() {
   return useMutation({
-    mutationFn: (body: PatchEventBody) => deleteEventEventsApi(eventId),
+    mutationFn: (eventId: number) => deleteEventEventsApi(eventId),
   });
 }

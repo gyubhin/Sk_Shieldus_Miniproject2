@@ -19,6 +19,7 @@ import EventItem from "@/features/group/_components/EventItem";
 import { useState } from "react";
 import { useGetEventAttendeeApi } from "@/features/event/_hooks/attendee/query";
 import { EventAttendeesModal } from "@/features/event/_components/attendee/EventAttendeesModal";
+import { useDeleteEventEventsApi } from "@/features/event/_hooks/event/mutation";
 
 /**
  *@description 내 모임 탭 > 모임 설정 페이지
@@ -32,11 +33,21 @@ function GroupSettingPage() {
   const { showToast } = useUiStore();
 
   const { data } = useGetGroupsOneApi(groupId);
+
+  // 멤버 추방 api
   const { mutateAsync: mutateKickMember } = useDeleteGroupsMemberApi(groupId);
+
+  // 그룹 삭제 api
   const { mutateAsync: mutateDeleteGroup } = useDeleteGroupsApi();
+
+  // 그룹 위임 api
   const { mutateAsync: mutateDelegate } = usePatchDelegateOwner(groupId);
 
+  // 그룹 멤버 조회 api
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
+
+  // 이벤트 삭제 api
+  const { mutateAsync: mutateDeleteEvent } = useDeleteEventEventsApi();
 
   // 이벤트(일정) 목록 state
   const { data: eventsList } = useGetEventsListApi(groupId);
@@ -103,8 +114,25 @@ function GroupSettingPage() {
     }
   };
 
+  // 이벤트(일정) 삭제
+  const onDeleteEvent = async (_eventId: number) => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        const res = await mutateDeleteEvent(_eventId);
+        if (res.status === 204) {
+          showToast({ type: "success", message: "성공적으로 삭제 되었습니다." });
+          navigate(-1);
+        }
+      } catch (error) {
+        if (isAxiosError<ErrorResponse>(error)) {
+          showToast({ type: "error", message: "잘못된 접근입니다." });
+        }
+      }
+    }
+  };
+
   // 이벤트(일정) more 선택
-  const onSelectedEvent = (_eventId: number) => {
+  const onManageEvent = (_eventId: number) => {
     setSelectedEvent(_eventId);
     setOpenEventAttendeeModal(true);
   };
@@ -153,7 +181,11 @@ function GroupSettingPage() {
         <h3>일정 목록</h3>
 
         {(eventsList?.content ?? []).map((event) => (
-          <EventItem data={event} onMoreClick={() => onSelectedEvent(event.id)} />
+          <EventItem
+            data={event}
+            onDelete={() => onDeleteEvent(event.id)}
+            onManage={() => onManageEvent(event.id)}
+          />
         ))}
       </section>
 
