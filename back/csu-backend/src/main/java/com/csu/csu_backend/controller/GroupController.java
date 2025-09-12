@@ -63,8 +63,10 @@ public class GroupController {
 
     @Operation(summary = "그룹 상세 조회 API")
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId) {
-        GroupResponse group = groupService.getGroup(groupId);
+    public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId,
+                                                  @AuthenticationPrincipal UserPrincipal currentUser) {
+        Long userId = (currentUser != null) ? currentUser.getId() : null;
+        GroupResponse group = groupService.getGroup(groupId, userId);
         return ResponseEntity.ok(group);
     }
 
@@ -129,10 +131,10 @@ public class GroupController {
     }
 
     @Operation(summary = "그룹 커버 이미지 업로드/수정 API")
-    @PostMapping("/{groupid}/cover-image")
-    public ResponseEntity<String> uploadCoverImage(@PathVariable Long id,
+    @PostMapping("/{groupId}/cover-image") // groupid -> groupId 로 수정
+    public ResponseEntity<String> uploadCoverImage(@PathVariable Long groupId,
                                                    @RequestParam("file") MultipartFile file) {
-        String path = groupService.updateCoverImage(id, file);
+        String path = groupService.updateCoverImage(groupId, file);
         return ResponseEntity.ok(path);
     }
 

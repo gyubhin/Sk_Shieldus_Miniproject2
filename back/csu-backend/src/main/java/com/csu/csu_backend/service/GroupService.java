@@ -82,9 +82,25 @@ public class GroupService {
         return PagingResponse.of(responsePage);
     }
 
-    public GroupResponse getGroup(Long groupId) {
+    // --- 메서드 시그니처 및 로직 수정 ---
+    public GroupResponse getGroup(Long groupId, Long userId) {
         Group group = findGroupById(groupId);
-        return new GroupResponse(group);
+        GroupResponse response = new GroupResponse(group);
+
+        // 비로그인 사용자는 false로 처리
+        if (userId == null) {
+            response.setLiked(false);
+            response.setJoined(false);
+        } else {
+            // 로그인 사용자의 경우, 찜/가입 여부 확인
+            User user = findUserById(userId);
+            boolean isLiked = groupLikeRepository.findByUserAndGroup(user, group).isPresent();
+            boolean isJoined = membershipRepository.existsByUserAndGroup(user, group);
+            response.setLiked(isLiked);
+            response.setJoined(isJoined);
+        }
+
+        return response;
     }
 
     public List<MemberResponse> getGroupMembers(Long groupId) {
@@ -223,7 +239,7 @@ public class GroupService {
     }
 
     private void validateGroupNameDuplication(String name) {
-        groupRepository.findByName(name).ifPresent(g -> {
+        groupRepository.findByNameWithLock(name).ifPresent(g -> {
             throw new DuplicateResourceException("이미 존재하는 그룹 이름입니다: " + name);
         });
     }

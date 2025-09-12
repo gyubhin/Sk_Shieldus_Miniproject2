@@ -1,14 +1,17 @@
 package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.CategoryDTO.CategoryResponse;
-import com.csu.csu_backend.controller.dto.CategoryDTO.CategoryWithGroupsResponse; // 추가
+import com.csu.csu_backend.controller.dto.CategoryDTO.CategoryWithGroupsResponse;
 import com.csu.csu_backend.repository.CategoryRepository;
-
+import com.csu.csu_backend.repository.GroupLikeRepository;
+import com.csu.csu_backend.repository.MembershipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final GroupLikeRepository groupLikeRepository;
+    private final MembershipRepository membershipRepository;
 
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream()
@@ -24,10 +29,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    // --- 아래 메서드를 새로 추가 ---
-    public List<CategoryWithGroupsResponse> getAllCategoriesWithGroups() {
+    public List<CategoryWithGroupsResponse> getAllCategoriesWithGroups(Long userId) {
+        Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
+        Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
+
         return categoryRepository.findAllWithGroups().stream()
-                .map(CategoryWithGroupsResponse::new)
+                .map(category -> new CategoryWithGroupsResponse(category, likedGroupIds, joinedGroupIds))
                 .collect(Collectors.toList());
     }
 }

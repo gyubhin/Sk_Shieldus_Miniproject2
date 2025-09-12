@@ -1,9 +1,11 @@
 package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.AuthDTO.LoginRequest;
+import com.csu.csu_backend.controller.dto.AuthDTO.RefreshRequest; // 추가
 import com.csu.csu_backend.controller.dto.AuthDTO.SignUpRequest;
 import com.csu.csu_backend.controller.dto.AuthDTO.TokenResponse;
 import com.csu.csu_backend.service.AuthService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -43,11 +45,12 @@ public class AuthController {
         return ResponseEntity.ok("성공적으로 로그아웃되었습니다.");
     }
 
+
     // 추가: 리프레시 토큰을 사용해 토큰 재발급 API
     @Operation(summary = "토큰 재발급 API")
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponse> refresh(@RequestBody String refreshToken) {
-        TokenResponse newToken = authService.refresh(refreshToken);
+    public ResponseEntity<TokenResponse> refresh(@Valid @RequestBody RefreshRequest request) { // 수정
+        TokenResponse newToken = authService.refresh(request.getRefreshToken()); // 수정
         return ResponseEntity.ok(newToken);
     }
 }

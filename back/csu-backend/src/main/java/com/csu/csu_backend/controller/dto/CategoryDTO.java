@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CategoryDTO {
@@ -28,11 +29,16 @@ public class CategoryDTO {
         private String name;
         private List<GroupDTO.GroupResponse> groups;
 
-        public CategoryWithGroupsResponse(Category category) {
+        public CategoryWithGroupsResponse(Category category, Set<Long> likedGroupIds, Set<Long> joinedGroupIds) {
             this.id = category.getId();
             this.name = category.getName();
             this.groups = category.getGroups().stream()
-                    .map(GroupDTO.GroupResponse::new)
+                    .map(group -> {
+                        GroupDTO.GroupResponse response = new GroupDTO.GroupResponse(group);
+                        response.setLiked(likedGroupIds.contains(group.getId()));
+                        response.setJoined(joinedGroupIds.contains(group.getId()));
+                        return response;
+                    })
                     .collect(Collectors.toList());
         }
     }
