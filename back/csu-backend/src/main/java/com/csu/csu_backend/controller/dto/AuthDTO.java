@@ -23,6 +23,8 @@ public class AuthDTO {
 
         @NotBlank(message = "닉네임은 필수입니다.")
         private String nickname;
+
+        private String region; // 추가
     }
 
     @Getter
@@ -40,7 +42,7 @@ public class AuthDTO {
     @NoArgsConstructor
     public static class TokenResponse {
         private String accessToken;
-        private String refreshToken; // 추가
+        private String refreshToken;
         private String tokenType = "Bearer";
 
         public TokenResponse(String accessToken, String refreshToken) {

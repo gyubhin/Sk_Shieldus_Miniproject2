@@ -19,8 +19,8 @@ public class GroupDTO {
         private String description;
         private String region;
         private int maxMembers;
-        private String imageUrl; // 추가
-        private String tags;     // 추가
+        private String imageUrl;
+        private String tags;
 
         @NotNull(message = "카테고리는 필수입니다.")
         private Long categoryId;
@@ -31,8 +31,8 @@ public class GroupDTO {
                     .description(description)
                     .region(region)
                     .maxMembers(maxMembers)
-                    .imageUrl(imageUrl) // 추가
-                    .tags(tags)         // 추가
+                    .imageUrl(imageUrl)
+                    .tags(tags)
                     .owner(owner)
                     .category(category)
                     .build();
@@ -40,7 +40,7 @@ public class GroupDTO {
     }
 
     @Getter
-    @Setter // isLiked 필드를 외부에서 설정하기 위해 추가
+    @Setter
     @NoArgsConstructor
     public static class GroupResponse {
         private Long id;
@@ -48,10 +48,11 @@ public class GroupDTO {
         private String description;
         private String region;
         private int maxMembers;
-        private int currentMembers; // 추가
-        private String imageUrl;    // 추가
-        private String tags;        // 추가
-        private boolean isLiked;    // 추가 (찜 여부)
+        private int currentMembers;
+        private String imageUrl;
+        private String tags;
+        private boolean isLiked;
+        private boolean isJoined; // 추가
         private Long ownerId;
         private String ownerNickname;
         private Long categoryId;
@@ -66,6 +67,8 @@ public class GroupDTO {
             this.currentMembers = group.getCurrentMembers();
             this.imageUrl = group.getImageUrl();
             this.tags = group.getTags();
+            this.isLiked = false; // 기본값, 서비스 레이어에서 최종 결정
+            this.isJoined = false; // 기본값, 서비스 레이어에서 최종 결정
             this.ownerId = group.getOwner().getId();
             this.ownerNickname = group.getOwner().getNickname();
             this.categoryId = group.getCategory().getId();
