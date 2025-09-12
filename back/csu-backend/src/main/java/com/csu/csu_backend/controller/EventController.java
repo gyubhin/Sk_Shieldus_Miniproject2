@@ -2,6 +2,7 @@ package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.EventRequest;
 import com.csu.csu_backend.controller.dto.EventResponse;
+import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,8 @@ public class EventController {
     }
 
     @DeleteMapping("/events/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
+    public ResponseEntity<ApiResponse> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 }

@@ -2,6 +2,7 @@ package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.CommentDTO.CreateCommentRequest;
 import com.csu.csu_backend.controller.dto.CommentDTO.UpdateCommentRequest;
+import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.CommentService;
 import jakarta.validation.Valid;
@@ -31,19 +32,19 @@ public class CommentController {
 
     // 댓글 수정
     @PatchMapping("/{commentId}")
-    public ResponseEntity<Void> updateComment(@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest request,
+    public ResponseEntity<ApiResponse> updateComment(@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest request,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
         commentService.updateComment(commentId, userId, request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 
     // 댓글 삭제 (논리적 삭제)
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
+    public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long commentId,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         Long userId = currentUser.getId();
         commentService.deleteComment(commentId, userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 50)
     private String nickname;
-
+    @Setter
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final FileStorageService fileStorageService;
 
     @Transactional
     public Long createPost(Long groupId, Long userId, CreatePostRequest request) {
@@ -101,4 +103,34 @@ public class PostService {
             throw new UnauthorizedException("해당 그룹의 게시글이 아닙니다.");
         }
     }
+
+    @Transactional
+    public String updatePostImage(Long groupId, Long postId, Long userId, MultipartFile file) {
+        Post post = findPostById(postId);
+        validatePostOwner(post, userId);
+        validatePostInGroup(post, groupId);
+
+
+        fileStorageService.deleteFile(post.getImageUrl());
+
+
+        String path = fileStorageService.saveFile(file, "posts");
+        post.setImageUrl(path);
+
+        postRepository.save(post);
+        return path;
+    }
+
+    @Transactional
+    public void deletePostImage(Long groupId, Long postId, Long userId) {
+        Post post = findPostById(postId);
+        validatePostOwner(post, userId);
+        validatePostInGroup(post, groupId);
+
+        fileStorageService.deleteFile(post.getImageUrl());
+        post.setImageUrl(null);
+
+        postRepository.save(post);
+    }
+
 }
