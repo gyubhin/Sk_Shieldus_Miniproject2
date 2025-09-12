@@ -10,6 +10,7 @@ import MyPostItem from "@/features/users/_components/mypage/MyPostItem";
 import { MypageInnerTab } from "@/features/users/_components/mypage/MypageInnerTab";
 import { MyCommentItem } from "@/features/users/_components/mypage/MyCommentItem";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useGetUserInfo } from "@/features/users/_hooks/query";
 
 /**
  *@description 마이페이지
@@ -19,21 +20,16 @@ function Mypage() {
   const [searchParams] = useSearchParams();
 
   const page = searchParams.get("page");
+  const { data: userData } = useGetUserInfo();
 
   const navigate = useNavigate();
 
-  const user = {
-    avatarUrl: undefined,
-    nickname: "토토",
-    description: "잘 부탁드려요!~",
-    postCount: 0,
-    commentCount: 0,
-  };
-
+  // 유저 프로필 수정 페이지 이동 이벤트
   const onMoveEditProfile = () => {
     navigate("/mypage/edit");
   };
 
+  // 셋팅 페이지 이동 이벤트
   const onMoveSetting = () => {
     navigate("/mypage/setting");
   };
@@ -43,20 +39,13 @@ function Mypage() {
     navigate(`/mypage?page=${page}`);
   };
 
-  // const wishGroups = Array.from({ length: 5 });
-
   return (
     <CommonLayout>
       <Header />
 
       <MyProfileView
-        avatarUrl={user.avatarUrl}
-        nickname={user.nickname}
-        description={user.description}
-        postCount={user.postCount}
-        commentCount={user.commentCount}
+        userData={userData}
         onEditProfile={onMoveEditProfile}
-        onEditLocation={() => alert("동네 수정 클릭됨")}
         onSettings={onMoveSetting}
       />
 

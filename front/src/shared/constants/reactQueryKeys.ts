@@ -9,6 +9,7 @@ export const reactQueryKeys = {
   },
   user: {
     getUserMeGroups: "get user me group",
+    getUserInfo: "get user info",
   },
 
   event: {

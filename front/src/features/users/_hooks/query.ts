@@ -1,6 +1,6 @@
 import { reactQueryKeys } from "@/shared/constants/reactQueryKeys";
 import { useQuery } from "@tanstack/react-query";
-import { getMyJoinedGroup } from "../_apis/user.api";
+import { getMyJoinedGroup, getUserInfo } from "../_apis/user.api";
 import type { PagingQuery } from "@/shared/types/api";
 
 /**
@@ -10,6 +10,19 @@ export function useGetMyJoinedGroup(query: PagingQuery) {
   return useQuery({
     queryKey: [reactQueryKeys.user.getUserMeGroups, query],
     queryFn: () => getMyJoinedGroup(query),
+    select: (data) => {
+      return data.data;
+    },
+  });
+}
+
+/**
+ *@description user 정보 조회 훅
+ */
+export function useGetUserInfo() {
+  return useQuery({
+    queryKey: [reactQueryKeys.user.getUserInfo],
+    queryFn: () => getUserInfo(),
     select: (data) => {
       return data.data;
     },
