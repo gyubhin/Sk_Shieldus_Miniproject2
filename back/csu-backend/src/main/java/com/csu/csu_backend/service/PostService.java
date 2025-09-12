@@ -1,9 +1,10 @@
 package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.PostDTO.CreatePostRequest;
-import com.csu.csu_backend.controller.dto.PostDTO.PostResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.PostDetailResponse;
+import com.csu.csu_backend.controller.dto.PostDTO.PostResponse;
 import com.csu.csu_backend.controller.dto.PostDTO.UpdatePostRequest;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.Post;
 import com.csu.csu_backend.entity.User;
@@ -17,9 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +48,10 @@ public class PostService {
         return new PostDetailResponse(post);
     }
 
-    public List<PostResponse> getAllPostsByGroup(Long groupId, Pageable pageable) {
+    public PagingResponse<PostResponse> getAllPostsByGroup(Long groupId, Pageable pageable) {
         Group group = findGroupById(groupId);
         Page<Post> postsPage = postRepository.findByGroup(group, pageable);
-        return postsPage.stream()
-                .map(PostResponse::new)
-                .collect(Collectors.toList());
+        return PagingResponse.of(postsPage.map(PostResponse::new));
     }
 
     @Transactional
@@ -70,11 +70,31 @@ public class PostService {
         post.delete();
     }
 
-    public List<PostResponse> searchPosts(String keyword, Pageable pageable) {
+    public PagingResponse<PostResponse> searchPosts(String keyword, Pageable pageable) {
         Page<Post> postsPage = postRepository.search(keyword, pageable);
-        return postsPage.stream()
-                .map(PostResponse::new)
-                .collect(Collectors.toList());
+        return PagingResponse.of(postsPage.map(PostResponse::new));
+    }
+
+    @Transactional
+    public String updatePostImage(Long groupId, Long postId, Long userId, MultipartFile file) {
+        Post post = findPostById(postId);
+        validatePostOwner(post, userId);
+        validatePostInGroup(post, groupId);
+        fileStorageService.deleteFile(post.getImageUrl());
+        String path = fileStorageService.saveFile(file, "posts");
+        post.setImageUrl(path);
+        postRepository.save(post);
+        return path;
+    }
+
+    @Transactional
+    public void deletePostImage(Long groupId, Long postId, Long userId) {
+        Post post = findPostById(postId);
+        validatePostOwner(post, userId);
+        validatePostInGroup(post, groupId);
+        fileStorageService.deleteFile(post.getImageUrl());
+        post.setImageUrl(null);
+        postRepository.save(post);
     }
 
     private User findUserById(Long userId) {
@@ -103,34 +123,4 @@ public class PostService {
             throw new UnauthorizedException("해당 그룹의 게시글이 아닙니다.");
         }
     }
-
-    @Transactional
-    public String updatePostImage(Long groupId, Long postId, Long userId, MultipartFile file) {
-        Post post = findPostById(postId);
-        validatePostOwner(post, userId);
-        validatePostInGroup(post, groupId);
-
-
-        fileStorageService.deleteFile(post.getImageUrl());
-
-
-        String path = fileStorageService.saveFile(file, "posts");
-        post.setImageUrl(path);
-
-        postRepository.save(post);
-        return path;
-    }
-
-    @Transactional
-    public void deletePostImage(Long groupId, Long postId, Long userId) {
-        Post post = findPostById(postId);
-        validatePostOwner(post, userId);
-        validatePostInGroup(post, groupId);
-
-        fileStorageService.deleteFile(post.getImageUrl());
-        post.setImageUrl(null);
-
-        postRepository.save(post);
-    }
-
 }

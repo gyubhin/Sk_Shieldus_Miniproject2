@@ -4,6 +4,7 @@ import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
 import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.GroupService;
 import jakarta.validation.Valid;
@@ -36,8 +37,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupResponse>> getAllGroups(
-            @RequestParam(required = false) Long categoryId, // categoryId 파라미터 추가
+    public ResponseEntity<PagingResponse<GroupResponse>> getAllGroups(
+            @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String region,
             @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
             @PageableDefault(size = 20) Pageable pageable,
@@ -51,7 +52,7 @@ public class GroupController {
         }
 
         Long userId = (currentUser != null) ? currentUser.getId() : null;
-        List<GroupResponse> groups = groupService.getAllGroups(categoryId, region, finalPageable, userId); // 서비스에 categoryId 전달
+        PagingResponse<GroupResponse> groups = groupService.getAllGroups(categoryId, region, finalPageable, userId);
         return ResponseEntity.ok(groups);
     }
 

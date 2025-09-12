@@ -3,14 +3,17 @@ package com.csu.csu_backend.controller;
 import com.csu.csu_backend.controller.dto.EventRequest;
 import com.csu.csu_backend.controller.dto.EventResponse;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -22,14 +25,16 @@ public class EventController {
     @PostMapping("/groups/{groupId}/events")
     public ResponseEntity<Void> createEvent(@PathVariable Long groupId, @Valid @RequestBody EventRequest request) {
         // TODO: Get user ID from security context
-        Long currentUserId = 1L; // Placeholder for the current user's ID.
+        Long currentUserId = 1L; // Placeholder
         Long eventId = eventService.createEvent(groupId, request, currentUserId);
         return ResponseEntity.created(URI.create("/api/events/" + eventId)).build();
     }
 
     @GetMapping("/groups/{groupId}/events")
-    public ResponseEntity<List<EventResponse>> getEvents(@PathVariable Long groupId) {
-        List<EventResponse> events = eventService.getEventsByGroup(groupId);
+    public ResponseEntity<PagingResponse<EventResponse>> getEvents(
+            @PathVariable Long groupId,
+            @PageableDefault(sort = "startAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        PagingResponse<EventResponse> events = eventService.getEventsByGroup(groupId, pageable);
         return ResponseEntity.ok(events);
     }
 

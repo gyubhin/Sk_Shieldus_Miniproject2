@@ -3,6 +3,7 @@ package com.csu.csu_backend.service;
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
 import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.*;
 import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.GroupFullException;
@@ -54,15 +55,12 @@ public class GroupService {
         return group.getId();
     }
 
-    public List<GroupResponse> getAllGroups(Long categoryId, String region, Pageable pageable, Long userId) {
-        // Specification을 사용하여 동적 쿼리 생성
+    public PagingResponse<GroupResponse> getAllGroups(Long categoryId, String region, Pageable pageable, Long userId) {
         Specification<Group> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            // categoryId가 있으면 카테고리 필터 조건 추가
             if (categoryId != null) {
                 predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
             }
-            // region이 있으면 지역 필터 조건 추가
             if (StringUtils.hasText(region)) {
                 predicates.add(criteriaBuilder.equal(root.get("region"), region));
             }
@@ -74,14 +72,14 @@ public class GroupService {
         Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
         Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
 
-        return groupPage.stream()
-                .map(group -> {
-                    GroupResponse response = new GroupResponse(group);
-                    response.setLiked(likedGroupIds.contains(group.getId()));
-                    response.setJoined(joinedGroupIds.contains(group.getId()));
-                    return response;
-                })
-                .collect(Collectors.toList());
+        Page<GroupResponse> responsePage = groupPage.map(group -> {
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(likedGroupIds.contains(group.getId()));
+            response.setJoined(joinedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(responsePage);
     }
 
     public GroupResponse getGroup(Long groupId) {
@@ -102,10 +100,8 @@ public class GroupService {
     public void joinGroup(Long groupId, Long userId) {
         User user = findUserById(userId);
         Group group = findGroupById(groupId);
-
         validateUserIsAlreadyMember(user, group);
         validateGroupCapacity(group);
-
         createMemberMembership(user, group);
     }
 
@@ -113,11 +109,8 @@ public class GroupService {
     public void leaveGroup(Long groupId, Long userId) {
         User user = findUserById(userId);
         Group group = findGroupById(groupId);
-
         Membership membership = findMembershipByUserAndGroup(user, group);
-
         validateMemberIsOwner(membership);
-
         membershipRepository.delete(membership);
     }
 
@@ -126,31 +119,23 @@ public class GroupService {
         if (ownerId.equals(memberId)) {
             throw new UnauthorizedException("그룹장은 자기 자신을 강퇴할 수 없습니다.");
         }
-
         Group group = findGroupById(groupId);
         validateUserIsOwner(group, ownerId);
-
         User member = findUserById(memberId);
         Membership membership = findMembershipByUserAndGroup(member, group);
-
         membershipRepository.delete(membership);
     }
 
     public List<GroupResponse> getMyGroups(Long userId) {
         User user = findUserById(userId);
         List<Membership> memberships = membershipRepository.findByUser(user);
-
         Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
-        Set<Long> joinedGroupIds = memberships.stream()
-                .map(m -> m.getGroup().getId())
-                .collect(Collectors.toSet());
-
         return memberships.stream()
                 .map(Membership::getGroup)
                 .map(group -> {
                     GroupResponse response = new GroupResponse(group);
                     response.setLiked(likedGroupIds.contains(group.getId()));
-                    response.setJoined(joinedGroupIds.contains(group.getId()));
+                    response.setJoined(true);
                     return response;
                 })
                 .collect(Collectors.toList());
@@ -167,19 +152,14 @@ public class GroupService {
     public void delegateGroupOwner(Long groupId, Long newOwnerId, Long currentOwnerId) {
         Group group = findGroupById(groupId);
         validateUserIsOwner(group, currentOwnerId);
-
         if (currentOwnerId.equals(newOwnerId)) {
             throw new IllegalArgumentException("그룹장을 자기 자신에게 위임할 수 없습니다.");
         }
-
         User newOwner = findUserById(newOwnerId);
         Membership newOwnerMembership = findMembershipByUserAndGroup(newOwner, group);
-
         Membership currentOwnerMembership = findMembershipByUserAndGroup(findUserById(currentOwnerId), group);
         currentOwnerMembership.updateRole(ROLE_MEMBER);
-
         newOwnerMembership.updateRole(ROLE_OWNER);
-
         group.delegateOwner(newOwner);
     }
 
