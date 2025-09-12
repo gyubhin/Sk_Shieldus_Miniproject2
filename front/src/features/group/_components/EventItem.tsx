@@ -7,6 +7,7 @@ type Props = {
   data: EventItem;
   onDelete?: () => void;
   onManage?: () => void;
+  onMoreClick?: () => void;
 };
 
 /**
@@ -23,7 +24,7 @@ type Props = {
  *   onMoreClick={() => console.log("더보기 클릭")}
  * />
  */
-export default function EventItem({ data, onDelete, onManage }: Props) {
+export default function EventItem({ data, onDelete, onManage, onMoreClick }: Props) {
   return (
     <div className={styles.card}>
       {/* 썸네일 */}
@@ -46,13 +47,23 @@ export default function EventItem({ data, onDelete, onManage }: Props) {
       </div>
 
       <div className={styles.actions}>
-        <SmallButton onClick={onDelete} styleType={"outline"}>
-          삭제
-        </SmallButton>
+        {onDelete && (
+          <SmallButton onClick={onDelete} styleType={"outline"}>
+            삭제
+          </SmallButton>
+        )}
 
-        <SmallButton onClick={onManage} styleType={"outline"}>
-          모임원 관리
-        </SmallButton>
+        {onManage && (
+          <SmallButton onClick={onManage} styleType={"outline"}>
+            모임원 관리
+          </SmallButton>
+        )}
+
+        {onMoreClick && (
+          <button className={styles.more_btn} onClick={onMoreClick}>
+            <IconButton iconName="More" size={18} />
+          </button>
+        )}
       </div>
     </div>
   );
