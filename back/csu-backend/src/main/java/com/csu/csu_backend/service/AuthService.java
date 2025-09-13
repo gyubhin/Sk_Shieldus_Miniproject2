@@ -8,13 +8,15 @@ import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.repository.UserRepository;
 import com.csu.csu_backend.security.JwtTokenProvider;
-import com.csu.csu_backend.security.UserPrincipal; // UserPrincipal 임포트 추가
+import com.csu.csu_backend.security.UserPrincipal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails; // UserDetails 임포트 추가
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,13 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+
+    @Getter
+    @AllArgsConstructor
+    public static class TokenPair {
+        private String accessToken;
+        private String refreshToken;
+    }
 
     @Transactional
     public Long registerUser(SignUpRequest signUpRequest) {
@@ -45,7 +54,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthDTO.TokenResponse loginUser(LoginRequest loginRequest) {
+    public TokenPair loginUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -63,11 +72,11 @@ public class AuthService {
         user.updateRefreshToken(refreshToken);
         userRepository.save(user);
 
-        return new AuthDTO.TokenResponse(jwt, refreshToken);
+        return new TokenPair(jwt, refreshToken);
     }
 
     @Transactional
-    public AuthDTO.TokenResponse refresh(String refreshToken) {
+    public TokenPair refresh(String refreshToken) {
         if (!tokenProvider.validateRefreshToken(refreshToken)) {
             throw new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.");
         }
@@ -75,9 +84,7 @@ public class AuthService {
         User user = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new ResourceNotFoundException("리프레시 토큰에 해당하는 사용자를 찾을 수 없습니다."));
 
-        // User 엔티티를 Spring Security가 이해하는 UserDetails(UserPrincipal)로 변환
         UserDetails userDetails = UserPrincipal.create(user);
-        // UserDetails를 사용하여 Authentication 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         String newAccessToken = tokenProvider.generateToken(authentication);
@@ -86,6 +93,6 @@ public class AuthService {
         user.updateRefreshToken(newRefreshToken);
         userRepository.save(user);
 
-        return new AuthDTO.TokenResponse(newAccessToken, newRefreshToken);
+        return new TokenPair(newAccessToken, newRefreshToken);
     }
 }
