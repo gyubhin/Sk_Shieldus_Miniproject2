@@ -18,6 +18,7 @@ type Props = {
 export function GroupSearchItem({ tags = [], data }: Props) {
   const navigate = useNavigate();
   const [liked, setLiked] = useState(data.liked);
+  const [imageError, setImageError] = useState(false);
 
   const onClickGroup = () => {
     navigate(`/group/${data.id}/info`);
@@ -44,7 +45,19 @@ export function GroupSearchItem({ tags = [], data }: Props) {
       onKeyDown={onKeyDownGroup}
     >
       {/* 이미지 */}
-      {data.imageUrl && <img src={data.imageUrl} alt={data.name} className={styles.image} />}
+      {!imageError && data.imageUrl && (
+        <img
+          src={`${import.meta.env.VITE_APP_IMG_BASE_URL}${data.imageUrl}`}
+          alt={data.name}
+          className={styles.image}
+          onError={() => {
+            setImageError(true);
+          }}
+        />
+      )}
+      {(imageError || !data.imageUrl) && (
+        <img src={"https://placehold.co/300x200"} alt={"대체 이미지"} className={styles.image} />
+      )}
 
       {/* 본문 */}
       <div className={styles.content}>

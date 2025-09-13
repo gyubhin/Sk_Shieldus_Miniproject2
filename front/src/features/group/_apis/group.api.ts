@@ -1,5 +1,5 @@
 import { apiCall } from "@/libs/apiCall";
-import type { PostGroupsBody } from "../_types/body";
+import type { PatchGroupsBody, PostGroupsBody } from "../_types/body";
 import type { MutationResponse, PagingQuery } from "@/shared/types/api";
 import type {
   GetGroupsListResponse,
@@ -12,10 +12,21 @@ import type { GroupsItem } from "../_types/base";
 /**
  *@description 모임 생성 api
  */
-export const postGroupsApi = (body: FormData) => {
+export const postGroupsApi = (body: PostGroupsBody) => {
   return apiCall<MutationResponse>({
     url: "/groups",
     method: "POST",
+    data: body,
+  });
+};
+
+/**
+ *@description 모임 수정 api
+ */
+export const patchGroupsApi = (body: PatchGroupsBody, groupId?: string) => {
+  return apiCall<undefined>({
+    url: `/groups/${groupId}`,
+    method: "PATCH",
     data: body,
   });
 };

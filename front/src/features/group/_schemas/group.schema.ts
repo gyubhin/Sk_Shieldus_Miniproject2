@@ -11,7 +11,7 @@ export const groupSchema = z.object({
   maxMembers: z.number("최대 인원은 숫자여야 합니다.").min(2, "최대 인원은 2명 이상이어야 합니다."),
   tags: z.string(),
   // tags: z.array(z.string()).max(5, "태그는 최대 5개까지 등록할 수 있습니다."),
-  // imageUrl: z.instanceof(File).optional(),
+  imageUrl: z.string().nullable().optional(),
 });
 
 // 등록/수정용 타입
