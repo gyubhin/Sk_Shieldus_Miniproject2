@@ -2,10 +2,14 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.CategoryDTO.CategoryResponse;
 import com.csu.csu_backend.controller.dto.CategoryDTO.CategoryWithGroupsResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
+import com.csu.csu_backend.entity.Category;
 import com.csu.csu_backend.repository.CategoryRepository;
 import com.csu.csu_backend.repository.GroupLikeRepository;
 import com.csu.csu_backend.repository.MembershipRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +33,15 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryWithGroupsResponse> getAllCategoriesWithGroups(Long userId) {
+    public PagingResponse<CategoryWithGroupsResponse> getAllCategoriesWithGroups(Long userId, Pageable pageable) {
         Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
         Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
 
-        return categoryRepository.findAllWithGroups().stream()
-                .map(category -> new CategoryWithGroupsResponse(category, likedGroupIds, joinedGroupIds))
-                .collect(Collectors.toList());
+        Page<Category> categoryPage = categoryRepository.findAllWithGroups(pageable);
+
+        Page<CategoryWithGroupsResponse> responsePage = categoryPage
+                .map(category -> new CategoryWithGroupsResponse(category, likedGroupIds, joinedGroupIds));
+
+        return PagingResponse.of(responsePage);
     }
 }
