@@ -46,3 +46,10 @@ export type Cursor<T> = {
   content: T;
   nextCursor: string;
 };
+
+/**
+ *@description file url 응답
+ */
+export type ImageUploadResponse = {
+  imageUrl: string;
+};
