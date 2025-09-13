@@ -29,22 +29,29 @@ function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage />} />
+
+        {/* AUTH */}
         <Route path="login" element={<LoginPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
-
         <Route path="signup" element={<SignupPage />} />
         <Route path="search" element={<MainSearch />} />
 
+        {/* 내모임 */}
         <Route path="group" element={<MyGroupTabPage />} />
-        <Route path="group/:groupId/post" element={<GroupPostPage />} />
-        <Route path="group/:groupId/post/register" element={<PostRegisterPage />} />
-        <Route path="group/:groupId/post/register/:postId" element={<PostRegisterPage />} />
         <Route path="group/register" element={<GroupRegisterPage />} />
         <Route path="group/register/:groupId" element={<GroupRegisterPage />} />
-        <Route path="group/event/register" element={<EventRegisterPage />} />
         <Route path="group/:groupId/info" element={<GroupInfoPage />} />
         <Route path="group/:groupId/setting" element={<GroupSettingPage />} />
 
+        {/* 게시글(POST) */}
+        <Route path="group/:groupId/post" element={<GroupPostPage />} />
+        <Route path="group/:groupId/post/register" element={<PostRegisterPage />} />
+        <Route path="group/:groupId/post/register/:postId" element={<PostRegisterPage />} />
+
+        {/* 일정 */}
+        <Route path="group/event/register" element={<EventRegisterPage />} />
+
+        {/* 내정보 */}
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/notice" element={<NoticePage />} />
