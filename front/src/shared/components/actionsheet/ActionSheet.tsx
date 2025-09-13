@@ -8,10 +8,12 @@ type Props = {
   onClose: () => void;
   onClickFirst?: () => void;
   onClickSecond?: () => void;
+  onClickThird?: () => void;
   firstText?: string;
   secondText?: string;
+  thirdText?: string;
   title?: string;
-  destructive?: "first" | "second";
+  destructive?: "first" | "second" | "third";
 };
 
 export default function ActionSheet({
@@ -19,16 +21,20 @@ export default function ActionSheet({
   onClose,
   onClickFirst,
   onClickSecond,
+  onClickThird,
   firstText,
   secondText,
+  thirdText,
   title,
   destructive,
 }: Props) {
   // ---- 하위호환 매핑 ----
   const handleFirst = onClickFirst;
   const handleSecond = onClickSecond;
+  const handleThird = onClickThird;
   const labelFirst = firstText;
   const labelSecond = secondText;
+  const labelThird = thirdText;
 
   useEffect(() => {
     if (!open) return;
@@ -69,6 +75,16 @@ export default function ActionSheet({
         >
           {labelSecond}
         </button>
+
+        {labelThird && (
+          <button
+            className={`${styles.item} ${destructive === "third" ? styles.destructive : ""}`}
+            type="button"
+            onClick={handleThird}
+          >
+            {labelThird}
+          </button>
+        )}
       </div>
     </div>,
     root,

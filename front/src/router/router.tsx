@@ -48,7 +48,8 @@ function Router() {
         <Route path="group/:groupId/post/register/:postId" element={<PostRegisterPage />} />
 
         {/* 일정 */}
-        <Route path="group/event/register" element={<EventRegisterPage />} />
+        <Route path="group/:groupId/event/register" element={<EventRegisterPage />} />
+        <Route path="group/:groupId/event/register/:eventId" element={<EventRegisterPage />} />
 
         {/* 내정보 */}
         <Route path="mypage" element={<Mypage />} />
