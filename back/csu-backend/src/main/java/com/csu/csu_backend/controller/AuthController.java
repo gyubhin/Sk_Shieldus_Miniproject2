@@ -26,9 +26,13 @@ public class AuthController {
 
     @Operation(summary = "회원가입 API")
     @PostMapping("/signup")
-    public ResponseEntity<Void> registerUser(@Valid @RequestBody SignUpRequest request) {
+    public ResponseEntity<TokenResponse> registerUser(
+            @Valid @RequestBody SignUpRequest request,
+            HttpServletResponse response) {
         Long userId = authService.registerUser(request);
-        return ResponseEntity.created(URI.create("/api/users/" + userId)).build();
+        AuthService.TokenPair tokenPair = authService.generateTokenAfterSignup(userId);
+        response.addHeader("refreshToken", tokenPair.getRefreshToken());
+        return ResponseEntity.ok(new TokenResponse(tokenPair.getAccessToken()));
     }
 
     @Operation(summary = "로그인 API")
@@ -66,4 +70,5 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new TokenResponse(newToken.getAccessToken()));
     }
+
 }
