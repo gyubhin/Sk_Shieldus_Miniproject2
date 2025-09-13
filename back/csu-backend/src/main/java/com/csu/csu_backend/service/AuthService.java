@@ -95,4 +95,26 @@ public class AuthService {
 
         return new TokenPair(newAccessToken, newRefreshToken);
     }
+
+    @Transactional
+    public TokenPair generateTokenAfterSignup(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("회원가입한 사용자를 찾을 수 없습니다."));
+
+
+        UserDetails userDetails = UserPrincipal.create(user);
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+
+        String accessToken = tokenProvider.generateToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
+
+
+        user.updateRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return new TokenPair(accessToken, refreshToken);
+    }
+
 }
