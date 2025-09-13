@@ -53,8 +53,8 @@ function Router() {
         {/* 내정보 */}
         <Route path="mypage" element={<Mypage />} />
         <Route path="mypage/setting" element={<SettingPage />} />
-        <Route path="mypage/notice" element={<NoticePage />} />
         <Route path="mypage/edit" element={<ProfileEditPage />} />
+        <Route path="mypage/setting/notice" element={<NoticePage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,9 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.content {
+  font-size: 1.4rem;
+  padding: 4rem;
+  border: 1px solid $color-grayscale-20;
+  background-color: $color-grayscale-10;
+}

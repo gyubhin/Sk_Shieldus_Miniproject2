@@ -35,4 +35,8 @@ export const reactQueryKeys = {
   comment: {
     getComments: "get comments",
   },
+
+  notice: {
+    getNotices: "get notices",
+  },
 } as const;
