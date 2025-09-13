@@ -32,12 +32,13 @@ export function Header() {
         .then((res) => {
           if (res.status === 200) {
             showToast({ message: "로그아웃되었습니다.", type: "success" });
-            reset(); // 토큰 삭제
             navigate("/login");
+            reset(); // 토큰 삭제
           }
         })
         .catch(() => {
           showToast({ message: "잘못된 접근입니다.", type: "error" });
+          navigate("/login");
         });
     } else {
       // 로그아웃된 상태 -> 로그인 페이지 이동
