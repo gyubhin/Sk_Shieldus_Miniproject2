@@ -19,20 +19,29 @@ public class PostDTO {
         private String title;
         @NotBlank(message = "게시글 내용은 필수입니다.")
         private String content;
-        private String imageUrl; // 추가
+        private String imageUrl;
 
         public Post toEntity(User user, Group group) {
             return Post.builder()
                     .title(title)
                     .content(content)
-                    .imageUrl(imageUrl) // 추가
+                    .imageUrl(imageUrl)
                     .user(user)
                     .group(group)
                     .build();
         }
     }
 
-    // ... (UpdatePostRequest는 그대로)
+    // 아래 UpdatePostRequest 클래스를 추가합니다.
+    @Getter
+    @NoArgsConstructor
+    public static class UpdatePostRequest {
+        @NotBlank(message = "게시글 제목은 필수입니다.")
+        private String title;
+        @NotBlank(message = "게시글 내용은 필수입니다.")
+        private String content;
+    }
+
 
     @Getter
     @NoArgsConstructor
@@ -40,7 +49,7 @@ public class PostDTO {
         private Long id;
         private String title;
         private String content;
-        private String imageUrl; // 추가
+        private String imageUrl;
         private LocalDateTime createdAt;
         private String authorNickname;
         private Long authorId;
@@ -49,7 +58,7 @@ public class PostDTO {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
-            this.imageUrl = post.getImageUrl(); // 추가
+            this.imageUrl = post.getImageUrl();
             this.createdAt = post.getCreatedAt();
             this.authorNickname = post.getUser().getNickname();
             this.authorId = post.getUser().getId();
@@ -62,7 +71,7 @@ public class PostDTO {
         private Long id;
         private String title;
         private String content;
-        private String imageUrl; // 추가
+        private String imageUrl;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private String authorNickname;
@@ -73,7 +82,7 @@ public class PostDTO {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
-            this.imageUrl = post.getImageUrl(); // 추가
+            this.imageUrl = post.getImageUrl();
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
             this.authorNickname = post.getUser().getNickname();
