@@ -17,6 +17,8 @@ import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
 import EventRegisterPage from "@/pages/event/register/EventRegisterPage";
 import GroupSettingPage from "@/pages/group/setting/GroupSettingPage";
 import { useGetUserInfo } from "@/features/users/_hooks/query";
+import EggPage from "@/pages/egg/EggPage";
+import NotFoundPage from "@/pages/notFound/NotFoundPage";
 
 /**
  *@description 페이지 라우팅 관리
@@ -56,6 +58,11 @@ function Router() {
         <Route path="mypage/setting" element={<SettingPage />} />
         <Route path="mypage/edit" element={<ProfileEditPage />} />
         <Route path="mypage/setting/notice" element={<NoticePage />} />
+
+        {/* EGG */}
+        <Route path="egg" element={<EggPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
