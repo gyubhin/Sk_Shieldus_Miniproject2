@@ -23,7 +23,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
   if (!isOpen || !eventId) return null;
 
   const role = {
-    ADMIN: "모임장",
+    OWNER: "모임장",
     MEMBER: "모임원",
   };
 
@@ -71,7 +71,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
             {(attendees?.confirmed ?? []).map((attendee) => (
               <li key={attendee.userId} className={styles.item}>
                 <div className={styles.attendee_info}>
-                  <span className={styles.nickname}>{attendee.nickname}</span>
+                  <span className={styles.nickname}>{attendee.username}</span>
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 
@@ -94,7 +94,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
             {(attendees?.waiting ?? []).map((attendee) => (
               <li key={attendee.userId} className={styles.item}>
                 <div className={styles.attendee_info}>
-                  <span className={styles.nickname}>{attendee.nickname}</span>
+                  <span className={styles.nickname}>{attendee.username}</span>
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 

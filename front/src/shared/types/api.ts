@@ -37,3 +37,12 @@ export type ErrorResponse = {
   message: string;
   field?: string;
 };
+
+/**
+ *@description 커서 방식 응답
+ */
+export type Cursor<T> = {
+  hasNext: boolean;
+  content: T;
+  nextCursor: string;
+};

@@ -2,6 +2,7 @@ import { apiCall } from "@/libs/apiCall";
 import type { MutationResponse, PagingQuery } from "@/shared/types/api";
 import type { PatchEventBody, PostEventBody } from "../_types/body";
 import type { GetEventListResponse, GetEventsDetail } from "../_types/response";
+import type { EventItem } from "../_types/base";
 
 /**
  *@description events 일정 목록 조회 api
@@ -60,5 +61,14 @@ export const deleteEventEventsApi = (eventId: number) => {
   return apiCall<undefined>({
     url: `/events/${eventId}`,
     method: "DELETE",
+  });
+};
+
+/**
+ *@description 다가오는 내 일정 api
+ */
+export const getMyUpcomingEvents = () => {
+  return apiCall<EventItem>({
+    url: `/my/upcoming-events`,
   });
 };

@@ -16,7 +16,7 @@ let eventData = Array.from({ length: 12 }, (_, i) => ({
 const attendeesMock: Record<number, GetEventsAttendeesResponse> = {
   1: {
     confirmed: [
-      { userId: 1, nickname: "홍길동", role: "ADMIN" },
+      { userId: 1, nickname: "홍길동", role: "OWNER" },
       { userId: 2, nickname: "김철수", role: "MEMBER" },
     ],
     waiting: [
@@ -26,7 +26,7 @@ const attendeesMock: Record<number, GetEventsAttendeesResponse> = {
   },
   2: {
     confirmed: [
-      { userId: 5, nickname: "최주영", role: "ADMIN" },
+      { userId: 5, nickname: "최주영", role: "OWNER" },
       { userId: 6, nickname: "한소라", role: "MEMBER" },
     ],
     waiting: [{ userId: 7, nickname: "오지훈", role: "MEMBER" }],
