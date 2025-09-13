@@ -1,4 +1,5 @@
 import type { TimeResponse } from "@/shared/types/api";
+import { string } from "zod";
 
 /**
  *@description 그룹 목록 항목 타입
@@ -27,6 +28,7 @@ export type GroupsItem = {
 export type GetGroupsMemberItem = {
   userId: number;
   nickname: string;
+  introduction: string;
   role: "OWNER" | "MEMBER";
 };
 

@@ -16,10 +16,12 @@ export function BottomTab() {
   const navigate = useNavigate();
   const { accessToken } = useAccessTokenStore();
 
+  console.log(pathname);
+
   const [activeKey, setActvieKey] = useState<ActveKey>(() => {
     if (pathname === "/" || pathname === "/search") {
       return "main" as ActveKey;
-    } else if (pathname === "/group") {
+    } else if (pathname.indexOf("/group") !== -1) {
       return "group" as ActveKey;
     } else {
       return "mypage" as ActveKey;

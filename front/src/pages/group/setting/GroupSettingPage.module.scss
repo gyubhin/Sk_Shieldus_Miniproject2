@@ -33,11 +33,21 @@
 .actions_wrapper {
   display: flex;
   justify-content: flex-end;
-  gap: 2.4rem;
+  gap: 1.4rem;
+
+  @include media(sm) {
+    gap: 2.4rem;
+  }
 
   & > button {
-    padding: 1.2rem 2.4rem;
+    padding: 1rem 2rem;
     border-radius: 18px;
+    font-size: 1.2rem;
     border: 1px solid $color-grayscale-50;
+
+    @include media(sm) {
+      padding: 1.2rem 2.4rem;
+      font-size: 1.4rem;
+    }
   }
 }

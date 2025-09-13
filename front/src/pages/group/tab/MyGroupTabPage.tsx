@@ -36,7 +36,7 @@ function MyGroupTabPage() {
       {/* 헤더 */}
       <Header />
 
-      <SectionTitle title={`다가오는 정모 일정 ${myEventsData?.length ?? 0}`} />
+      <SectionTitle title={`다가오는 정모 일정 (${myEventsData?.length ?? 0})`} />
 
       <section className={styles.schedule_view}>
         {(myEventsData ?? []).map((event) => (

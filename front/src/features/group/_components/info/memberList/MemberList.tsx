@@ -22,7 +22,7 @@ function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
         <MemberItem
           userId={admin?.userId}
           name={admin?.nickname ?? ""}
-          description={"잘 부탁드립니다."}
+          description={admin?.introduction ?? ""}
         />
       </div>
 
@@ -35,7 +35,7 @@ function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
               key={member.userId}
               userId={member.userId}
               name={member?.nickname ?? ""}
-              description={"안녕~"}
+              description={member?.introduction ?? ""}
               onKick={onKickMember}
               onDelegate={onDelegateGroup}
             />
