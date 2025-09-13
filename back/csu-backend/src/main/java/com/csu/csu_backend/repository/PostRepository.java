@@ -2,6 +2,7 @@ package com.csu.csu_backend.repository;
 
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.Post;
+import com.csu.csu_backend.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +39,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                           Pageable pageable);
 
     long countByUserId(Long userId);
+
+    Page<Post> findByUser(User user, Pageable pageable);
 }

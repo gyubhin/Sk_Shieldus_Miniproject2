@@ -200,6 +200,23 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    public PagingResponse<GroupResponse> getLikedGroups(Long userId, Pageable pageable) {
+        User user = findUserById(userId);
+        Page<GroupLike> likedGroupsPage = groupLikeRepository.findByUser(user, pageable);
+
+        Set<Long> joinedGroupIds = membershipRepository.findJoinedGroupIdsByUserId(userId);
+
+        Page<GroupResponse> responsePage = likedGroupsPage.map(groupLike -> {
+            Group group = groupLike.getGroup();
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(true);
+            response.setJoined(joinedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(responsePage);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + userId));

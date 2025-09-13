@@ -127,6 +127,12 @@ public class PostService {
         return new CursorPagingResponse<>(dtoList, nextCursor, hasNext);
     }
 
+    public PagingResponse<PostResponse> getMyPosts(Long userId, Pageable pageable) {
+        User user = findUserById(userId);
+        Page<Post> postsPage = postRepository.findByUser(user, pageable);
+        return PagingResponse.of(postsPage.map(PostResponse::new));
+    }
+
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
