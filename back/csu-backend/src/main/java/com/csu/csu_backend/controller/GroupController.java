@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "그룹(모임) API", description = "그룹 CRUD API")
 @RestController
@@ -131,7 +132,7 @@ public class GroupController {
     }
 
     @Operation(summary = "그룹 커버 이미지 업로드/수정 API")
-    @PostMapping("/{groupId}/cover-image") // groupid -> groupId 로 수정
+    @PostMapping("/{groupId}/cover-image")
     public ResponseEntity<String> uploadCoverImage(@PathVariable Long groupId,
                                                    @RequestParam("file") MultipartFile file) {
         String path = groupService.updateCoverImage(groupId, file);
@@ -144,5 +145,13 @@ public class GroupController {
                                                         @AuthenticationPrincipal UserPrincipal currentUser) {
         groupService.deleteCoverImage(groupId, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok());
+    }
+
+    @Operation(summary = "그룹 찜하기/찜 취소 API")
+    @PostMapping("/{groupId}/like")
+    public ResponseEntity<Map<String, Boolean>> toggleGroupLike(@PathVariable Long groupId,
+                                                                @AuthenticationPrincipal UserPrincipal currentUser) {
+        boolean isLiked = groupService.toggleGroupLike(groupId, currentUser.getId());
+        return ResponseEntity.ok(Map.of("liked", isLiked));
     }
 }

@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -82,17 +83,14 @@ public class GroupService {
         return PagingResponse.of(responsePage);
     }
 
-    // --- 메서드 시그니처 및 로직 수정 ---
     public GroupResponse getGroup(Long groupId, Long userId) {
         Group group = findGroupById(groupId);
         GroupResponse response = new GroupResponse(group);
 
-        // 비로그인 사용자는 false로 처리
         if (userId == null) {
             response.setLiked(false);
             response.setJoined(false);
         } else {
-            // 로그인 사용자의 경우, 찜/가입 여부 확인
             User user = findUserById(userId);
             boolean isLiked = groupLikeRepository.findByUserAndGroup(user, group).isPresent();
             boolean isJoined = membershipRepository.existsByUserAndGroup(user, group);
@@ -215,6 +213,28 @@ public class GroupService {
         });
 
         return PagingResponse.of(responsePage);
+    }
+
+    @Transactional
+    public boolean toggleGroupLike(Long groupId, Long userId) {
+        User user = findUserById(userId);
+        Group group = findGroupById(groupId);
+
+        Optional<GroupLike> groupLikeOptional = groupLikeRepository.findByUserAndGroup(user, group);
+
+        if (groupLikeOptional.isPresent()) {
+            // 이미 찜한 경우, 찜 취소
+            groupLikeRepository.delete(groupLikeOptional.get());
+            return false;
+        } else {
+            // 찜하지 않은 경우, 찜하기
+            GroupLike newGroupLike = GroupLike.builder()
+                    .user(user)
+                    .group(group)
+                    .build();
+            groupLikeRepository.save(newGroupLike);
+            return true;
+        }
     }
 
     private User findUserById(Long userId) {
