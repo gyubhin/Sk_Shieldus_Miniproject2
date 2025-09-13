@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "../pages/main/MainPage";
 import LoginPage from "../pages/login/LoginPage";
 import SignupPage from "../pages/signup/SignupPage";
-import TestPage from "@/pages/test/TestPage";
 import MainSearch from "@/pages/main/search/MainSearch";
 import MyGroupTabPage from "@/pages/group/tab/MyGroupTabPage";
 import GroupInfoPage from "@/pages/group/info/GroupInfoPage";

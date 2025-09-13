@@ -68,7 +68,7 @@ export const deleteEventEventsApi = (eventId: number) => {
  *@description 다가오는 내 일정 api
  */
 export const getMyUpcomingEvents = () => {
-  return apiCall<EventItem>({
+  return apiCall<EventItem[]>({
     url: `/my/upcoming-events`,
   });
 };

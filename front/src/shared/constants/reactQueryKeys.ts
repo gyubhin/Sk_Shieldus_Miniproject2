@@ -16,6 +16,7 @@ export const reactQueryKeys = {
     getEventsList: "get events list",
     getEventsDetail: "get events detail",
     getEventsAttendees: "get events attendees",
+    getMyUpcomingEvents: "get myupcoming events",
   },
 
   attendee: {
