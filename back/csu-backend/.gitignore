@@ -34,3 +34,4 @@ build/
 
 # Ignore local properties file
 application-local.properties
+/uploads
