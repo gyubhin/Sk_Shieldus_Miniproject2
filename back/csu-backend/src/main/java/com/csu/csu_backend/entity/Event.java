@@ -1,11 +1,7 @@
 package com.csu.csu_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -29,6 +25,9 @@ public class Event {
     private String title;
 
     private String description;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(nullable = false)
     private Integer maxAttendees;
@@ -58,9 +57,10 @@ public class Event {
     private List<EventAttendee> attendees = new ArrayList<>();
 
     @Builder
-    public Event(String title, String description, Integer maxAttendees, LocalDateTime startAt, LocalDateTime endAt, User host, Group group) {
+    public Event(String title, String description, String imageUrl, Integer maxAttendees, LocalDateTime startAt, LocalDateTime endAt, User host, Group group) {
         this.title = title;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.maxAttendees = maxAttendees;
         this.startAt = startAt;
         this.endAt = endAt;
@@ -72,5 +72,4 @@ public class Event {
         this.startAt = eventDate;
         this.endAt = eventDate.plusHours(2);
     }
-
 }

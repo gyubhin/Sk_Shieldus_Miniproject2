@@ -30,6 +30,10 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @Setter
+    @Column(name = "image_url")
+    private String imageUrl; // 필드는 이미 존재
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
@@ -49,6 +53,7 @@ public class Post {
     public Post(String title, String content, String imageUrl, User user, Group group) { // imageUrl 추가
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl; // 추가
         this.user = user;
         this.group = group;
         this.createdAt = LocalDateTime.now();
@@ -64,9 +69,4 @@ public class Post {
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
-
-    @Setter
-    @Column(name = "image_url")
-    private String imageUrl;
-
 }

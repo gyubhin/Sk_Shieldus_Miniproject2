@@ -19,25 +19,20 @@ public class PostDTO {
         private String title;
         @NotBlank(message = "게시글 내용은 필수입니다.")
         private String content;
+        private String imageUrl; // 추가
 
         public Post toEntity(User user, Group group) {
             return Post.builder()
                     .title(title)
                     .content(content)
+                    .imageUrl(imageUrl) // 추가
                     .user(user)
                     .group(group)
                     .build();
         }
     }
 
-    @Getter
-    @NoArgsConstructor
-    public static class UpdatePostRequest {
-        @NotBlank(message = "게시글 제목은 필수입니다.")
-        private String title;
-        @NotBlank(message = "게시글 내용은 필수입니다.")
-        private String content;
-    }
+    // ... (UpdatePostRequest는 그대로)
 
     @Getter
     @NoArgsConstructor
@@ -45,6 +40,7 @@ public class PostDTO {
         private Long id;
         private String title;
         private String content;
+        private String imageUrl; // 추가
         private LocalDateTime createdAt;
         private String authorNickname;
         private Long authorId;
@@ -53,6 +49,7 @@ public class PostDTO {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
+            this.imageUrl = post.getImageUrl(); // 추가
             this.createdAt = post.getCreatedAt();
             this.authorNickname = post.getUser().getNickname();
             this.authorId = post.getUser().getId();
@@ -65,6 +62,7 @@ public class PostDTO {
         private Long id;
         private String title;
         private String content;
+        private String imageUrl; // 추가
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private String authorNickname;
@@ -75,6 +73,7 @@ public class PostDTO {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
+            this.imageUrl = post.getImageUrl(); // 추가
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
             this.authorNickname = post.getUser().getNickname();

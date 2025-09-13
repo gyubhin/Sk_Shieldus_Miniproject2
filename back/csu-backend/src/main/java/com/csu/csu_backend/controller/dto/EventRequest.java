@@ -14,6 +14,8 @@ public class EventRequest {
 
     private String description;
 
+    private String imageUrl; // 추가
+
     @NotNull(message = "이벤트 날짜는 필수입니다.")
     @Future(message = "이벤트 날짜는 현재보다 미래여야 합니다.")
     private LocalDateTime eventDate;
@@ -23,35 +25,14 @@ public class EventRequest {
 
     // --- Manual Getters and Setters ---
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public int getMaxAttendees() {
-        return maxAttendees;
-    }
-
-    public void setMaxAttendees(int maxAttendees) {
-        this.maxAttendees = maxAttendees;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public LocalDateTime getEventDate() { return eventDate; }
+    public void setEventDate(LocalDateTime eventDate) { this.eventDate = eventDate; }
+    public int getMaxAttendees() { return maxAttendees; }
+    public void setMaxAttendees(int maxAttendees) { this.maxAttendees = maxAttendees; }
 }

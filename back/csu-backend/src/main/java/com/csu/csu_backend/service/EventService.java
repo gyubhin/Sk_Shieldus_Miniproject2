@@ -41,6 +41,7 @@ public class EventService {
                 .host(user)
                 .title(request.getTitle())
                 .description(request.getDescription())
+                .imageUrl(request.getImageUrl()) // 추가
                 .maxAttendees(request.getMaxAttendees())
                 .startAt(request.getEventDate())
                 .endAt(request.getEventDate().plusHours(2))
@@ -65,7 +66,6 @@ public class EventService {
         return mapToEventResponse(event);
     }
 
-    // --- 아래 메서드를 새로 추가 ---
     @Transactional(readOnly = true)
     public List<EventResponse> getUpcomingEventsForUser(Long userId) {
         List<Event> upcomingEvents = eventRepository.findUpcomingEventsByUserId(userId, LocalDateTime.now());
@@ -80,6 +80,7 @@ public class EventService {
 
         event.setTitle(request.getTitle());
         event.setDescription(request.getDescription());
+        event.setImageUrl(request.getImageUrl()); // 추가
         event.setMaxAttendees(request.getMaxAttendees());
         event.setEventDate(request.getEventDate());
 
@@ -99,6 +100,7 @@ public class EventService {
                 .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
+                .imageUrl(event.getImageUrl()) // 추가
                 .eventDate(event.getStartAt())
                 .maxAttendees(event.getMaxAttendees())
                 .groupId(event.getGroup().getId())
