@@ -40,6 +40,17 @@ public class GroupDTO {
     }
 
     @Getter
+    @NoArgsConstructor
+    public static class UpdateGroupRequest {
+        private String name;
+        private String description;
+        private String region;
+        private Integer maxMembers;
+        private String tags;
+        private Long categoryId;
+    }
+
+    @Getter
     @Setter
     @NoArgsConstructor
     public static class GroupResponse {
@@ -51,7 +62,7 @@ public class GroupDTO {
         private int currentMembers;
         private String imageUrl;
         private String tags;
-        private boolean liked; // Liked -> liked 로 필드명 수정
+        private boolean liked;
         private boolean isJoined;
         private Long ownerId;
         private String ownerNickname;

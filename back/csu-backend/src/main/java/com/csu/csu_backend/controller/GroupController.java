@@ -2,6 +2,7 @@ package com.csu.csu_backend.controller;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.GroupDTO.UpdateGroupRequest;
 import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.controller.dto.Response.PagingResponse;
@@ -69,6 +70,16 @@ public class GroupController {
         Long userId = (currentUser != null) ? currentUser.getId() : null;
         GroupResponse group = groupService.getGroup(groupId, userId);
         return ResponseEntity.ok(group);
+    }
+
+    @Operation(summary = "그룹 수정 API")
+    @PatchMapping("/{groupId}")
+    public ResponseEntity<GroupResponse> updateGroup(@PathVariable Long groupId,
+                                                     @Valid @RequestBody UpdateGroupRequest request,
+                                                     @AuthenticationPrincipal UserPrincipal currentUser) {
+        Long ownerId = currentUser.getId();
+        GroupResponse updatedGroup = groupService.updateGroup(groupId, request, ownerId);
+        return ResponseEntity.ok(updatedGroup);
     }
 
     @Operation(summary = "내가 가입한 그룹 조회 API")
