@@ -26,6 +26,9 @@ public class Event {
 
     private String description;
 
+    // location 필드 추가
+    private String location;
+
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -57,9 +60,10 @@ public class Event {
     private List<EventAttendee> attendees = new ArrayList<>();
 
     @Builder
-    public Event(String title, String description, String imageUrl, Integer maxAttendees, LocalDateTime startAt, LocalDateTime endAt, User host, Group group) {
+    public Event(String title, String description, String location, String imageUrl, Integer maxAttendees, LocalDateTime startAt, LocalDateTime endAt, User host, Group group) {
         this.title = title;
         this.description = description;
+        this.location = location;
         this.imageUrl = imageUrl;
         this.maxAttendees = maxAttendees;
         this.startAt = startAt;

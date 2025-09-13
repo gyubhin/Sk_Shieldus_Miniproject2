@@ -14,7 +14,10 @@ public class EventRequest {
 
     private String description;
 
-    private String imageUrl; // 추가
+    private String imageUrl;
+
+    // location 필드 추가
+    private String location;
 
     @NotNull(message = "이벤트 날짜는 필수입니다.")
     @Future(message = "이벤트 날짜는 현재보다 미래여야 합니다.")
@@ -31,6 +34,8 @@ public class EventRequest {
     public void setDescription(String description) { this.description = description; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getLocation() { return location; } // Getter 추가
+    public void setLocation(String location) { this.location = location; } // Setter 추가
     public LocalDateTime getEventDate() { return eventDate; }
     public void setEventDate(LocalDateTime eventDate) { this.eventDate = eventDate; }
     public int getMaxAttendees() { return maxAttendees; }

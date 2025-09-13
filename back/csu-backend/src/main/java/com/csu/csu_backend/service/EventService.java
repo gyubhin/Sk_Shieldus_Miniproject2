@@ -6,6 +6,7 @@ import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.Event;
 import com.csu.csu_backend.entity.Group;
 import com.csu.csu_backend.entity.User;
+import com.csu.csu_backend.repository.EventAttendeeRepository;
 import com.csu.csu_backend.repository.EventRepository;
 import com.csu.csu_backend.repository.GroupRepository;
 import com.csu.csu_backend.repository.UserRepository;
@@ -29,6 +30,7 @@ public class EventService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final EventAttendeeService eventAttendeeService;
+    private final EventAttendeeRepository eventAttendeeRepository; // Repository 주입
 
     public Long createEvent(Long groupId, EventRequest request, Long userId) {
         Group group = groupRepository.findById(groupId)
@@ -41,7 +43,8 @@ public class EventService {
                 .host(user)
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .imageUrl(request.getImageUrl()) // 추가
+                .location(request.getLocation()) // location 추가
+                .imageUrl(request.getImageUrl())
                 .maxAttendees(request.getMaxAttendees())
                 .startAt(request.getEventDate())
                 .endAt(request.getEventDate().plusHours(2))
@@ -80,7 +83,8 @@ public class EventService {
 
         event.setTitle(request.getTitle());
         event.setDescription(request.getDescription());
-        event.setImageUrl(request.getImageUrl()); // 추가
+        event.setLocation(request.getLocation()); // location 추가
+        event.setImageUrl(request.getImageUrl());
         event.setMaxAttendees(request.getMaxAttendees());
         event.setEventDate(request.getEventDate());
 
@@ -96,13 +100,18 @@ public class EventService {
     }
 
     private EventResponse mapToEventResponse(Event event) {
+        // 확정된(CONFIRMED) 참석자 수를 조회
+        long confirmedAttendeesCount = eventAttendeeRepository.countByEventIdAndStatus(event.getId(), "CONFIRMED");
+
         return EventResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .imageUrl(event.getImageUrl()) // 추가
+                .imageUrl(event.getImageUrl())
+                .location(event.getLocation()) // location 추가
                 .eventDate(event.getStartAt())
                 .maxAttendees(event.getMaxAttendees())
+                .attendeesCount(confirmedAttendeesCount) // 참석자 수 추가
                 .groupId(event.getGroup().getId())
                 .hostId(event.getHost().getId())
                 .build();
