@@ -29,6 +29,7 @@ function ProfileEditPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const res = await mutatePatch({
         nickname,

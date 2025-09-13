@@ -10,6 +10,9 @@ export const reactQueryKeys = {
   user: {
     getUserMeGroups: "get user me group",
     getUserInfo: "get user info",
+    getUserPosts: "get user posts",
+    getUserComments: "get user comments",
+    getMyLikedGroups: "get my liked groups",
   },
 
   event: {

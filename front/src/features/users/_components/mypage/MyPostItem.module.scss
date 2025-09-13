@@ -6,14 +6,15 @@
   padding-bottom: 32px;
   gap: 5.8rem;
 
-  border-bottom: 1px solid $color-grayscale-60;
+  border-bottom: 1px solid $color-grayscale-40;
 }
 
 .left {
-  & > .post_img {
+  .post_img {
     width: 180px;
     height: 180px;
     border: 1px solid;
+    border-radius: 4px;
   }
 }
 
@@ -48,13 +49,22 @@
 
     .title {
       color: $color-grayscale-80;
-      font-size: 1.6rem;
-      margin-bottom: 8px;
+      margin-bottom: 1.2rem;
+      font-size: 1.4rem;
+
+      @include media(sm) {
+        font-size: 1.6rem;
+      }
     }
 
     .content {
       color: $color-grayscale-80;
-      font-size: 1.4rem;
+
+      font-size: 1.2rem;
+
+      @include media(sm) {
+        font-size: 1.4rem;
+      }
     }
   }
 

@@ -4,6 +4,7 @@
 
 import type { GroupsItem } from "@/features/group/_types/base";
 import type { PagingResponse } from "@/shared/types/api";
+import type { MyCommentItem, MyLikedGroupItem, MyPostItem } from "./base";
 
 export type GetUserInfoResponse = {
   id: number;
@@ -20,3 +21,18 @@ export type GetUserInfoResponse = {
  *@description 내가 가입한 그룹 조회 응답
  */
 export type GetMyJoinedGroupResponse = PagingResponse<GroupsItem>;
+
+/**
+ *@description 내 게시글 목록 조회 응답
+ */
+export type MyPostsResponse = PagingResponse<MyPostItem>;
+
+/**
+ *@description 내 댓글 목록 조회 응답
+ */
+export type MyCommentResponse = PagingResponse<MyCommentItem>;
+
+/**
+ *@description 내 찜한 그룹 목록 조회 응답
+ */
+export type MyLikedGroupResponse = PagingResponse<MyLikedGroupItem>;

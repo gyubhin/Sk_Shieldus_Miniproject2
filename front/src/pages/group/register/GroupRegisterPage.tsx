@@ -38,8 +38,6 @@ function GroupRegisterPage() {
   // 그룹 상세 조회
   const { data: groupsOneData } = useGetGroupsOneApi(groupId);
 
-  const [previewImage, setPreviewImage] = useState();
-
   // 이미지 업로드
   const { mutateAsync: mutateUploadImage } = usePostUploadImage();
 
