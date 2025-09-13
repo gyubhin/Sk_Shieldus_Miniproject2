@@ -13,11 +13,13 @@ public class MembershipDTO {
         private Long userId;
         private String nickname;
         private String role;
+        private String introduction;
 
         public MemberResponse(Membership membership) {
             this.userId = membership.getUser().getId();
             this.nickname = membership.getUser().getNickname();
             this.role = membership.getRole();
+            this.introduction = membership.getUser().getIntroduction();
         }
     }
 }
