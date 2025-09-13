@@ -25,6 +25,7 @@ export const reactQueryKeys = {
   post: {
     getPostList: "get post list",
     getPostDetail: "get post detail",
+    getPostsCursor: "get posts cursor",
   },
 
   comment: {

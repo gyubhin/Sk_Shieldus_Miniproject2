@@ -6,6 +6,7 @@ import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { BackHeader } from "@/shared/components/header/BackHeader";
 import axios from "axios";
+import { useAccessTokenStore } from "@/features/auth";
 
 /**
  *@description 프로필 수정 페이지
@@ -14,12 +15,13 @@ function ProfileEditPage() {
   const [nickname, setNickname] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const { accessToken } = useAccessTokenStore();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       console.log("API URL:", import.meta.env.VITE_APP_API_URL);
-      
+
       const res = await axios.patch(
         `${import.meta.env.VITE_APP_API_URL}/users/me`,
         {
@@ -29,9 +31,9 @@ function ProfileEditPage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // zustand store 연결도 가능
+            Authorization: `Bearer ${accessToken}`, // zustand store 연결도 가능
           },
-        }
+        },
       );
 
       console.log("회원 정보 수정 응답:", res.data);
@@ -48,10 +50,7 @@ function ProfileEditPage() {
 
       <form className={styles.form} onSubmit={onSubmit}>
         <section className={styles.profile_field}>
-          <img
-            src={profileImage || "/images/ImageProfileDefault.svg"}
-            alt="프로필 이미지"
-          />
+          <img src={profileImage || "/images/ImageProfileDefault.svg"} alt="프로필 이미지" />
 
           <div className={styles.profile_description}>
             <p>프로필 사진</p>
@@ -61,13 +60,7 @@ function ProfileEditPage() {
 
         <Card title="유저 정보">
           {/* 이메일은 수정 불가 → disabled */}
-          <InputField
-            label={"이메일"}
-            required
-            name={"email"}
-            placeholder="example.com"
-            disabled
-          />
+          <InputField label={"이메일"} required name={"email"} placeholder="example.com" disabled />
 
           <InputField
             label={"닉네임"}
@@ -91,17 +84,14 @@ function ProfileEditPage() {
             name={"profileImage"}
             placeholder="이미지 주소 입력"
             value={profileImage}
+            type="file"
             onChange={(e) => setProfileImage(e.target.value)}
           />
         </Card>
 
         <div className={styles.button_groups}>
           <ActiveButton type="submit">프로필 수정</ActiveButton>
-          <ActiveButton
-            type="button"
-            buttonStyle="disabled"
-            onClick={() => window.history.back()}
-          >
+          <ActiveButton type="button" buttonStyle="disabled" onClick={() => window.history.back()}>
             취소
           </ActiveButton>
         </div>

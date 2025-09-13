@@ -17,11 +17,14 @@ import NoticePage from "@/pages/mypage/setting/notice/NoticePage";
 import ProfileEditPage from "@/pages/mypage/profileEdit/ProfileEditPage";
 import EventRegisterPage from "@/pages/event/register/EventRegisterPage";
 import GroupSettingPage from "@/pages/group/setting/GroupSettingPage";
+import { useGetUserInfo } from "@/features/users/_hooks/query";
 
 /**
  *@description 페이지 라우팅 관리
  */
 function Router() {
+  useGetUserInfo();
+
   return (
     <BrowserRouter>
       <Routes>

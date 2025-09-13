@@ -12,6 +12,8 @@ export type GetUserInfoResponse = {
   region: string;
   profileImageUrl: string | null;
   introduction: string;
+  postCount: number;
+  commentCount: number;
 };
 
 /**
