@@ -26,8 +26,6 @@ export function InputField({
     rest.onChange?.(e);
   };
 
-  console.log(previewUrl);
-
   return (
     <div className={styles.container}>
       <label className={styles.label} htmlFor={name}>

@@ -25,7 +25,7 @@ export function useGetEventsListApi(groupId?: string, query?: PagingQuery) {
 /**
  *@description events 일정 상세 조회 훅
  */
-export function useGetEventsDetailApi(eventId: number) {
+export function useGetEventsDetailApi(eventId?: string) {
   return useQuery({
     queryKey: [reactQueryKeys.event.getEventsList, eventId],
     queryFn: () => getEventsDetailApi(eventId),

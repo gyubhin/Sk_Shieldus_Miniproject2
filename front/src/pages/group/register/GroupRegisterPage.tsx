@@ -62,9 +62,6 @@ function GroupRegisterPage() {
     tags: groupsOneData?.tags ?? "",
   };
 
-  console.log(groupsOneData?.categoryName);
-  console.log(initForm);
-
   const [errorMessage, setErrorMesage] = useState(initError);
 
   const [form, setForm] = useState(initForm);
@@ -79,8 +76,6 @@ function GroupRegisterPage() {
       setTag("");
     }
   };
-
-  console.log(tags);
 
   // 태그 삭제
   const onDeleteTag = (index: number) => {
@@ -153,6 +148,13 @@ function GroupRegisterPage() {
         showToast({ message: error.message ?? "이미지 업로드 실패", type: "error" });
       }
     }
+  };
+
+  /**
+   *@description 등록 취소 클릭 이벤트
+   */
+  const onCancel = () => {
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -254,7 +256,9 @@ function GroupRegisterPage() {
         <div className={styles.button_groups}>
           <ActiveButton onClick={onRegister}>{groupId ? "수정" : "등록"}</ActiveButton>
 
-          <ActiveButton buttonStyle="disabled">취소</ActiveButton>
+          <ActiveButton onClick={onCancel} buttonStyle="disabled">
+            취소
+          </ActiveButton>
         </div>
       </section>
     </CommonLayout>

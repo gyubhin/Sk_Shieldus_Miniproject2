@@ -1,3 +1,5 @@
+import type { PostEventBody } from "./body";
+
 /**
  *@description 이벤트 항목
  */
@@ -32,4 +34,11 @@ export type EventAttendeeList = {
   confirmed: EventAttendee[];
 
   waiting: EventAttendee[];
+};
+
+/**
+ *@description 이벤트 폼 에러
+ */
+export type EventFormError = {
+  [K in keyof PostEventBody]?: string;
 };

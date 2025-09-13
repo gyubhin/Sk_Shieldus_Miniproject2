@@ -15,6 +15,8 @@ export type GetEventsDetail = {
   description: string;
   eventDate: string;
   maxAttendees: number;
+  location: string;
+  imageUrl?: string | null;
   groupId: number;
   attendeesCount: number;
   createdAt: string;

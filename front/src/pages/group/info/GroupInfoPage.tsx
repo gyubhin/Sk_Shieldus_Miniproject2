@@ -35,17 +35,19 @@ function GroupInfoPage() {
 
   const { data } = useGetGroupsOneApi(groupId);
 
-  const tabs =
-    Number(userId) === data?.ownerId
-      ? [
-          { key: "info", name: "모임 정보" },
-          { key: "post", name: "게시판" },
-          { key: "setting", name: "모임 설정" },
-        ]
-      : [
-          { key: "info", name: "모임 정보" },
-          { key: "post", name: "게시판" },
-        ];
+  console.log(data?.ownerId);
+  const isOwner = Number(userId) === data?.ownerId;
+
+  const tabs = isOwner
+    ? [
+        { key: "info", name: "모임 정보" },
+        { key: "post", name: "게시판" },
+        { key: "setting", name: "모임 설정" },
+      ]
+    : [
+        { key: "info", name: "모임 정보" },
+        { key: "post", name: "게시판" },
+      ];
 
   // 이벤트(일정) 목록 state
   const { data: eventsList } = useGetEventsListApi(groupId);
@@ -102,12 +104,17 @@ function GroupInfoPage() {
   };
 
   // 참석
-  const onAttend = (eventId?: number) => {
+  const onAttendAndModify = (eventId?: number) => {
     if (!eventId) {
       showToast({
         message: "잘못된 접근입니다.",
         type: "error",
       });
+      return;
+    }
+
+    if (isOwner) {
+      navigate(`/group/${groupId}/event/register/${eventId}`);
       return;
     }
 
@@ -145,7 +152,7 @@ function GroupInfoPage() {
 
   // 모임 일정 등록 페이지로  이동
   const onMoveRegisterEvent = () => {
-    navigate("/group/event/register");
+    navigate(`/group/${groupId}/event/register`);
   };
 
   // 이벤트(일정) more 선택
@@ -179,28 +186,15 @@ function GroupInfoPage() {
         {(eventsList?.content ?? []).map((event) => (
           <EventItem data={event} onMoreClick={() => onSelectedEvent(event.id)} />
         ))}
-
-        <EventItem
-          data={{
-            id: 1,
-            title: "title1",
-            eventDate: "250912",
-            maxAttendees: 10,
-            attendeesCount: 2,
-            imageUrl: "",
-            location: "서울시",
-          }}
-          onMoreClick={() => onSelectedEvent(1)}
-        />
       </section>
 
       {groupMembers && <MemberList groupMembers={groupMembers} />}
 
       <ActionSheet
         open={isEventMoreOpen}
-        firstText="참여"
+        firstText={isOwner ? "수정" : "참여"}
         secondText="취소"
-        onClickFirst={() => onAttend(selectedEvent)}
+        onClickFirst={() => onAttendAndModify(selectedEvent)}
         onClickSecond={() => onWithdrawl(selectedEvent)}
         onClose={() => setEventMoreOpen(false)}
         destructive="second"

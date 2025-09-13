@@ -17,7 +17,7 @@ export const getEventsListApi = (groupId?: string, query?: PagingQuery) => {
 /**
  *@description events 일정 상세 조회 api
  */
-export const getEventsDetailApi = (eventId: number) => {
+export const getEventsDetailApi = (eventId?: string) => {
   return apiCall<GetEventsDetail>({
     url: `/events/${eventId}`,
   });
@@ -35,7 +35,7 @@ export const getEventsAttendeesApi = (eventId: number) => {
 /**
  *@description events 일정 생성 api
  */
-export const postEventsApi = (groupId: number, body: PostEventBody) => {
+export const postEventsApi = (body: PostEventBody, groupId?: string) => {
   return apiCall<MutationResponse>({
     url: `/groups/${groupId}/events`,
     data: body,
@@ -46,7 +46,7 @@ export const postEventsApi = (groupId: number, body: PostEventBody) => {
 /**
  *@description events 일정 부분 수정 api
  */
-export const patchEventsApi = (eventId: number, body: PatchEventBody) => {
+export const patchEventsApi = (body: PatchEventBody, eventId?: string) => {
   return apiCall<MutationResponse>({
     url: `/events/${eventId}`,
     method: "PATCH",
