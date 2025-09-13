@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -26,4 +28,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "p.content LIKE CONCAT('%', :keyword, '%') OR " +
             "LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Post> search(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT p FROM Post p " +
+            "WHERE p.group = :group " +
+            "AND (:cursor IS NULL OR p.createdAt < :cursor) " +
+            "ORDER BY p.createdAt DESC")
+    List<Post> findPostsByGroupWithCursor(@Param("group") Group group,
+                                          @Param("cursor") LocalDateTime cursor,
+                                          Pageable pageable);
+
+    long countByUserId(Long userId);
 }

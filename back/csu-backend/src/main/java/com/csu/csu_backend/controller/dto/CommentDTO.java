@@ -6,6 +6,8 @@ import com.csu.csu_backend.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ public class CommentDTO {
         private String content;
     }
 
+    @Setter
     @Getter
     @NoArgsConstructor
     public static class CommentResponse {
@@ -37,15 +40,26 @@ public class CommentDTO {
         private Long authorId;
         private List<CommentResponse> children;
 
+        private Long parentId;
+        private String parentAuthorNickname;
+
         public CommentResponse(Comment comment) {
             this.id = comment.getId();
             this.content = comment.getContent();
             this.createdAt = comment.getCreatedAt();
             this.authorNickname = comment.getUser().getNickname();
             this.authorId = comment.getUser().getId();
-            this.children = comment.getChildren().stream()
-                    .map(CommentResponse::new)
-                    .collect(Collectors.toList());
+
+            // 중복 조회 방지
+            this.children = List.of();
+
+            // 타겟 정보
+            if (comment.getParent() != null) {
+                this.parentId = comment.getParent().getId();
+                this.parentAuthorNickname = comment.getParent().getUser().getNickname();
+            }
         }
+
     }
+
 }

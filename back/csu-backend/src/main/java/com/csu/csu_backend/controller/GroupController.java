@@ -7,6 +7,8 @@ import com.csu.csu_backend.controller.dto.Response.ApiResponse;
 import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.security.UserPrincipal;
 import com.csu.csu_backend.service.GroupService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "그룹(모임) API", description = "그룹 CRUD API")
 @RestController
 @RequestMapping("/api/groups")
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class GroupController {
 
     private final GroupService groupService;
 
+    @Operation(summary = "그룹 생성 API")
     @PostMapping
     public ResponseEntity<Void> createGroup(@Valid @RequestBody CreateGroupRequest request,
                                             @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -36,6 +40,7 @@ public class GroupController {
         return ResponseEntity.created(URI.create("/api/groups/" + groupId)).build();
     }
 
+    @Operation(summary = "그룹 검색 API")
     @GetMapping
     public ResponseEntity<PagingResponse<GroupResponse>> getAllGroups(
             @RequestParam(required = false) Long categoryId,
@@ -56,7 +61,7 @@ public class GroupController {
         return ResponseEntity.ok(groups);
     }
 
-    // --- 메서드 시그니처 수정 ---
+    @Operation(summary = "그룹 상세 조회 API")
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId,
                                                   @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -65,6 +70,7 @@ public class GroupController {
         return ResponseEntity.ok(group);
     }
 
+    @Operation(summary = "내가 가입한 그룹 조회 API")
     @GetMapping("/my")
     public ResponseEntity<List<GroupResponse>> getMyGroups(
             @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -73,12 +79,14 @@ public class GroupController {
         return ResponseEntity.ok(myGroups);
     }
 
+    @Operation(summary = "그룹 멤버 목록 조회 API")
     @GetMapping("/{groupId}/members")
     public ResponseEntity<List<MemberResponse>> getGroupMembers(@PathVariable Long groupId) {
         List<MemberResponse> members = groupService.getGroupMembers(groupId);
         return ResponseEntity.ok(members);
     }
 
+    @Operation(summary = "그룹 삭제 API")
     @DeleteMapping("/{groupId}")
     public ResponseEntity<ApiResponse> deleteGroup(@PathVariable Long groupId,
                                                    @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -86,6 +94,7 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
+    @Operation(summary = "모임장 위임 API")
     @PatchMapping("/{groupId}/delegate-owner/{newOwnerId}")
     public ResponseEntity<ApiResponse> delegateGroupOwner(@PathVariable Long groupId,
                                                           @PathVariable Long newOwnerId,
@@ -94,6 +103,7 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
+    @Operation(summary = "그룹 가입 신청 API")
     @PostMapping("/{groupId}/join")
     public ResponseEntity<String> joinGroup(@PathVariable Long groupId,
                                             @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -102,6 +112,7 @@ public class GroupController {
         return ResponseEntity.ok("가입 신청이 완료되었습니다.");
     }
 
+    @Operation(summary = "그룹 탈퇴 API")
     @DeleteMapping("/{groupId}/leave")
     public ResponseEntity<ApiResponse> leaveGroup(@PathVariable Long groupId,
                                                   @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -110,6 +121,7 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
+    @Operation(summary = "그룹 멤버 강퇴(모임장) API")
     @DeleteMapping("/{groupId}/members/{userId}")
     public ResponseEntity<ApiResponse> removeMember(@PathVariable Long groupId, @PathVariable Long userId,
                                                     @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -118,6 +130,7 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
+    @Operation(summary = "그룹 커버 이미지 업로드/수정 API")
     @PostMapping("/{groupId}/cover-image") // groupid -> groupId 로 수정
     public ResponseEntity<String> uploadCoverImage(@PathVariable Long groupId,
                                                    @RequestParam("file") MultipartFile file) {
@@ -125,6 +138,7 @@ public class GroupController {
         return ResponseEntity.ok(path);
     }
 
+    @Operation(summary = "그룹 커버 이미지 삭제 API")
     @DeleteMapping("/{groupId}/cover-image")
     public ResponseEntity<ApiResponse> deleteCoverImage(@PathVariable Long groupId,
                                                         @AuthenticationPrincipal UserPrincipal currentUser) {
