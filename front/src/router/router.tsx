@@ -33,7 +33,6 @@ function Router() {
         <Route path="privacy" element={<PrivacyPage />} />
 
         <Route path="signup" element={<SignupPage />} />
-        <Route path="test" element={<TestPage />} />
         <Route path="search" element={<MainSearch />} />
 
         <Route path="group" element={<MyGroupTabPage />} />
