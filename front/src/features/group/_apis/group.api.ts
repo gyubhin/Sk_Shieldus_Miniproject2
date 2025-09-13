@@ -24,7 +24,7 @@ export const postGroupsApi = (body: PostGroupsBody) => {
  *@description 모임 수정 api
  */
 export const patchGroupsApi = (body: PatchGroupsBody, groupId?: string) => {
-  return apiCall<undefined>({
+  return apiCall<MutationResponse>({
     url: `/groups/${groupId}`,
     method: "PATCH",
     data: body,
@@ -117,5 +117,15 @@ export const patchDelegateOwner = (targretId: number, groupId?: string) => {
   return apiCall<undefined>({
     url: `/groups/${groupId}/delegate-owner/${targretId}`,
     method: "PATCH",
+  });
+};
+
+/**
+ *@description 모임장이 찜 or 취소 api
+ */
+export const postGroupsLike = (groupId: number) => {
+  return apiCall<{ liked: boolean }>({
+    url: `/groups/${groupId}/like`,
+    method: "POST",
   });
 };

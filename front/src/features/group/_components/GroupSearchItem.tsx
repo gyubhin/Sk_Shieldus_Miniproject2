@@ -6,34 +6,60 @@ import { useNavigate } from "react-router-dom";
 import type { GroupsItem } from "../_types/base";
 import dayjs from "dayjs";
 import LikeButton from "@/shared/components/button/LikeButton";
+import { usePostGroupsLike } from "../_hooks/mutation";
+import { useUiStore } from "@/shared/stores/ui.store";
+import { isAxiosError } from "axios";
 
 type Props = {
-  tags?: string[];
   data: GroupsItem;
+  refetch: () => void;
 };
 
 /**
  *@description 모임 검색 항목
  */
-export function GroupSearchItem({ tags = [], data }: Props) {
+export function GroupSearchItem({ data, refetch }: Props) {
   const navigate = useNavigate();
   const [liked, setLiked] = useState(data.liked);
   const [imageError, setImageError] = useState(false);
+  const { showToast } = useUiStore();
+
+  const { mutateAsync: mutateLike } = usePostGroupsLike();
 
   const onClickGroup = () => {
     navigate(`/group/${data.id}/info`);
   };
 
+  // 그룹 들어가기
   const onKeyDownGroup = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       onClickGroup();
     }
   };
 
+  // 좋아요 클릭
   const onHeartTogggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
 
     setLiked((prev) => !prev);
+
+    mutateLike(data.id)
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+          showToast({
+            message: res.data.liked ? "찜했습니다." : "찜 해제했습니다.",
+            type: "success",
+          });
+        }
+      })
+      .catch((error) => {
+        if (isAxiosError(error)) {
+          if (error.status === 403) {
+            showToast({ message: "접근 권한이없습니다.", type: "error" });
+          }
+        }
+      });
   };
 
   return (
@@ -66,7 +92,7 @@ export function GroupSearchItem({ tags = [], data }: Props) {
 
         {/* 태그 */}
         <div className={styles.tags}>
-          {tags.map((tag, i) => (
+          {data.tags.split(",").map((tag, i) => (
             <React.Fragment key={i}>
               <Tag name={tag} />
             </React.Fragment>

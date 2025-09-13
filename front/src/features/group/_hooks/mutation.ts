@@ -7,6 +7,7 @@ import {
   patchGroupsApi,
   postGroupsApi,
   postGroupsJoinApi,
+  postGroupsLike,
 } from "../_apis/group.api";
 import type { PatchGroupsBody, PostGroupsBody } from "../_types/body";
 
@@ -73,5 +74,14 @@ export const useDeleteGroupsApi = (groupId?: string) => {
 export const usePatchDelegateOwner = (groupId?: string) => {
   return useMutation({
     mutationFn: (targetId: number) => patchDelegateOwner(targetId, groupId),
+  });
+};
+
+/**
+ *@description 모임장이 찜 or 취소 훅
+ */
+export const usePostGroupsLike = () => {
+  return useMutation({
+    mutationFn: (groupId: number) => postGroupsLike(groupId),
   });
 };

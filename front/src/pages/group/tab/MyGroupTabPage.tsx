@@ -21,7 +21,7 @@ function MyGroupTabPage() {
   // const { data: eventList } = useGetEventsListApi();
   const { data: myEventsData } = useGetMyUpcomingEvents();
 
-  const { data: myJoinedGroups } = useGetMyJoinedGroupsApi({
+  const { data: myJoinedGroups, refetch: refetchMyJoinedGroup } = useGetMyJoinedGroupsApi({
     page: Number(page),
     size: 9,
   });
@@ -48,7 +48,7 @@ function MyGroupTabPage() {
 
       <section className={styles.my_group_view}>
         {(myJoinedGroups ?? []).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
+          <GroupSearchItem data={_item} key={idx} refetch={refetchMyJoinedGroup} />
         ))}
       </section>
 

@@ -6,6 +6,7 @@ export const reactQueryKeys = {
   },
   categories: {
     getCategories: "get categories",
+    getCategoriesWithGroupsApi: "get categories with groups",
   },
   user: {
     getUserMeGroups: "get user me group",

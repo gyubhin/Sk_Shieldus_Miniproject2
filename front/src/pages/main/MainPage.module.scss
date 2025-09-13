@@ -13,12 +13,14 @@
 }
 
 .group_view {
-  @include flex-column;
+  display: flex;
+  flex-direction: column;
   gap: 3.2rem;
   margin-bottom: 40px;
 
   @include media(sm) {
-    @include flex-row-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.2rem;
   }
 }

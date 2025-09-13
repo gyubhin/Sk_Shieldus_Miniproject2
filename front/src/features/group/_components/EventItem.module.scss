@@ -5,6 +5,9 @@
 .card {
   @include flex-row;
   gap: 3.2rem;
+  border: 1px solid $color-orange--10;
+  padding: 1.2rem;
+  border-radius: 1.4rem;
 }
 
 // 일정 이미지

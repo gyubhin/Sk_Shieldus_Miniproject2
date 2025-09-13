@@ -1,4 +1,5 @@
 export const regionOptions = [
+  { label: "전체", value: "" },
   { label: "서울", value: "서울" },
   { label: "부산", value: "부산" },
   { label: "대구", value: "대구" },
@@ -11,7 +12,7 @@ export const regionOptions = [
 
 export const sortOptions = [
   { label: "최신순", value: "latest desc" },
-  { label: "이름순", value: "name" },
+  { label: "이름순", value: "name desc" },
 ];
 
 // 카테고리 필터 TODO 나중에 api로 대체될 수 있음

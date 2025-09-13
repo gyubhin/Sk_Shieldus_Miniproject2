@@ -68,13 +68,15 @@ export default function ActionSheet({
           {labelFirst}
         </button>
 
-        <button
-          className={`${styles.item} ${destructive === "second" ? styles.destructive : ""}`}
-          type="button"
-          onClick={handleSecond}
-        >
-          {labelSecond}
-        </button>
+        {labelSecond && (
+          <button
+            className={`${styles.item} ${destructive === "second" ? styles.destructive : ""}`}
+            type="button"
+            onClick={handleSecond}
+          >
+            {labelSecond}
+          </button>
+        )}
 
         {labelThird && (
           <button

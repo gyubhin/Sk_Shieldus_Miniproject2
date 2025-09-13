@@ -10,7 +10,7 @@ import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
 import Tag from "@/shared/components/tag/Tag";
 import { useEffect, useState } from "react";
-import type { PostGroupsBody, PostGroupsForm } from "@/features/group/_types/body";
+import type { PostGroupsForm } from "@/features/group/_types/body";
 import { useNavigate, useParams, type ErrorResponse } from "react-router-dom";
 import { groupSchema } from "@/features/group/_schemas/group.schema";
 import z from "zod";

@@ -193,7 +193,7 @@ function GroupInfoPage() {
       <ActionSheet
         open={isEventMoreOpen}
         firstText={isOwner ? "수정" : "참여"}
-        secondText="취소"
+        secondText={!isOwner ? "취소" : undefined}
         onClickFirst={() => onAttendAndModify(selectedEvent)}
         onClickSecond={() => onWithdrawl(selectedEvent)}
         onClose={() => setEventMoreOpen(false)}
