@@ -1,6 +1,6 @@
 package com.csu.csu_backend.service;
 
-import com.csu.csu_backend.controller.dto.UserDTO; // 추가
+import com.csu.csu_backend.controller.dto.UserDTO;
 import com.csu.csu_backend.entity.User;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.repository.CommentRepository;
@@ -21,7 +21,6 @@ public class UserService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    // --- 아래 메서드를 새로 추가 ---
     public UserDTO.UserDetailResponse getUserDetail(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
@@ -30,6 +29,14 @@ public class UserService {
         long commentCount = commentRepository.countByUserId(userId);
 
         return new UserDTO.UserDetailResponse(user, postCount, commentCount);
+    }
+
+    // --- 아래 updateUser 메서드를 새로 추가 ---
+    @Transactional
+    public void updateUser(Long userId, UserDTO.UpdateUserRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
+        user.updateProfile(request);
     }
 
     @Transactional

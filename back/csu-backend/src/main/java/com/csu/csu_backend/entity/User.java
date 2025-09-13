@@ -1,5 +1,6 @@
 package com.csu.csu_backend.entity;
 
+import com.csu.csu_backend.controller.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,8 +33,8 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String nickname;
 
-    @Column(length = 50) // 추가
-    private String region; // 추가
+    @Column(length = 50)
+    private String region;
 
     @Setter
     @Column(name = "profile_image_url")
@@ -53,16 +54,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Membership> memberships = new ArrayList<>();
 
-    // 생성자 수정
     public User(String email, String password, String nickname, String region) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.region = region; // 추가
+        this.region = region;
         this.createdAt = LocalDateTime.now();
     }
 
-    // DataInitializer에서 사용할 레거시 생성자 (region이 null로 들어감)
     public User(String email, String password, String nickname) {
         this(email, password, nickname, null);
     }
@@ -77,5 +76,18 @@ public class User {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    // --- 아래 메서드를 새로 추가 ---
+    public void updateProfile(UserDTO.UpdateUserRequest request) {
+        if (request.getNickname() != null) {
+            this.nickname = request.getNickname();
+        }
+        if (request.getRegion() != null) {
+            this.region = request.getRegion();
+        }
+        if (request.getIntroduction() != null) {
+            this.introduction = request.getIntroduction();
+        }
     }
 }

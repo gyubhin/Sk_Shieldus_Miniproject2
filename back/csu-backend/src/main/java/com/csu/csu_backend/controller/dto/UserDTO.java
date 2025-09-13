@@ -8,6 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDTO {
 
+    // --- 아래 UpdateUserRequest 클래스를 새로 추가 ---
+    @Getter
+    @NoArgsConstructor
+    public static class UpdateUserRequest {
+        private String nickname;
+        private String region;
+        private String introduction;
+    }
+
     @Getter
     @NoArgsConstructor
     public static class UserDetailResponse {
