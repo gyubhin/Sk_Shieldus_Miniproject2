@@ -13,29 +13,35 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private final String uploadDir = "uploads"; // 프로젝트 루트에 uploads 폴더
+    // 절대경로: 프로젝트 실행 디렉토리/uploads
+    private final String uploadDir = System.getProperty("user.dir") + File.separator + "uploads";
 
     public String saveFile(MultipartFile file, String subDir) {
         try {
-            String folderPath = uploadDir + File.separator + subDir;
-            Path dirPath = Paths.get(folderPath);
+            Path dirPath = Paths.get(uploadDir, subDir);
             if (!Files.exists(dirPath)) {
                 Files.createDirectories(dirPath);
             }
 
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = dirPath.resolve(filename);
+
             file.transferTo(filePath.toFile());
 
-            return "/" + folderPath + "/" + filename; // DB에 저장될 경로
+            // 프론트 접근용 URL 반환
+            return "/uploads/" + subDir + "/" + filename;
         } catch (IOException e) {
-            throw new RuntimeException("파일 저장 실패: " + e.getMessage());
+            throw new RuntimeException("파일 저장 실패: " + e.getMessage(), e);
         }
     }
 
-    public void deleteFile(String filePath) {
-        if (filePath == null) return;
-        File file = new File(filePath);
+    public void deleteFile(String fileUrl) {
+        if (fileUrl == null) return;
+
+        String relativePath = fileUrl.replaceFirst("/uploads/", "");
+        Path filePath = Paths.get(uploadDir, relativePath);
+
+        File file = filePath.toFile();
         if (file.exists()) {
             file.delete();
         }
