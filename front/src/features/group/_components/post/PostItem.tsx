@@ -1,7 +1,5 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./PostItem.module.scss";
-import { useState } from "react";
-import clsx from "clsx";
 import type { PostItem as PostItemType } from "@/features/post/_types/base";
 import { getRelativeTime } from "@/libs/time";
 
@@ -9,13 +7,12 @@ type Props = {
   onContentOpen: () => void;
   data: PostItemType;
   onMoreOpen: (postId: number) => void;
+  userId?: number | null;
 };
 /**
  *@description 모임 게시글 항목
  */
-function PostItem({ onContentOpen, data, onMoreOpen }: Props) {
-  const [isExpandContent, setExpandContent] = useState(false);
-
+function PostItem({ onContentOpen, data, onMoreOpen, userId }: Props) {
   return (
     <section className={styles.post_wrapper}>
       {/* 상단 뷰 */}
@@ -26,10 +23,11 @@ function PostItem({ onContentOpen, data, onMoreOpen }: Props) {
 
         <p>{getRelativeTime(data.createdAt)}</p>
 
-        {/* TODO 나중에 유저 정보랑 작성자 정보 비교해서 보여질지 여부 로직 추가 */}
-        <button className={styles.more_btn} onClick={() => onMoreOpen(data.id)}>
-          <IconButton iconName={"More"} />
-        </button>
+        {userId === data.authorId && (
+          <button className={styles.more_btn} onClick={() => onMoreOpen(data.id)}>
+            <IconButton iconName={"More"} />
+          </button>
+        )}
       </section>
 
       {/* 게시글 이미지 */}
@@ -50,9 +48,8 @@ function PostItem({ onContentOpen, data, onMoreOpen }: Props) {
 
       {/* 내용 */}
       <section className={styles.content_view}>
-        <p className={clsx(!isExpandContent && styles.hide_text)}>{data.content}</p>
-
-        <button onClick={() => setExpandContent(!isExpandContent)}>더보기</button>
+        <p className={styles.title}>{data.title}</p>
+        <p className={styles.content}>{data.content}</p>
       </section>
     </section>
   );

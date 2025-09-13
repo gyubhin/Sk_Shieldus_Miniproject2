@@ -57,5 +57,16 @@ export function useGetGroupMemberApi(groupId?: string) {
     queryKey: [reactQueryKeys.group.getGroupsMembers, groupId],
     queryFn: () => getGroupsMembersApi(groupId),
     enabled: !!groupId,
+    select: (data) => {
+      const admins = data.data.filter((item) => item.role === "OWNER");
+      const admin = admins[0];
+      console.log(admin);
+      const members = data.data.filter((item) => item.role === "MEMBER");
+
+      return {
+        admin,
+        members,
+      };
+    },
   });
 }

@@ -19,6 +19,7 @@ import {
 } from "@/features/event/_hooks/attendee/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
+import { useUserId } from "@/features/users/_hooks/useUserId";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -30,6 +31,21 @@ function GroupInfoPage() {
   const [isEventMoreOpen, setEventMoreOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const { showToast } = useUiStore();
+  const userId = useUserId();
+
+  const { data } = useGetGroupsOneApi(groupId);
+
+  const tabs =
+    Number(userId) === data?.ownerId
+      ? [
+          { key: "info", name: "모임 정보" },
+          { key: "post", name: "게시판" },
+          { key: "setting", name: "모임 설정" },
+        ]
+      : [
+          { key: "info", name: "모임 정보" },
+          { key: "post", name: "게시판" },
+        ];
 
   // 이벤트(일정) 목록 state
   const { data: eventsList } = useGetEventsListApi(groupId);
@@ -38,7 +54,6 @@ function GroupInfoPage() {
   const { onChangeTab, activeKey } = useSetGroupTab();
 
   // 그룹 상세정보 state
-  const { data } = useGetGroupsOneApi(groupId);
 
   // 그룹 멤버 state
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
@@ -146,15 +161,7 @@ function GroupInfoPage() {
 
       {/* 그룹탭 */}
       <section className={styles.top_tab_view}>
-        <GroupTab
-          tabs={[
-            { key: "info", name: "모임 정보" },
-            { key: "post", name: "게시판" },
-            { key: "setting", name: "모임 설정" },
-          ]}
-          activeKey={activeKey}
-          onChange={onChangeTab}
-        />
+        <GroupTab tabs={tabs} activeKey={activeKey} onChange={onChangeTab} />
       </section>
 
       {/* 모임 배너 이미지 */}
@@ -187,8 +194,7 @@ function GroupInfoPage() {
         />
       </section>
 
-      {/* TODO 더미 데이터로 나중에 제거해야함 */}
-      {groupMembers?.data && <MemberList groupMembers={groupMembers.data} />}
+      {groupMembers && <MemberList groupMembers={groupMembers} />}
 
       <ActionSheet
         open={isEventMoreOpen}

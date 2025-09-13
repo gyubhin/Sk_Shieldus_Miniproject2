@@ -57,9 +57,25 @@
 .content_view {
   width: 90%;
   // 본문
-  & > p {
+  & > .content {
     margin-bottom: 20px;
     line-height: 28px;
+    font-size: 1.2rem;
+    color: $color-grayscale-80;
+
+    @include media(sm) {
+      font-size: 1.4rem;
+    }
+  }
+
+  & > .title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: $color-grayscale-90;
+
+    @include media(sm) {
+      font-size: 1.6rem;
+    }
   }
 
   & > .hide_text {

@@ -39,7 +39,12 @@
 .author {
   font-weight: bold;
   color: $color-grayscale-90;
-  margin-right: 0.4rem;
+  margin-right: 0.6rem;
+}
+
+.parent {
+  color: $color-positive-10;
+  margin-right: 0.6rem;
 }
 
 /* 댓글 메타 정보 (날짜, 액션 버튼 묶음) */

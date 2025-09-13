@@ -17,6 +17,8 @@ function MyGroupTabPage() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page");
 
+  // const { data: eventList } = useGetEventsListApi();
+
   const { data: myJoinedGroups } = useGetMyJoinedGroupsApi({
     page: Number(page),
     size: 9,
@@ -32,27 +34,27 @@ function MyGroupTabPage() {
       {/* 헤더 */}
       <Header />
 
-      <SectionTitle title={"다가오는 정모 일정 4"} />
+      {/* <SectionTitle title={`다가오는 정모 일정 ${eventList?.totalElements}`} /> */}
 
-      <section className={styles.schedule_view}>
-        {/* {(eventsList?.content ?? []).map((event) => (
+      {/* <section className={styles.schedule_view}>
+        {(eventList?.content ?? []).map((event) => (
           <EventItem data={event} onMoreClick={() => console.log("더보기 클릭")} />
-        ))} */}
-      </section>
+        ))}
+      </section> */}
 
       <SectionTitle title={"참여중인 모임"} />
 
       <section className={styles.my_group_view}>
-        {(myJoinedGroups?.content ?? []).map((_item, idx) => (
+        {(myJoinedGroups ?? []).map((_item, idx) => (
           <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
         ))}
       </section>
 
-      <Pagination
+      {/* <Pagination
         totalPages={myJoinedGroups?.totalPages ?? 1}
         currentPage={Number(page ?? 1)}
         onChange={onPageMove}
-      />
+      /> */}
     </CommonLayout>
   );
 }

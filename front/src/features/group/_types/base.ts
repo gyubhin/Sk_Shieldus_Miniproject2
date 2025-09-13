@@ -27,7 +27,7 @@ export type GroupsItem = {
 export type GetGroupsMemberItem = {
   userId: number;
   nickname: string;
-  role: "ADMIN" | "MEMBER";
+  role: "OWNER" | "MEMBER";
 };
 
 /**
@@ -39,4 +39,12 @@ export type GroupRegisterFormError = {
   region?: string;
   maxMembers?: string;
   categoryId?: string;
+};
+
+/**
+ *@description 그룹 멤버 목록
+ */
+export type GroupMembers = {
+  admin: GetGroupsMemberItem;
+  members: GetGroupsMemberItem[];
 };
