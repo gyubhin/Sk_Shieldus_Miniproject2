@@ -3,18 +3,16 @@ import { Header } from "@/shared/components/header/Header";
 import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MyGroupTabPage.module.scss";
-import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import EventItem from "@/features/group/_components/EventItem";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
-import { useGetEventsListApi, useGetMyUpcomingEvents } from "@/features/event/_hooks/event/query";
+import { useGetMyUpcomingEvents } from "@/features/event/_hooks/event/query";
 import { EmptyView } from "@/shared/components/empty/EmptyView";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
  */
 function MyGroupTabPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page");
 
@@ -26,11 +24,6 @@ function MyGroupTabPage() {
     size: 9,
   });
 
-  // 페이지 이동 이벤트
-  const onPageMove = (page: number) => {
-    navigate(`/group?page=${page}`);
-  };
-
   return (
     <CommonLayout>
       {/* 헤더 */}
@@ -40,7 +33,7 @@ function MyGroupTabPage() {
 
       <section className={styles.schedule_view}>
         {(myEventsData ?? []).map((event) => (
-          <EventItem data={event} onMoreClick={() => console.log("더보기 클릭")} />
+          <EventItem data={event} />
         ))}
       </section>
 

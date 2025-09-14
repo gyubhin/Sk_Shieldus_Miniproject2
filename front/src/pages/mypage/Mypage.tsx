@@ -44,6 +44,8 @@ function Mypage() {
 
   const { data: userData } = useGetUserInfo();
 
+  console.log(userData);
+
   const navigate = useNavigate();
 
   // 유저 프로필 수정 페이지 이동 이벤트

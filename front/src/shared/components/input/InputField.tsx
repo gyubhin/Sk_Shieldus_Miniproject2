@@ -68,6 +68,7 @@ export function InputField({
             successMessage && styles.success,
             className,
           )}
+          accept={type === "file" ? "image/jpeg, image/png, image/svg+xml" : undefined}
           aria-invalid={!!errorMessage}
           {...rest}
         />

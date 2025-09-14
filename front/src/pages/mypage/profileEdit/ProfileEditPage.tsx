@@ -7,10 +7,10 @@ import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { BackHeader } from "@/shared/components/header/BackHeader";
 import { isAxiosError } from "axios";
 import { usePatchUser } from "@/features/users/_hooks/mutation";
-import { useUiStore } from "@/shared/stores/ui.store";
 import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
 import { useGetUserInfo } from "@/features/users/_hooks/query";
+import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 
 /**
  *@description 프로필 수정 페이지
@@ -25,7 +25,13 @@ function ProfileEditPage() {
 
   // 유저 정보 수정 api
   const { mutateAsync: mutatePatch } = usePatchUser();
-  const { showToast } = useUiStore();
+
+  // 이미지 업로드 훅
+  const { onUploadImage, showToast } = useUploadImage({
+    onSuccess: (_imageUrl) => {
+      setProfileImage(_imageUrl);
+    },
+  });
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +41,13 @@ function ProfileEditPage() {
         nickname,
         introduction,
         region: "",
+        profileImageUrl: profileImage,
       });
 
-      refetch();
-      showToast({ message: "회원정보 수정이 완료되었습니다.", type: "success" });
+      if (res.status == 200) {
+        refetch();
+        showToast({ message: "회원정보 수정이 완료되었습니다.", type: "success" });
+      }
     } catch (error) {
       let message = null;
 
@@ -60,15 +69,6 @@ function ProfileEditPage() {
       <BackHeader title={"프로필 수정"} />
 
       <form className={styles.form} onSubmit={onSubmit}>
-        <section className={styles.profile_field}>
-          <img src={profileImage || "/images/ImageProfileDefault.svg"} alt="프로필 이미지" />
-
-          <div className={styles.profile_description}>
-            <p>프로필 사진</p>
-            <p>JPG, PNG 파일을 업로드할 수 있습니다.</p>
-          </div>
-        </section>
-
         <Card title="유저 정보">
           {/* 이메일은 수정 불가 → disabled */}
           <InputField label={"이메일"} required name={"email"} placeholder="example.com" disabled />
@@ -100,12 +100,12 @@ function ProfileEditPage() {
           />
 
           <InputField
-            label={"프로필 이미지 URL"}
-            name={"profileImage"}
-            placeholder="이미지 주소 입력"
-            value={profileImage}
+            label={"프로필 이미지 업로드"}
+            name={"image"}
+            placeholder="이미지 업로드하기"
             type="file"
-            onChange={(e) => setProfileImage(e.target.value)}
+            onChange={onUploadImage}
+            previewUrl={profileImage}
           />
         </Card>
 
