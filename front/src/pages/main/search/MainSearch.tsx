@@ -35,7 +35,7 @@ function MainSearch() {
     sort,
   });
 
-  const { data: grouopsListData } = useGetGroupsListApi({
+  const { data: grouopsListData, refetch: groupListRefetch } = useGetGroupsListApi({
     size: 9,
     page: page ? Number(page) - 1 : 0,
     search: word,
@@ -85,13 +85,13 @@ function MainSearch() {
       {!more && search && <SectionTitle title={`'${word}'으로 검색한 내용`} />}
 
       <section className={styles.group_serach_view}>
-        {(categoryWithGroupData?.content ?? []).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} />
+        {(grouopsListData?.content ?? []).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} refetch={groupListRefetch} />
         ))}
       </section>
 
       <Pagination
-        totalPages={categoryWithGroupData?.totalPages ?? 1}
+        totalPages={grouopsListData?.totalPages ?? 1}
         currentPage={Number(page ?? 1)}
         onChange={onPageMove}
       />

@@ -37,7 +37,7 @@ function Mypage() {
     size: 8,
   });
 
-  const { data: myLikedGroupData } = useGetMyLikedGroups({
+  const { data: myLikedGroupData, refetch: refetchMyLikedGroup } = useGetMyLikedGroups({
     page: Number(page) - 1,
     size: 8,
   });
@@ -82,7 +82,7 @@ function Mypage() {
         <section>
           <section className={clsx(styles.item_container, styles[`${tab}_container`])}>
             {(myLikedGroupData?.content ?? []).map((item, idx) => (
-              <GroupSearchItem key={idx} data={item} />
+              <GroupSearchItem key={idx} data={item} refetch={refetchMyLikedGroup} />
             ))}
           </section>
 

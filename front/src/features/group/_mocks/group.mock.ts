@@ -74,6 +74,9 @@ export const groupHandlers = [
       ownerNickname: body.ownerNickname ?? "주인장",
       categoryId: body.categoryId ?? 1,
       categoryName: body.categoryName ?? "카테고리",
+      tags: "코코",
+      liked: false,
+      joined: false,
       createdAt: dayjs().format("YYYY.MM.DD"),
       updatedAt: dayjs().format("YYYY.MM.DD"),
     };
