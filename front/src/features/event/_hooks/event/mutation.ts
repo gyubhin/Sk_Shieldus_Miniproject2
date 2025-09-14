@@ -5,18 +5,18 @@ import type { PatchEventBody, PostEventBody } from "../../_types/body";
 /**
  *@description events 일정 생성  훅
  */
-export function usePostEventsApi(groupId: number) {
+export function usePostEventsApi(groupId?: string) {
   return useMutation({
-    mutationFn: (body: PostEventBody) => postEventsApi(groupId, body),
+    mutationFn: (body: PostEventBody) => postEventsApi(body, groupId),
   });
 }
 
 /**
  *@description events 일정 부분 수정  훅
  */
-export function usePatchEventsApi(eventId: number) {
+export function usePatchEventsApi(eventId?: string) {
   return useMutation({
-    mutationFn: (body: PatchEventBody) => patchEventsApi(eventId, body),
+    mutationFn: (body: PatchEventBody) => patchEventsApi(body, eventId),
   });
 }
 

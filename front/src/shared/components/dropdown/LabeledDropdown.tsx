@@ -14,6 +14,7 @@ type Props = {
   onChange: (value: string) => void;
   successMessage?: string;
   errorMessage?: string;
+  defaultValue?: string;
 };
 
 export function LabeledDropdown({
@@ -24,8 +25,9 @@ export function LabeledDropdown({
   onChange,
   successMessage,
   errorMessage,
+  defaultValue,
 }: Props) {
-  const [selected, setSelected] = useState<string>("");
+  const [selected, setSelected] = useState<string>(defaultValue ?? "");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;

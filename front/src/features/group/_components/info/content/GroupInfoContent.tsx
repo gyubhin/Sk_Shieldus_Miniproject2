@@ -79,7 +79,7 @@ function GroupInfoContent({ data }: Props) {
           <LikeButton isLike={data.liked} />
         </div>
 
-        <button onClick={onJoin}>탈퇴하기</button>
+        <button onClick={onJoin}>{data?.joined ? "탈퇴하기" : "가입하기"}</button>
       </div>
 
       {/* 장소, 멤버 인원수 */}

@@ -1,14 +1,19 @@
-/**
- *@description 모임 생성 api 바디
- */
 export type PostGroupsForm = {
   name: string;
   description: string;
   region: string;
   maxMembers: number;
-  imageUrl?: File | null;
+  imageUrl?: string | null;
   tags: string;
   categoryId: number;
 };
 
-export type PostGroupsBody = FormData;
+/**
+ *@description 모임 등록 api 바디
+ */
+export type PostGroupsBody = PostGroupsForm;
+
+/**
+ *@description 모임 수정 api 바디
+ */
+export type PatchGroupsBody = Partial<PostGroupsForm>;

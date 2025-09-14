@@ -1,0 +1,26 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.empty_post_wrapper {
+  @include flex-column;
+  width: 100%;
+  gap: 2.4em;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  & > img {
+    width: 240px;
+    aspect-ratio: 3 / 2;
+  }
+}
+
+.title {
+  font-size: 2rem;
+  color: $color-grayscale-90;
+}
+
+.message {
+  font-size: 1.6rem;
+  color: $color-grayscale-70;
+}

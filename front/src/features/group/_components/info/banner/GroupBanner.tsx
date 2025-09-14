@@ -11,9 +11,9 @@ function GroupBanner({ url }: Props) {
   return (
     <div className={styles.group_banner}>
       {url ? (
-        <img src={"/images/GroupTmpBanner.svg"} alt={"group_banner"} />
+        <img src={url} alt={"group_banner"} />
       ) : (
-        <div className={styles.placeholder} />
+        <div className={styles.placeholder}>no image</div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./EventItem.module.scss";
 import type { EventItem } from "@/features/event/_types/base";
 import { SmallButton } from "@/shared/components/button/SmallButton";
+import dayjs from "dayjs";
 
 type Props = {
   data: EventItem;
@@ -41,7 +42,8 @@ export default function EventItem({ data, onDelete, onManage, onMoreClick }: Pro
         <h3 className={styles.title}>{data?.title ?? ""}</h3>
 
         <div className={styles.info}>
-          <p className={styles.time}>{data?.eventDate ?? ""}</p>
+          <p className={styles.time}>{dayjs(data?.eventDate ?? "").format("YYYY.MM.DD")}</p>
+
           <p className={styles.location}>{data?.location ?? ""}</p>
         </div>
       </div>

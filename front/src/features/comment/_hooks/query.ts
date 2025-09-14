@@ -6,10 +6,10 @@ import { getCommentsApi } from "../_apis/comment.api";
 /**
  *@description 댓글 목록 조회 훅
  */
-export function useGetCommentsApi(postId: number, query: PagingQuery) {
+export function useGetCommentsApi(groupId: number, postId: number) {
   return useQuery({
-    queryKey: [reactQueryKeys.comment.getComments, query],
-    queryFn: () => getCommentsApi(postId, query),
+    queryKey: [reactQueryKeys.comment.getComments, groupId, postId],
+    queryFn: () => getCommentsApi(groupId, postId),
     select: (data) => {
       return data.data;
     },

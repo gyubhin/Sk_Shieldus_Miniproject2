@@ -6,14 +6,14 @@ import dayjs from "dayjs";
 import {
   useDeleteCommentApi,
   usePostCommentApi,
-  usePutCommentApi,
+  usePatchCommentApi,
 } from "@/features/comment/_hooks/mutation";
 import { useState } from "react";
 import type { ErrorResponse } from "react-router-dom";
 import { useUiStore } from "@/shared/stores/ui.store";
 import ModalConfirm from "@/shared/components/modal/ModalConfirm";
-import { useGetCommentsApi } from "@/features/comment/_hooks/query";
 import { isAxiosError } from "axios";
+import { useGetCommentsApi } from "@/features/comment/_hooks/query";
 
 type Props = {
   groupId?: number;
@@ -31,15 +31,15 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
 
   const showToast = useUiStore((s) => s.showToast);
 
-  const { data, refetch } = usePostDetailApi(groupId, postId);
+  const { data: postDetailData, refetch: refetchPostDetail } = usePostDetailApi(groupId, postId);
 
-  // TODO API 나오면 연동하기
-  const { data: commentList } = useGetCommentsApi(postId, {
-    page: 0,
-    size: 10,
-  });
+  const { data: commentsData, refetch: refetchComments } = useGetCommentsApi(groupId, postId);
+
+  console.log(postDetailData);
+  console.log(commentsData);
+
   const { mutateAsync: createCommentMutate } = usePostCommentApi(groupId, postId);
-  const { mutateAsync: updateCommentMutate } = usePutCommentApi(groupId, postId);
+  const { mutateAsync: updateCommentMutate } = usePatchCommentApi(groupId, postId);
   const { mutateAsync: deleteCommentMutate } = useDeleteCommentApi(groupId, postId);
   const [comment, setComment] = useState("");
 
@@ -72,7 +72,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
         });
 
         if (res.status === 200) {
-          refetch();
+          refetchPostDetail();
           showToast({ message: "댓글이 수정되었습니다.", type: "success" });
           setSelectedCommentId(initSelectedId);
           setComment("");
@@ -85,7 +85,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
         });
 
         if (res.status === 201) {
-          refetch();
+          refetchComments();
           showToast({
             message: selectedId.recomment ? "답글이 등록되었습니다." : "댓글이 등록되었습니다.",
             type: "success",
@@ -109,8 +109,8 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
 
     deleteCommentMutate(deletedId)
       .then((res) => {
-        if (res.status === 204) {
-          refetch();
+        if (res.status === 200) {
+          refetchPostDetail();
 
           showToast({
             message: "댓글이 삭제되었습니다.",
@@ -148,8 +148,8 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
             <div className={styles.author_view}>
               <div className={styles.profile_img} />
 
-              <span className={styles.author}>{data?.authorNickname ?? ""}</span>
-              <span>{dayjs(data?.createdAt).format("YYYY-MM-DD")}</span>
+              <span className={styles.author}>{postDetailData?.authorNickname ?? ""}</span>
+              <span>{dayjs(postDetailData?.createdAt).format("YYYY-MM-DD")}</span>
             </div>
 
             <IconButton size={24} onClick={onClose} iconName={"Close"} />
@@ -159,33 +159,56 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
             {/* 본문 */}
             <div className={styles.content_wrapper}>
               <p className={styles.text}>
-                <span className={styles.title}>{data?.title ?? ""}</span>
+                <span className={styles.title}>{postDetailData?.title ?? ""}</span>
               </p>
 
               <p className={styles.text}>
-                <span className={styles.content}>{data?.content ?? ""}</span>
+                <span className={styles.content}>{postDetailData?.content ?? ""}</span>
               </p>
             </div>
 
             {/* 댓글 리스트 */}
             <div className={styles.comments_wrapper}>
-              {data?.comments.map((c) => (
-                <CommentItem
-                  key={c.id}
-                  data={c}
-                  onReply={() => {
-                    setSelectedCommentId({ ...initSelectedId, recomment: c.id }); // 답글 대상 지정
-                    setComment(""); // 새 입력
-                  }}
-                  onDelete={() => {
-                    setDeletePopupShow(true);
-                    setSelectedCommentId({ ...initSelectedId, delete: c.id });
-                  }}
-                  onEdit={() => {
-                    setSelectedCommentId({ ...initSelectedId, edit: c.id });
-                    setComment(c.content);
-                  }}
-                />
+              {(commentsData ?? []).map((_comment) => (
+                <div className={styles.comments}>
+                  <CommentItem
+                    key={_comment.id}
+                    data={_comment}
+                    onReply={() => {
+                      setSelectedCommentId({ ...initSelectedId, recomment: _comment.id }); // 답글 대상 지정
+                      setComment(""); // 새 입력
+                    }}
+                    onDelete={() => {
+                      setDeletePopupShow(true);
+                      setSelectedCommentId({ ...initSelectedId, delete: _comment.id });
+                    }}
+                    onEdit={() => {
+                      setSelectedCommentId({ ...initSelectedId, edit: _comment.id });
+                      setComment(_comment.content);
+                    }}
+                  />
+
+                  <div className={styles.recomments}>
+                    {(_comment.children ?? []).map((reomment) => (
+                      <CommentItem
+                        key={reomment.id}
+                        data={reomment}
+                        onReply={() => {
+                          setSelectedCommentId({ ...initSelectedId, recomment: reomment.id }); // 답글 대상 지정
+                          setComment(""); // 새 입력
+                        }}
+                        onDelete={() => {
+                          setDeletePopupShow(true);
+                          setSelectedCommentId({ ...initSelectedId, delete: reomment.id });
+                        }}
+                        onEdit={() => {
+                          setSelectedCommentId({ ...initSelectedId, edit: reomment.id });
+                          setComment(reomment.content);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

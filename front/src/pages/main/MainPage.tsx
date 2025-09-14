@@ -9,6 +9,7 @@ import { SmallButton } from "@/shared/components/button/SmallButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useGetGroupsListApi } from "@/features/group/_hooks/query";
+import { useGetMyLikedGroups } from "@/features/users/_hooks/query";
 
 /**
  *@description 메인 페이지 > 검색, 추천 그룹 표시, 내가 가입한 모임,
@@ -17,13 +18,16 @@ function MainPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const { data: grouopsListData } = useGetGroupsListApi({
+  const { data: groupsListData, refetch: refetchGroupsData } = useGetGroupsListApi({
     size: 9,
     page: 0,
     sort: "createdAt,DESC",
   });
 
-  console.log(grouopsListData);
+  const { data: myLikedGroups, refetch: refetchMyLikedGroup } = useGetMyLikedGroups({
+    page: 0,
+    size: 6,
+  });
 
   const word = searchParams.get("word");
 
@@ -67,28 +71,20 @@ function MainPage() {
       {/* 필터 뷰 */}
       <FilterList />
 
-      <SectionTitle
-        title={"내가 찜한 모임"}
-        rightActionLabel="더보기"
-        onActionClick={() => onClickMore("recommend")}
-      />
+      <SectionTitle title={"내가 찜한 모임"} />
 
       <section className={styles.group_view}>
-        {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
+        {(myLikedGroups?.content ?? []).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} refetch={refetchMyLikedGroup} />
         ))}
       </section>
 
       {/* 그룹 리스트 뷰 */}
-      <SectionTitle
-        title={"추천 모임 표시"}
-        rightActionLabel="더보기"
-        onActionClick={() => onClickMore("recommend")}
-      />
+      <SectionTitle title={"추천 모임 표시"} />
 
       <section className={styles.group_view}>
-        {(grouopsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
+        {(groupsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} refetch={refetchGroupsData} />
         ))}
       </section>
     </CommonLayout>

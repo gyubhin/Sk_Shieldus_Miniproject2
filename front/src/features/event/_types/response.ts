@@ -15,6 +15,8 @@ export type GetEventsDetail = {
   description: string;
   eventDate: string;
   maxAttendees: number;
+  location: string;
+  imageUrl?: string | null;
   groupId: number;
   attendeesCount: number;
   createdAt: string;
@@ -24,11 +26,7 @@ export type GetEventsDetail = {
 /**
  *@description 일정 참석자/대기자 목록
  */
-export type GetEventsAttendeesResponse = {
-  confirmed: EventAttendee[];
-
-  waiting: EventAttendee[];
-};
+export type GetEventsAttendeesResponse = EventAttendee[];
 
 /**
  *@description 일정 참석자/대기자 목록, CONFIRMED > 정원 미달 시, WAITING > 정원 초과 시

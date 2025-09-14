@@ -15,12 +15,17 @@
 
   /* 모임원 정보 */
   .member_info {
-    @include flex-column;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 
     p {
       font-size: 1.4rem;
       color: $color-grayscale-80;
+    }
+
+    @include media(sm) {
+      min-width: 100px;
     }
   }
 
@@ -42,5 +47,10 @@
     height: 32px;
     line-height: 34px;
     border-radius: 12px;
+  }
+
+  .actions {
+    @include flex-row;
+    gap: 1.4rem;
   }
 }

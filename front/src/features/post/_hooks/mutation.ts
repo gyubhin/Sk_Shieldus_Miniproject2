@@ -1,21 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
-import { createPostsApi, deletePostApi, putPostApi } from "../_apis/post.api";
+import { createPostsApi, deletePostApi, patchPostApi, uploadPostImageApi } from "../_apis/post.api";
+import type { CreatePostBody, PatchPostBody } from "../_types/body";
 
 /**
  *@description 게시글 등록 훅
  */
 export function useCreatePostsApi(groupId: number) {
   return useMutation({
-    mutationFn: (body: FormData) => createPostsApi(groupId, body),
+    mutationFn: (body: CreatePostBody) => createPostsApi(groupId, body),
   });
 }
 
 /**
  *@description 게시글 수정 훅
  */
-export function usePutPostApi(groupId: number, postId: number) {
+export function usePatchPostApi(groupId: number, postId: number) {
   return useMutation({
-    mutationFn: (body: FormData) => putPostApi(groupId, postId, body),
+    mutationFn: (body: PatchPostBody) => patchPostApi(groupId, postId, body),
   });
 }
 
@@ -27,3 +28,12 @@ export function useDeletePostApi(groupId: number) {
     mutationFn: (postId: number) => deletePostApi(groupId, postId),
   });
 }
+
+/**
+ *@description 이미지 업로드 훅
+ */
+export const useUploadPostImage = (groupId: number, postId?: number) => {
+  return useMutation({
+    mutationFn: (file: File) => uploadPostImageApi(groupId, file, postId),
+  });
+};

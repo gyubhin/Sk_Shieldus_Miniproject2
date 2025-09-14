@@ -22,7 +22,13 @@ function FilterList() {
   const regionDefault = region
     ? regionOptions.find((item) => item.value === region)
     : regionOptions[0];
-  const cateDefault = cate ? regionOptions.find((item) => item.value === cate) : categoryOptions[0];
+  const cateDefault =
+    categoriesData && cate
+      ? categoriesData.find((item) => item.value === cate)
+      : {
+          label: "전체",
+          value: "0",
+        };
 
   // 필터 버튼 클릭 이벤트
   const onSearchMove = (key: string, value: string) => {

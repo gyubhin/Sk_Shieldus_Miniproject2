@@ -11,7 +11,7 @@ export type MutationResponse = {
 export type PagingQuery = {
   size: number;
   page: number;
-  sort?: string;
+  sort?: string | null;
 };
 
 export type PagingResponse<T> = {
@@ -36,4 +36,20 @@ export type ErrorResponse = {
   code: string;
   message: string;
   field?: string;
+};
+
+/**
+ *@description 커서 방식 응답
+ */
+export type Cursor<T> = {
+  hasNext: boolean;
+  content: T;
+  nextCursor: string;
+};
+
+/**
+ *@description file url 응답
+ */
+export type ImageUploadResponse = {
+  imageUrl: string;
 };

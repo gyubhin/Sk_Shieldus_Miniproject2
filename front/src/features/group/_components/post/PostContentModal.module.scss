@@ -136,6 +136,19 @@
   flex: 1;
   padding: 1.2rem;
   overflow-y: auto;
+
+  .comments {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .recomments {
+    padding-left: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 }
 
 .comment_input {

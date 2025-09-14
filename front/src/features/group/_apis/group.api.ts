@@ -1,5 +1,5 @@
 import { apiCall } from "@/libs/apiCall";
-import type { PostGroupsBody } from "../_types/body";
+import type { PatchGroupsBody, PostGroupsBody } from "../_types/body";
 import type { MutationResponse, PagingQuery } from "@/shared/types/api";
 import type {
   GetGroupsListResponse,
@@ -7,14 +7,26 @@ import type {
   GetGroupsOneResponse,
 } from "../_types/response";
 import type { GetGroupsListQuery } from "../_types/query";
+import type { GroupsItem } from "../_types/base";
 
 /**
  *@description 모임 생성 api
  */
-export const postGroupsApi = (body: FormData) => {
+export const postGroupsApi = (body: PostGroupsBody) => {
   return apiCall<MutationResponse>({
     url: "/groups",
     method: "POST",
+    data: body,
+  });
+};
+
+/**
+ *@description 모임 수정 api
+ */
+export const patchGroupsApi = (body: PatchGroupsBody, groupId?: string) => {
+  return apiCall<MutationResponse>({
+    url: `/groups/${groupId}`,
+    method: "PATCH",
     data: body,
   });
 };
@@ -34,7 +46,7 @@ export const getGroupsListApi = (params: GetGroupsListQuery) => {
  *@description 내가 가입한 모든 모임 목록 조회 api
  */
 export const getMyJoinedGroupsApi = (params: PagingQuery) => {
-  return apiCall<GetGroupsListResponse>({
+  return apiCall<GroupsItem[]>({
     url: "/groups/my",
     params,
   });
@@ -105,5 +117,15 @@ export const patchDelegateOwner = (targretId: number, groupId?: string) => {
   return apiCall<undefined>({
     url: `/groups/${groupId}/delegate-owner/${targretId}`,
     method: "PATCH",
+  });
+};
+
+/**
+ *@description 모임장이 찜 or 취소 api
+ */
+export const postGroupsLike = (groupId: number) => {
+  return apiCall<{ liked: boolean }>({
+    url: `/groups/${groupId}/like`,
+    method: "POST",
   });
 };

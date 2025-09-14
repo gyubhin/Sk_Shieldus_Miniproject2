@@ -4,16 +4,28 @@ import {
   deleteGroupsLeaveApi,
   deleteGroupsMemberApi,
   patchDelegateOwner,
+  patchGroupsApi,
   postGroupsApi,
   postGroupsJoinApi,
+  postGroupsLike,
 } from "../_apis/group.api";
+import type { PatchGroupsBody, PostGroupsBody } from "../_types/body";
 
 /**
  *@description 모임 생성 요청 훅
  */
 export const usePostGroupsApi = () => {
   return useMutation({
-    mutationFn: (body: FormData) => postGroupsApi(body),
+    mutationFn: (body: PostGroupsBody) => postGroupsApi(body),
+  });
+};
+
+/**
+ *@description 모임 수정 요청 훅
+ */
+export const usePatchGroupsApi = (groupId?: string) => {
+  return useMutation({
+    mutationFn: (body: PatchGroupsBody) => patchGroupsApi(body, groupId),
   });
 };
 
@@ -50,18 +62,26 @@ export const useDeleteGroupsMemberApi = (groupId?: string) => {
 /**
  *@description 그룹 삭제 훅
  */
-
 export const useDeleteGroupsApi = (groupId?: string) => {
   return useMutation({
     mutationFn: () => deleteGroupsApi(groupId),
   });
 };
+
 /**
  *@description 모임 위임 훅
  */
-
 export const usePatchDelegateOwner = (groupId?: string) => {
   return useMutation({
     mutationFn: (targetId: number) => patchDelegateOwner(targetId, groupId),
+  });
+};
+
+/**
+ *@description 모임장이 찜 or 취소 훅
+ */
+export const usePostGroupsLike = () => {
+  return useMutation({
+    mutationFn: (groupId: number) => postGroupsLike(groupId),
   });
 };

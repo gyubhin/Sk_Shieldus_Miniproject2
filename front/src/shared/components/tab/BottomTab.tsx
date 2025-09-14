@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { IconButton } from "../icon/IconButton";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAccessTokenStore } from "@/features/auth";
 
 type ActveKey = "main" | "group" | "mypage";
 
@@ -13,11 +14,14 @@ type ActveKey = "main" | "group" | "mypage";
 export function BottomTab() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { accessToken } = useAccessTokenStore();
+
+  console.log(pathname);
 
   const [activeKey, setActvieKey] = useState<ActveKey>(() => {
     if (pathname === "/" || pathname === "/search") {
       return "main" as ActveKey;
-    } else if (pathname === "/group") {
+    } else if (pathname.indexOf("/group") !== -1) {
       return "group" as ActveKey;
     } else {
       return "mypage" as ActveKey;
@@ -25,6 +29,8 @@ export function BottomTab() {
   });
 
   const onTabClick = (_key: ActveKey) => {
+    if (!accessToken) navigate("/login", { replace: true });
+
     setActvieKey(_key);
     navigate(_key === "main" ? "/" : `/${_key}`);
   };

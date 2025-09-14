@@ -17,7 +17,7 @@ export const postCommentApi = (groupId: number, postId: number, body: PostCommen
 /**
  *@description 댓글 수정 api
  */
-export const putCommentApi = (
+export const patchCommentApi = (
   groupId: number,
   postId: number,
   commentId: number,
@@ -26,7 +26,7 @@ export const putCommentApi = (
   return apiCall<undefined>({
     url: `/groups/${groupId}/posts/${postId}/comments/${commentId}`,
     data: body,
-    method: "PUT",
+    method: "PATCH",
   });
 };
 
@@ -43,9 +43,8 @@ export const deleteCommentApi = (groupId: number, postId: number, commentId: num
 /**
  *@description 댓글 목록 조회 api
  */
-export const getCommentsApi = (postId: number, query: PagingQuery) => {
+export const getCommentsApi = (groupId: number, postId: number) => {
   return apiCall<GetCommentsResponse>({
-    url: `/posts/${postId}/comments`,
-    params: query,
+    url: `/groups/${groupId}/posts/${postId}/comments`,
   });
 };

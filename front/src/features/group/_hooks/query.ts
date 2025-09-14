@@ -1,6 +1,11 @@
 import { reactQueryKeys } from "@/shared/constants/reactQueryKeys";
 import { useQuery } from "@tanstack/react-query";
-import { getGroupsListApi, getGroupsMembersApi, getGroupsOneApi } from "../_apis/group.api";
+import {
+  getGroupsListApi,
+  getGroupsMembersApi,
+  getGroupsOneApi,
+  getMyJoinedGroupsApi,
+} from "../_apis/group.api";
 import type { GetGroupsListQuery } from "../_types/query";
 import type { PagingQuery } from "@/shared/types/api";
 
@@ -37,7 +42,7 @@ export function useGetGroupsOneApi(groupId?: string) {
 export function useGetMyJoinedGroupsApi(params: PagingQuery) {
   return useQuery({
     queryKey: [reactQueryKeys.group.getMyJoinedGroup, params],
-    queryFn: () => getGroupsListApi(params),
+    queryFn: () => getMyJoinedGroupsApi(params),
     select: (data) => {
       return data.data;
     },
@@ -52,5 +57,16 @@ export function useGetGroupMemberApi(groupId?: string) {
     queryKey: [reactQueryKeys.group.getGroupsMembers, groupId],
     queryFn: () => getGroupsMembersApi(groupId),
     enabled: !!groupId,
+    select: (data) => {
+      const admins = data.data.filter((item) => item.role === "OWNER");
+      const admin = admins[0];
+      console.log(admin);
+      const members = data.data.filter((item) => item.role === "MEMBER");
+
+      return {
+        admin,
+        members,
+      };
+    },
   });
 }

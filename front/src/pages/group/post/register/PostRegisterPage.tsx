@@ -5,10 +5,10 @@ import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { BackHeader } from "@/shared/components/header/BackHeader";
 import { useState } from "react";
-import type { CreatePostForm } from "@/features/post/_types/body";
+import type { CreatePostBody } from "@/features/post/_types/body";
 import type { PostRegisterFormError } from "@/features/post/_types/base";
 import { useNavigate, useParams, type ErrorResponse } from "react-router-dom";
-import { useCreatePostsApi, usePutPostApi } from "@/features/post/_hooks/mutation";
+import { useCreatePostsApi, usePatchPostApi } from "@/features/post/_hooks/mutation";
 import { postSchema } from "@/features/post/_schemas/post.schema";
 import z from "zod";
 import { usePostDetailApi } from "@/features/post/_hooks/query";
@@ -25,7 +25,7 @@ function PostRegisterPage() {
     content: undefined,
   };
 
-  const initForm: CreatePostForm = {
+  const initForm: CreatePostBody = {
     title: "",
     content: "",
   };
@@ -34,11 +34,10 @@ function PostRegisterPage() {
   const { showToast } = useUiStore();
 
   const { data } = usePostDetailApi(Number(groupId), Number(postId));
-  console.log(data);
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMesage] = useState(initError);
-  const [form, setForm] = useState<CreatePostForm>(
+  const [form, setForm] = useState<CreatePostBody>(
     postId
       ? {
           title: data?.title ?? "",
@@ -49,7 +48,7 @@ function PostRegisterPage() {
   const [imageFile, setImageFile] = useState<File>();
 
   const { mutateAsync: createMutate } = useCreatePostsApi(Number(groupId));
-  const { mutateAsync: updateMutate } = usePutPostApi(Number(groupId), Number(postId));
+  const { mutateAsync: updateMutate } = usePatchPostApi(Number(groupId), Number(postId));
 
   // 폼 수정 이벤트
   const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,11 +68,6 @@ function PostRegisterPage() {
       // 검증 실행
       const validated = postSchema.parse({ ...form });
 
-      const formData = new FormData();
-      formData.append("title", form.title);
-      formData.append("content", form.content);
-      formData.append("image", form.content);
-
       if (imageFile instanceof File) {
         // TODO 서버가 이미지 로직 추가하면 추가할 예정
         // formData.append("image", imageFile);
@@ -81,14 +75,14 @@ function PostRegisterPage() {
 
       if (postId) {
         // 수정 모드
-        const res = await updateMutate(formData);
+        const res = await updateMutate(validated);
         if (res.status === 200) {
           alert("수정 성공했습니다.");
           navigate(`/group/${groupId}/post/`, { replace: true }); // 수정 후 상세로
         }
       } else {
         // 등록 모드
-        const res = await createMutate(formData);
+        const res = await createMutate(validated);
         if (res.status === 201) {
           showToast({ message: "등록 성공했습니다.", type: "success" });
           navigate(`/group/${groupId}/post`, { replace: true }); // 등록 후 목록으로
@@ -116,7 +110,7 @@ function PostRegisterPage() {
 
   return (
     <CommonLayout>
-      <BackHeader title={`모임 ${postId ? "수정" : "등록"}`} />
+      <BackHeader title={`게시글 ${postId ? "수정" : "등록"}`} />
 
       <section className={styles.form}>
         <Card title="게시글 정보">

@@ -1,17 +1,18 @@
 export const regionOptions = [
-  { label: "서울특별시", value: "seoul" },
-  { label: "부산광역시", value: "busan" },
-  { label: "대구광역시", value: "daegu" },
-  { label: "인천광역시", value: "incheon" },
-  { label: "광주광역시", value: "gwangju" },
-  { label: "대전광역시", value: "daejeon" },
-  { label: "울산광역시", value: "ulsan" },
-  { label: "세종특별자치시", value: "sejong" },
+  { label: "전체", value: "" },
+  { label: "서울", value: "서울" },
+  { label: "부산", value: "부산" },
+  { label: "대구", value: "대구" },
+  { label: "인천", value: "인천" },
+  { label: "광주", value: "광주" },
+  { label: "대전", value: "대전" },
+  { label: "울산", value: "울산" },
+  { label: "세종", value: "세종" },
 ];
 
 export const sortOptions = [
-  { label: "최신순", value: "desc" },
-  { label: "이름순", value: "name" },
+  { label: "최신순", value: "latest desc" },
+  { label: "이름순", value: "name desc" },
 ];
 
 // 카테고리 필터 TODO 나중에 api로 대체될 수 있음

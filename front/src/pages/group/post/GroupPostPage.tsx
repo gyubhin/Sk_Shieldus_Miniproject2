@@ -6,12 +6,14 @@ import { PostContentModal } from "@/features/group/_components/post/PostContentM
 import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetPostListApi } from "@/features/post/_hooks/query";
+import { useGetPostsWithCursorApi } from "@/features/post/_hooks/query";
 import PostItem from "@/features/group/_components/post/PostItem";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
 import { useDeletePostApi } from "@/features/post/_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
+import { useUserId } from "@/features/users/_hooks/useUserId";
+import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
 
 /**
  *@description 모임 게시글 목록 페이지
@@ -22,15 +24,31 @@ function GroupPostPage() {
   const [isMoreOpen, setMoreOpen] = useState(false);
   const { showToast } = useUiStore();
 
+  // 그룹 데이터 조회
+  const { data } = useGetGroupsOneApi(groupId);
+
+  // 커서 방식 조회
+  const { data: postsData, refetch } = useGetPostsWithCursorApi(4, Number(groupId));
+
   const { onChangeTab, activeKey } = useSetGroupTab();
   const [isContentModalOpen, setContentModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number>();
 
-  // 그룹 게시글 목록
-  const { data: postList, refetch } = useGetPostListApi(1, {
-    page: 0,
-    size: 9,
-  });
+  const posts = postsData?.pages.flatMap((page) => page.content) ?? [];
+
+  const userId = useUserId();
+
+  const tabs =
+    Number(userId) === data?.ownerId
+      ? [
+          { key: "info", name: "모임 정보" },
+          { key: "post", name: "게시판" },
+          { key: "setting", name: "모임 설정" },
+        ]
+      : [
+          { key: "info", name: "모임 정보" },
+          { key: "post", name: "게시판" },
+        ];
 
   const { mutateAsync: deleteMutate } = useDeletePostApi(Number(groupId));
 
@@ -76,15 +94,7 @@ function GroupPostPage() {
 
       {/* 그룹탭 */}
       <section className={styles.top_tab_view}>
-        <GroupTab
-          tabs={[
-            { key: "info", name: "모임 정보" },
-            { key: "post", name: "게시판" },
-            { key: "setting", name: "모임 설정" },
-          ]}
-          activeKey={activeKey}
-          onChange={onChangeTab}
-        />
+        <GroupTab tabs={tabs} activeKey={activeKey} onChange={onChangeTab} />
 
         <button onClick={() => onMoveRegisterPage()} className={styles.top_tab_more_btn}>
           글 작성
@@ -93,8 +103,9 @@ function GroupPostPage() {
 
       {/* 게시글 목록 */}
       <section className={styles.posts_wrapper}>
-        {(postList?.content ?? []).map((item) => (
+        {posts.map((item) => (
           <PostItem
+            userId={userId}
             onMoreOpen={onMoreOpen}
             key={item.id}
             data={item}

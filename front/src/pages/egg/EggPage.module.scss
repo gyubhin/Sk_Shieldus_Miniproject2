@@ -1,0 +1,133 @@
+@use "@/shared/styles/color" as *;
+@use "@/shared/styles/mixin" as *;
+
+.container {
+  text-align: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcbee);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+  animation: shine 3s linear infinite;
+}
+
+.message {
+  font-size: 1.6rem;
+  margin-bottom: 24px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.image {
+  width: 240px;
+  filter: drop-shadow(0 0 10px rgba(255, 200, 200, 0.7));
+  animation: eggAnimation 4s ease-in-out infinite;
+}
+
+.member {
+  font-size: 1.4rem;
+  margin-top: 8px;
+  opacity: 0;
+  position: relative;
+  animation: flyIn 1s ease forwards;
+}
+
+/* 각 이름에 다른 애니메이션 방향 부여 */
+.member:nth-child(1) {
+  animation-name: flyInLeft;
+  animation-delay: 0.3s;
+}
+.member:nth-child(2) {
+  animation-name: flyInRight;
+  animation-delay: 0.6s;
+}
+.member:nth-child(3) {
+  animation-name: flyInTop;
+  animation-delay: 0.9s;
+}
+.member:nth-child(4) {
+  animation-name: flyInBottom;
+  animation-delay: 1.2s;
+}
+.member:nth-child(5) {
+  animation-name: flyInRotate;
+  animation-delay: 1.5s;
+}
+.member:nth-child(6) {
+  animation-name: flyInZoom;
+  animation-delay: 1.8s;
+}
+
+/* Keyframes 정의 */
+@keyframes flyInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-200px) rotate(-15deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes flyInRight {
+  from {
+    opacity: 0;
+    transform: translateX(200px) rotate(15deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes flyInTop {
+  from {
+    opacity: 0;
+    transform: translateY(-200px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flyInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(200px) scale(1.2);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flyInRotate {
+  from {
+    opacity: 0;
+    transform: translateX(-150px) rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes flyInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}

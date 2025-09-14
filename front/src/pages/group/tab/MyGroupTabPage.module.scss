@@ -3,9 +3,11 @@
 
 .schedule_view {
   display: flex;
-  flex-wrap: wrap;
   gap: 1.6rem;
   margin-bottom: 40px;
+  padding-bottom: 1.6rem;
+
+  overflow-x: scroll;
 
   @include media(sm) {
     gap: 5.3rem;

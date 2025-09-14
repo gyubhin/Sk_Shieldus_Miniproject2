@@ -1,0 +1,81 @@
+// src/pages/NotFoundPage.module.scss
+.container {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  font-size: 14rem;
+  font-weight: bold;
+  color: white;
+  animation: shake 1.5s infinite;
+}
+
+.message {
+  font-size: 1.6rem;
+  margin: 20px 0;
+  color: #fff;
+
+  animation: pulse 2s ease-in-out 3; // 2초 애니메이션, 3번만 반복
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3); // 1.3배 확대
+  }
+}
+
+.egg {
+  font-size: 5rem;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+.homeButton {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: white;
+  color: #ee7777;
+  font-weight: bold;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #fff0f0;
+    transform: scale(1.05);
+  }
+}
+
+/* 애니메이션 */
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}

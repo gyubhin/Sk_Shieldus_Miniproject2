@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { PostCommentBody, PutCommentBody } from "../_types/body";
-import { deleteCommentApi, postCommentApi, putCommentApi } from "../_apis/comment.api";
+import { deleteCommentApi, postCommentApi, patchCommentApi } from "../_apis/comment.api";
 
 /**
  *@description 댓글 등록 훅
@@ -14,10 +14,10 @@ export function usePostCommentApi(groupId: number, postId: number) {
 /**
  *@description 댓글 수정 훅
  */
-export function usePutCommentApi(groupId: number, postId: number) {
+export function usePatchCommentApi(groupId: number, postId: number) {
   return useMutation({
     mutationFn: (data: { body: PutCommentBody; commentId: number }) =>
-      putCommentApi(groupId, postId, data.commentId, data.body),
+      patchCommentApi(groupId, postId, data.commentId, data.body),
   });
 }
 

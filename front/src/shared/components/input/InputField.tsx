@@ -8,7 +8,7 @@ type Props = {
   successMessage?: string;
   errorMessage?: string;
   required?: boolean;
-  initialPreviewUrl?: string; // 서버에서 받은 기존 이미지 URL
+  previewUrl?: string | null; // 서버에서 받은 기존 이미지 URL
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function InputField({
@@ -19,20 +19,10 @@ export function InputField({
   errorMessage,
   className,
   type = "text",
-  initialPreviewUrl,
+  previewUrl,
   ...rest
 }: Props) {
-  const [preview, setPreview] = useState<string | null>(initialPreviewUrl ?? null);
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-    } else {
-      setPreview(initialPreviewUrl ?? null); // 파일 없으면 기존 프리뷰 유지
-    }
-
     rest.onChange?.(e);
   };
 
@@ -59,7 +49,13 @@ export function InputField({
             이미지 선택
           </label>
 
-          {preview && <img src={preview} alt="미리보기" className={styles.preview} />}
+          {previewUrl && (
+            <img
+              src={`${import.meta.env.VITE_APP_IMG_BASE_URL}${previewUrl}`}
+              alt="미리보기"
+              className={styles.preview}
+            />
+          )}
         </>
       ) : (
         <input

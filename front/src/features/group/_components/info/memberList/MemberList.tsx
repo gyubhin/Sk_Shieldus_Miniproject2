@@ -1,35 +1,41 @@
 import styles from "./MemberList.module.scss";
 import MemberItem from "./MemberItem";
 import clsx from "clsx";
-import type { GetGroupsMemberItem } from "@/features/group/_types/base";
+import type { GroupMembers } from "@/features/group/_types/base";
 
 type Props = {
   onKickMember?: (userId: number) => void;
   onDelegateGroup?: (userId: number) => void;
-  groupMembers: GetGroupsMemberItem[];
+  groupMembers: GroupMembers;
 };
 
 /**
  *@description 모임원 목록
  */
 function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
+  const { admin, members } = groupMembers;
   return (
     <section className={styles.member_list_container}>
       <div className={clsx(styles.manager_view, styles.members_wrapper)}>
         <p>운영진</p>
 
-        <MemberItem name={"최진수"} description={"안녕~"} />
+        <MemberItem
+          userId={admin?.userId}
+          name={admin?.nickname ?? ""}
+          description={admin?.introduction ?? ""}
+        />
       </div>
 
       <div className={clsx(styles.members_view, styles.members_wrapper)}>
-        <p>모임 멤버 103</p>
+        <p>모임 멤버 {members?.length ?? 0}</p>
 
         <div className={styles.manager_list}>
-          {groupMembers.map((member) => (
+          {members.map((member) => (
             <MemberItem
               key={member.userId}
-              name={"최진수"}
-              description={"안녕~"}
+              userId={member.userId}
+              name={member?.nickname ?? ""}
+              description={member?.introduction ?? ""}
               onKick={onKickMember}
               onDelegate={onDelegateGroup}
             />

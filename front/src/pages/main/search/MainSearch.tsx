@@ -10,6 +10,7 @@ import { Pagination } from "@/shared/components/pagenation/Pagenation";
 import { useState } from "react";
 import { useGetGroupsListApi } from "@/features/group/_hooks/query";
 import { useQueryParams } from "@/shared/hooks/useQueryParameter";
+import { useGetCategoriesWithGroupsApi } from "@/features/category/_hooks/query";
 
 /**
  *@description 메인 페이지 > 검색 내용 페이지 컴포넌트
@@ -20,13 +21,26 @@ function MainSearch() {
   const word = query.get("word"); //  검색 단어
   const more = query.get("more"); // 더보기로 접근시
   const page = query.get("page");
+  const region = query.get("region");
+  const sort = query.get("sort");
+  const cate = query.get("cate");
 
   const [search, setSearch] = useState(word);
 
+  const { data: categoryWithGroupData } = useGetCategoriesWithGroupsApi({
+    size: 4,
+    page: page ? Number(page) - 1 : 0,
+    search: word,
+    region,
+    sort,
+  });
+
   const { data: grouopsListData } = useGetGroupsListApi({
     size: 9,
-    page: Number(page) - 1,
+    page: page ? Number(page) - 1 : 0,
     search: word,
+    region,
+    sort,
   });
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,13 +85,13 @@ function MainSearch() {
       {!more && search && <SectionTitle title={`'${word}'으로 검색한 내용`} />}
 
       <section className={styles.group_serach_view}>
-        {grouopsListData?.content.map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} tags={["파이썬", "AI"]} />
+        {(categoryWithGroupData?.content ?? []).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} />
         ))}
       </section>
 
       <Pagination
-        totalPages={grouopsListData?.totalPages ?? 1}
+        totalPages={categoryWithGroupData?.totalPages ?? 1}
         currentPage={Number(page ?? 1)}
         onChange={onPageMove}
       />

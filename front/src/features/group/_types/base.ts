@@ -1,4 +1,5 @@
 import type { TimeResponse } from "@/shared/types/api";
+import { string } from "zod";
 
 /**
  *@description 그룹 목록 항목 타입
@@ -18,6 +19,7 @@ export type GroupsItem = {
   imageUrl: string;
   tags: string;
   liked: boolean;
+  joined?: boolean;
 } & TimeResponse;
 
 /**
@@ -26,7 +28,8 @@ export type GroupsItem = {
 export type GetGroupsMemberItem = {
   userId: number;
   nickname: string;
-  role: "ADMIN" | "MEMBER";
+  introduction: string;
+  role: "OWNER" | "MEMBER";
 };
 
 /**
@@ -38,4 +41,12 @@ export type GroupRegisterFormError = {
   region?: string;
   maxMembers?: string;
   categoryId?: string;
+};
+
+/**
+ *@description 그룹 멤버 목록
+ */
+export type GroupMembers = {
+  admin: GetGroupsMemberItem;
+  members: GetGroupsMemberItem[];
 };

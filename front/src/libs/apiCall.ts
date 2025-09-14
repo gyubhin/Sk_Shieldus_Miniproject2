@@ -3,18 +3,18 @@ import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./cookie";
 
 export const apiCall = axios.create({
-  // baseURL: import.meta.env.VITE_APP_LIVE_API_URL,
-  baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: import.meta.env.VITE_APP_LIVE_API_URL,
+  // baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
 
 apiCall.interceptors.request.use(
   (config) => {
     const token = useAccessTokenStore.getState().accessToken;
+    console.log(token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      config.headers["X-XSRF-TOKEN"] = getCookie("xsrftk");
     }
     return config;
   },

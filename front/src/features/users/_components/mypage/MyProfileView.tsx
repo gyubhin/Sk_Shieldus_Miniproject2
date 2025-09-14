@@ -38,12 +38,12 @@ export function MyProfileView({ onEditProfile, onSettings, userData }: Props) {
 
         <div className={styles.counts}>
           <div className={styles.count}>
-            <span className={styles.number}>{0}</span>
+            <span className={styles.number}>{userData?.postCount ?? 0}</span>
             <span className={styles.label}>게시물</span>
           </div>
 
           <div className={styles.count}>
-            <span className={styles.number}>{0}</span>
+            <span className={styles.number}>{userData?.commentCount ?? 0}</span>
             <span className={styles.label}>댓글</span>
           </div>
         </div>

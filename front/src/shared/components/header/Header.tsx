@@ -4,7 +4,7 @@ import styles from "./Header.module.scss";
 import { useAccessTokenStore } from "@/features/auth";
 import useIsMobile from "@/shared/hooks/useIsMobile";
 import { IconButton } from "../icon/IconButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePostLogoutApi } from "@/features/auth/_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 
@@ -24,18 +24,40 @@ export function Header() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  // 로고 이스터에그 (5번 연속 클릭)
+  const [logoClickCount, setLogoClickCount] = useState(0);
+
+  useEffect(() => {
+    if (logoClickCount === 5) {
+      navigate("/egg"); // 원하는 페이지 경로
+      setLogoClickCount(0); // 초기화
+    }
+  }, [logoClickCount, navigate]);
+
+  const handleLogoClick = () => {
+    setLogoClickCount((prev) => prev + 1);
+
+    // 일정 시간(예: 1.5초) 내에 5번 누르지 않으면 초기화
+    setTimeout(() => {
+      setLogoClickCount(0);
+    }, 1500);
+  };
+
   // 로그인/로그아웃 버튼 이벤트
   const onLoginButtonClick = () => {
     if (isLogin) {
       // 로그인된 상태 -> 로그아웃 api 호출
       mutateAsync()
-        .then(() => {
-          showToast({ message: "로그아웃되었습니다.", type: "success" });
-          reset(); // 토큰 삭제
-          navigate("/login");
+        .then((res) => {
+          if (res.status === 200) {
+            showToast({ message: "로그아웃되었습니다.", type: "success" });
+            navigate("/login");
+            reset(); // 토큰 삭제
+          }
         })
         .catch(() => {
           showToast({ message: "잘못된 접근입니다.", type: "error" });
+          navigate("/login");
         });
     } else {
       // 로그아웃된 상태 -> 로그인 페이지 이동
@@ -46,9 +68,9 @@ export function Header() {
   return (
     <header className={styles.header}>
       {/* Logo */}
-      <Link to="/">
+      <button onClick={handleLogoClick}>
         <img src="/images/ImageLogo.svg" alt="HobbyHub 로고" className={styles.logo_icon} />
-      </Link>
+      </button>
 
       <div className={styles.actions}>
         {isMobile && <IconButton size={24} iconName={"Menu"} onClick={toggleMenu} />}

@@ -7,5 +7,7 @@ export type CommentItem = {
   createdAt: string;
   authorNickname: string;
   authorId: number;
+  parentId: number | null;
+  parentAuthorNickname: string | null;
   children?: CommentItem[];
 };
