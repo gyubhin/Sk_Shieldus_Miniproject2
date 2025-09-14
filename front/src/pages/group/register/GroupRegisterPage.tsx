@@ -17,9 +17,8 @@ import z from "zod";
 import { isAxiosError } from "axios";
 import { strUtils } from "@/libs/str";
 import type { GroupRegisterFormError } from "@/features/group/_types/base";
-import { useUiStore } from "@/shared/stores/ui.store";
-import { usePostUploadImage } from "@/features/image/_hooks/mutation";
 import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
+import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 
 /**
  *@description 모임 등록/수정 페이지
@@ -33,13 +32,11 @@ function GroupRegisterPage() {
 
   // 카테고리 조회
   const { data: categoryOptions } = useGetCategoriesApi();
-  const { showToast } = useUiStore();
 
   // 그룹 상세 조회
   const { data: groupsOneData } = useGetGroupsOneApi(groupId);
 
   // 이미지 업로드
-  const { mutateAsync: mutateUploadImage } = usePostUploadImage();
 
   const { mutateAsync: mutatePatchGroups } = usePatchGroupsApi(groupId);
 
@@ -53,26 +50,41 @@ function GroupRegisterPage() {
   };
 
   const initForm: PostGroupsForm = {
-    name: groupsOneData?.name ?? "",
-    description: groupsOneData?.description ?? "",
-    region: groupsOneData?.region ?? "",
-    maxMembers: groupsOneData?.maxMembers ?? 0,
-    categoryId: groupsOneData?.categoryId ?? 0,
-    imageUrl: groupsOneData?.imageUrl ?? null,
-    tags: groupsOneData?.tags ?? "",
+    name: "",
+    description: "",
+    region: "",
+    maxMembers: 0,
+    categoryId: undefined,
+    imageUrl: null,
+    tags: "",
   };
 
   const [errorMessage, setErrorMesage] = useState(initError);
 
   const [form, setForm] = useState(initForm);
+
+  // 이미지 업로드 훅
+  const { onUploadImage, showToast } = useUploadImage({
+    onSuccess: (_imageUrl) => {
+      setForm((prev) => ({
+        ...prev,
+        imageUrl: _imageUrl,
+      }));
+    },
+  });
   const [tags, setTags] = useState<string[]>([]);
   const [tag, setTag] = useState("");
 
   // 태그 추가
   const onAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log(3);
-      setTags((prev) => [...prev, tag]);
+    if (e.key === "Enter" && tag.trim()) {
+      e.preventDefault();
+      if (tags.length >= 5) {
+        return showToast({ message: "태그는 최대 5개까지 가능합니다.", type: "error" });
+      }
+      if (tags.includes(tag.trim())) return;
+
+      setTags((prev) => [...prev, tag.trim()]);
       setTag("");
     }
   };
@@ -130,26 +142,6 @@ function GroupRegisterPage() {
     }
   };
 
-  // 이미지 업로드
-  const onUploadImage = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("type", "misc");
-
-      const response = await mutateUploadImage(formData);
-      setForm((prev) => ({
-        ...prev,
-        imageUrl: response.data.imageUrl, // 백엔드 응답 스펙에 맞게 수정
-      }));
-      showToast({ message: "이미지 업로드 성공!", type: "success" });
-    } catch (error) {
-      if (isAxiosError<ErrorResponse>(error)) {
-        showToast({ message: error.message ?? "이미지 업로드 실패", type: "error" });
-      }
-    }
-  };
-
   /**
    *@description 등록 취소 클릭 이벤트
    */
@@ -162,6 +154,22 @@ function GroupRegisterPage() {
       setTags(groupsOneData?.tags.split(","));
     }
   }, []);
+
+  // 수정시, 이전 데이터 추가
+  useEffect(() => {
+    if (groupsOneData) {
+      setForm({
+        name: groupsOneData.name,
+        description: groupsOneData.description,
+        region: groupsOneData.region,
+        maxMembers: groupsOneData.maxMembers,
+        categoryId: groupsOneData.categoryId,
+        imageUrl: groupsOneData.imageUrl,
+        tags: groupsOneData.tags,
+      });
+      setTags(groupsOneData.tags.split(","));
+    }
+  }, [groupsOneData]);
 
   return (
     <CommonLayout>
@@ -194,7 +202,7 @@ function GroupRegisterPage() {
             required
             placeholder="카테고리를 선택해주세요."
             options={categoryOptions ?? []}
-            defaultValue={form.categoryId.toString()}
+            defaultValue={form.categoryId?.toString()}
             onChange={(val) => setForm((prev) => ({ ...prev, categoryId: Number(val) }))}
             errorMessage={errorMessage["categoryId"]}
           />
@@ -243,12 +251,7 @@ function GroupRegisterPage() {
             name={"image"}
             placeholder="이미지 업로드하기"
             type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                onUploadImage(file);
-              }
-            }}
+            onChange={onUploadImage}
             previewUrl={form.imageUrl}
           />
         </Card>

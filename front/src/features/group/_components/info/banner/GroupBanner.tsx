@@ -1,3 +1,4 @@
+import { getImageUrl } from "@/libs/image";
 import styles from "./GroupBanner.module.scss";
 
 type Props = {
@@ -11,7 +12,7 @@ function GroupBanner({ url }: Props) {
   return (
     <div className={styles.group_banner}>
       {url ? (
-        <img src={url} alt={"group_banner"} />
+        <img src={getImageUrl(url)} alt={"group_banner"} />
       ) : (
         <div className={styles.placeholder}>no image</div>
       )}

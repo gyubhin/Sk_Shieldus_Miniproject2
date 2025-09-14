@@ -10,6 +10,7 @@ export type PostItem = {
   createdAt: string;
   authorNickname: string;
   authorId: number;
+  imageUrl?: string | null;
 };
 
 /**

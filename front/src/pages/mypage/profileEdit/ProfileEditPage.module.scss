@@ -5,29 +5,6 @@
   @include flex-column;
   gap: 4rem;
 
-  .profile_field {
-    width: 100%;
-    @include flex-row;
-    gap: 3.5rem;
-
-    .profile_description {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-
-      &:first-child {
-        font-size: 1.6rem;
-        font-weight: bold;
-        color: $color-grayscale-90;
-      }
-
-      &:last-child {
-        font-size: 1.4rem;
-        color: $color-grayscale-70;
-      }
-    }
-  }
-
   .button_groups {
     width: 100%;
     @include flex-column;

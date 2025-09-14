@@ -5,7 +5,7 @@ export type PostGroupsForm = {
   maxMembers: number;
   imageUrl?: string | null;
   tags: string;
-  categoryId: number;
+  categoryId?: number;
 };
 
 /**

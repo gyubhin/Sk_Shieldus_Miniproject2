@@ -44,7 +44,7 @@ export function useGetMyJoinedGroupsApi(params: PagingQuery) {
     queryKey: [reactQueryKeys.group.getMyJoinedGroup, params],
     queryFn: () => getMyJoinedGroupsApi(params),
     select: (data) => {
-      return data.data;
+      return data.data.reverse();
     },
   });
 }

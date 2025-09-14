@@ -13,11 +13,17 @@ function MyPostItem({ data }: Props) {
   return (
     <section className={styles.mypost_wrapper}>
       <div className={styles.left}>
-        <img
-          className={styles.post_img}
-          alt={"내 게시글 이미지"}
-          src={getImageUrl(data.imageUrl)}
-        />
+        {data.imageUrl ? (
+          <img
+            className={styles.post_img}
+            alt={"내 게시글 이미지"}
+            src={getImageUrl(data.imageUrl)}
+          />
+        ) : (
+          <div className={styles.no_image}>
+            <p>no image</p>
+          </div>
+        )}
       </div>
 
       <div className={styles.right}>

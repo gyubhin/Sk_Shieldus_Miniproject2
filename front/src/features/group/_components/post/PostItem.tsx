@@ -2,6 +2,7 @@ import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./PostItem.module.scss";
 import type { PostItem as PostItemType } from "@/features/post/_types/base";
 import { getRelativeTime } from "@/libs/time";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   onContentOpen: () => void;
@@ -33,7 +34,7 @@ function PostItem({ onContentOpen, data, onMoreOpen, userId }: Props) {
       {/* 게시글 이미지 */}
       <section className={styles.img_view}>
         <button onClick={onContentOpen}>
-          <img src={"/images/ImagePostDummy.svg"} alt="ImagePostDummy" />
+          {data.imageUrl && <img alt={`${data.title} 이미지`} src={getImageUrl(data.imageUrl)} />}
         </button>
       </section>
 

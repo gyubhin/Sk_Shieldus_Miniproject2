@@ -5,4 +5,6 @@ export type PatchUserBody = {
   nickname: string;
   region: string;
   introduction: string;
+  // imageUrl?: string | null;
+  profileImageUrl?: string | null;
 };

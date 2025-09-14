@@ -177,7 +177,7 @@ function GroupInfoPage() {
       {data && <GroupInfoContent data={data} />}
 
       <SectionTitle
-        title={"정모 일정 4"}
+        title={"정모 일정"}
         rightActionLabel="+ 일정 생성"
         onActionClick={onMoveRegisterEvent}
       />

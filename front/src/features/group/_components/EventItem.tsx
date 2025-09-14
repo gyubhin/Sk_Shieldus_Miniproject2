@@ -3,6 +3,7 @@ import styles from "./EventItem.module.scss";
 import type { EventItem } from "@/features/event/_types/base";
 import { SmallButton } from "@/shared/components/button/SmallButton";
 import dayjs from "dayjs";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   data: EventItem;
@@ -31,7 +32,7 @@ export default function EventItem({ data, onDelete, onManage, onMoreClick }: Pro
       {/* 썸네일 */}
       <div className={styles.thumbnail}>
         {data?.imageUrl ? (
-          <img src={data?.imageUrl} alt={data.title} />
+          <img src={getImageUrl(data?.imageUrl)} alt={data.title} />
         ) : (
           <div className={styles.placeholder} />
         )}
@@ -42,9 +43,13 @@ export default function EventItem({ data, onDelete, onManage, onMoreClick }: Pro
         <h3 className={styles.title}>{data?.title ?? ""}</h3>
 
         <div className={styles.info}>
-          <p className={styles.time}>{dayjs(data?.eventDate ?? "").format("YYYY.MM.DD")}</p>
+          <p className={styles.time}>날짜: {dayjs(data?.eventDate ?? "").format("YYYY.MM.DD")}</p>
 
-          <p className={styles.location}>{data?.location ?? ""}</p>
+          <p className={styles.location}>장소: {data?.location ?? ""}</p>
+
+          <p className={styles.location}>
+            참석: {data?.attendeesCount ?? 0} / {data?.maxAttendees ?? 0}명
+          </p>
         </div>
       </div>
 

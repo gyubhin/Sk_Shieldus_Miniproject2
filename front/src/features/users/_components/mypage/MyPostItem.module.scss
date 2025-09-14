@@ -11,10 +11,17 @@
 
 .left {
   .post_img {
-    width: 180px;
-    height: 180px;
-    border: 1px solid;
+    width: 100px;
+    height: 100px;
     border-radius: 4px;
+  }
+
+  .no_image {
+    width: 100px;
+    height: 100px;
+    @include flex-center;
+    border: 1px solid $color-grayscale-30;
+    background-color: $color-grayscale-10;
   }
 }
 

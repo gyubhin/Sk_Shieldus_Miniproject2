@@ -1,6 +1,8 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./MyProfileView.module.scss";
 import type { GetUserInfoResponse } from "../../_types/response";
+import { getUserInfo } from "../../_apis/user.api";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   onEditProfile?: () => void;
@@ -18,7 +20,11 @@ export function MyProfileView({ onEditProfile, onSettings, userData }: Props) {
       <div className={styles.left}>
         <div className={styles.profile_img_wrapper}>
           <img
-            src={userData?.profileImageUrl ?? "/images/ImageProfileDefault.svg"}
+            src={
+              userData?.profileImageUrl
+                ? getImageUrl(userData?.profileImageUrl)
+                : "/images/ImageProfileDefault.svg"
+            }
             alt="프로필"
             className={
               userData?.profileImageUrl ? styles.profile_image : styles.profile_default_image

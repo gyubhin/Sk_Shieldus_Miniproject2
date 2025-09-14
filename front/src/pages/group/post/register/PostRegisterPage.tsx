@@ -4,16 +4,16 @@ import Card from "@/shared/components/card/Card";
 import { InputField } from "@/shared/components/input/InputField";
 import { ActiveButton } from "@/shared/components/button/ActiveButton";
 import { BackHeader } from "@/shared/components/header/BackHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CreatePostBody } from "@/features/post/_types/body";
 import type { PostRegisterFormError } from "@/features/post/_types/base";
 import { useNavigate, useParams, type ErrorResponse } from "react-router-dom";
 import { useCreatePostsApi, usePatchPostApi } from "@/features/post/_hooks/mutation";
 import { postSchema } from "@/features/post/_schemas/post.schema";
 import z from "zod";
-import { usePostDetailApi } from "@/features/post/_hooks/query";
-import { useUiStore } from "@/shared/stores/ui.store";
+import { useGetPostsWithCursorApi, usePostDetailApi } from "@/features/post/_hooks/query";
 import { isAxiosError } from "axios";
+import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 
 /**
  *@description 게시글 등록/수정 페이지
@@ -28,24 +28,27 @@ function PostRegisterPage() {
   const initForm: CreatePostBody = {
     title: "",
     content: "",
+    imageUrl: null,
   };
 
   const { groupId, postId } = useParams<{ groupId: string; postId: string }>();
-  const { showToast } = useUiStore();
 
   const { data } = usePostDetailApi(Number(groupId), Number(postId));
+  const { refetch: refetchList } = useGetPostsWithCursorApi(4, Number(groupId));
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMesage] = useState(initError);
-  const [form, setForm] = useState<CreatePostBody>(
-    postId
-      ? {
-          title: data?.title ?? "",
-          content: data?.content ?? "",
-        }
-      : initForm,
-  );
-  const [imageFile, setImageFile] = useState<File>();
+  const [form, setForm] = useState<CreatePostBody>(initForm);
+
+  // 이미지 업로드 훅
+  const { onUploadImage, showToast } = useUploadImage({
+    onSuccess: (_imageUrl) => {
+      setForm((prev) => ({
+        ...prev,
+        imageUrl: _imageUrl,
+      }));
+    },
+  });
 
   const { mutateAsync: createMutate } = useCreatePostsApi(Number(groupId));
   const { mutateAsync: updateMutate } = usePatchPostApi(Number(groupId), Number(postId));
@@ -68,16 +71,12 @@ function PostRegisterPage() {
       // 검증 실행
       const validated = postSchema.parse({ ...form });
 
-      if (imageFile instanceof File) {
-        // TODO 서버가 이미지 로직 추가하면 추가할 예정
-        // formData.append("image", imageFile);
-      }
-
       if (postId) {
         // 수정 모드
         const res = await updateMutate(validated);
         if (res.status === 200) {
-          alert("수정 성공했습니다.");
+          showToast({ message: "수정 성공했습니다.", type: "success" });
+          refetchList();
           navigate(`/group/${groupId}/post/`, { replace: true }); // 수정 후 상세로
         }
       } else {
@@ -85,6 +84,7 @@ function PostRegisterPage() {
         const res = await createMutate(validated);
         if (res.status === 201) {
           showToast({ message: "등록 성공했습니다.", type: "success" });
+          refetchList();
           navigate(`/group/${groupId}/post`, { replace: true }); // 등록 후 목록으로
         }
       }
@@ -107,6 +107,17 @@ function PostRegisterPage() {
   const onCancel = () => {
     navigate(`/group/${groupId}/post`, { replace: true });
   };
+
+  // 수정시, 이전 데이터 추가
+  useEffect(() => {
+    if (data) {
+      setForm({
+        title: data.title,
+        content: data.content,
+        imageUrl: data.imageUrl,
+      });
+    }
+  }, [data]);
 
   return (
     <CommonLayout>
@@ -138,12 +149,8 @@ function PostRegisterPage() {
             name={"image"}
             placeholder="이미지 업로드하기"
             type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setImageFile(file);
-              }
-            }}
+            onChange={onUploadImage}
+            previewUrl={form.imageUrl}
           />
         </Card>
 
