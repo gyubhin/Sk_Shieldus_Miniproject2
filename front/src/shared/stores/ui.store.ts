@@ -12,8 +12,11 @@ type ToastState = {
 
 type UiState = {
   toast: ToastState;
+  loading: boolean;
   showToast: (payload: Omit<ToastState, "show">) => void;
   clearToast: () => void;
+  showLoading: () => void;
+  hideLoading: () => void;
 };
 
 const initialToast: ToastState = {
@@ -25,14 +28,19 @@ const initialToast: ToastState = {
 export const useUiStore = create<UiState>()(
   devtools((set) => ({
     toast: initialToast,
+    loading: false,
 
     showToast: (payload) =>
       set(() => ({
         toast: { ...payload, show: true },
       })),
+
     clearToast: () =>
       set(() => ({
         toast: initialToast,
       })),
+
+    showLoading: () => set({ loading: true }),
+    hideLoading: () => set({ loading: false }),
   })),
 );

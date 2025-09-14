@@ -13,7 +13,7 @@ export default function EggPage() {
         <div>
           <p className={styles.member}>김뀨빈</p>
           <p className={styles.member}>5지윤</p>
-          <p className={styles.member}>겸</p>
+          <p className={styles.member}>남다굠</p>
           <p className={styles.member}>꽉병국</p>
           <p className={styles.member}>만기봉</p>
           <p className={styles.member}>윤쫑윤</p>
