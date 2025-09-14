@@ -14,23 +14,17 @@ let eventData = Array.from({ length: 12 }, (_, i) => ({
 
 // 더미 참석자/대기자 데이터
 const attendeesMock: Record<number, GetEventsAttendeesResponse> = {
-  1: {
-    confirmed: [
-      { userId: 1, nickname: "홍길동", role: "OWNER" },
-      { userId: 2, nickname: "김철수", role: "MEMBER" },
-    ],
-    waiting: [
-      { userId: 3, nickname: "이영희", role: "MEMBER" },
-      { userId: 4, nickname: "박민수", role: "MEMBER" },
-    ],
-  },
-  2: {
-    confirmed: [
-      { userId: 5, nickname: "최주영", role: "OWNER" },
-      { userId: 6, nickname: "한소라", role: "MEMBER" },
-    ],
-    waiting: [{ userId: 7, nickname: "오지훈", role: "MEMBER" }],
-  },
+  1: [
+    { userId: 1, username: "홍길동", role: "OWNER", status: "APPROVED" },
+    { userId: 2, username: "김철수", role: "MEMBER", status: "APPROVED" },
+    { userId: 3, username: "이영희", role: "MEMBER", status: "WAITING" },
+    { userId: 4, username: "박민수", role: "MEMBER", status: "WAITING" },
+  ],
+  2: [
+    { userId: 5, username: "최주영", role: "OWNER", status: "APPROVED" },
+    { userId: 6, username: "한소라", role: "MEMBER", status: "APPROVED" },
+    { userId: 7, username: "오지훈", role: "MEMBER", status: "WAITING" },
+  ],
 };
 
 export const eventHandlers = [
@@ -59,7 +53,7 @@ export const eventHandlers = [
   // 참석자 목록 조회
   http.get(mswUtils.getUrl("/events/:eventId/attendees"), ({ params }) => {
     const { eventId } = params;
-    const data = attendeesMock[Number(eventId)] ?? { confirmed: [], waiting: [] };
+    const data = attendeesMock[Number(eventId)] ?? [];
 
     return HttpResponse.json(data, { status: 200 });
   }),
@@ -69,17 +63,20 @@ export const eventHandlers = [
     const { eventId } = params;
     const eid = Number(eventId);
 
+    if (!attendeesMock[eid]) attendeesMock[eid] = [];
+
     // 더미 유저 (로그인한 유저라고 가정)
-    const newUser = { userId: Date.now(), nickname: "신규참가자", role: "MEMBER" } as EventAttendee;
+    const newUser: EventAttendee = {
+      userId: Date.now(),
+      username: "신규참가자",
+      role: "MEMBER",
+      status:
+        attendeesMock[eid].filter((u) => u.status === "APPROVED").length < 5
+          ? "APPROVED"
+          : "WAITING",
+    };
 
-    if (!attendeesMock[eid]) attendeesMock[eid] = { confirmed: [], waiting: [] };
-
-    // 임시 로직: 정원 다 안 찼으면 confirmed, 아니면 waiting
-    if (attendeesMock[eid].confirmed.length < 5) {
-      attendeesMock[eid].confirmed.push(newUser);
-    } else {
-      attendeesMock[eid].waiting.push(newUser);
-    }
+    attendeesMock[eid].push(newUser);
 
     return HttpResponse.json({ message: "참석 신청 성공" }, { status: 201 });
   }),
@@ -89,11 +86,10 @@ export const eventHandlers = [
     const { eventId } = params;
     const eid = Number(eventId);
 
-    if (!attendeesMock[eid]) attendeesMock[eid] = { confirmed: [], waiting: [] };
+    if (!attendeesMock[eid]) attendeesMock[eid] = [];
 
     // 더미 유저 ID = 999 라고 가정하고 취소 처리
-    attendeesMock[eid].confirmed = attendeesMock[eid].confirmed.filter((u) => u.userId !== 999);
-    attendeesMock[eid].waiting = attendeesMock[eid].waiting.filter((u) => u.userId !== 999);
+    attendeesMock[eid] = attendeesMock[eid].filter((u) => u.userId !== 999);
 
     return HttpResponse.json({ message: "참석 취소 성공" }, { status: 200 });
   }),
@@ -106,23 +102,26 @@ export const eventHandlers = [
     const eid = Number(eventId);
     const uid = Number(userId);
 
-    if (!attendeesMock[eid]) attendeesMock[eid] = { confirmed: [], waiting: [] };
+    if (!attendeesMock[eid]) attendeesMock[eid] = [];
 
-    // 해당 유저 찾기
-    let user =
-      attendeesMock[eid].confirmed.find((u) => u.userId === uid) ||
-      attendeesMock[eid].waiting.find((u) => u.userId === uid);
+    attendeesMock[eid] = attendeesMock[eid].map((u) =>
+      u.userId === uid
+        ? {
+            ...u,
+            status:
+              body.status === "GOING"
+                ? "APPROVED"
+                : body.status === "WAITING"
+                  ? "WAITING"
+                  : u.status, // CANCELLED은 제외 처리해야 할 수도 있음
+          }
+        : u,
+    );
 
-    // 목록에서 제거
-    attendeesMock[eid].confirmed = attendeesMock[eid].confirmed.filter((u) => u.userId !== uid);
-    attendeesMock[eid].waiting = attendeesMock[eid].waiting.filter((u) => u.userId !== uid);
-
-    if (body.status === "GOING") {
-      if (user) attendeesMock[eid].confirmed.push(user);
-    } else if (body.status === "WAITING") {
-      if (user) attendeesMock[eid].waiting.push(user);
+    // CANCELLED 요청이면 아예 배열에서 제거
+    if (body.status === "CANCELLED") {
+      attendeesMock[eid] = attendeesMock[eid].filter((u) => u.userId !== uid);
     }
-    // CANCELLED이면 아예 제외
 
     return HttpResponse.json({ message: "참석자 상태 변경 성공" }, { status: 200 });
   }),

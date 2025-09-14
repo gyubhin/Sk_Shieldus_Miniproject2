@@ -10,13 +10,17 @@ let commentData = Array.from({ length: 4 }, (_, i) => ({
   createdAt: dayjs().format("YYYY.MM.DD"),
   authorNickname: `댓글 작성자${i + 1}`,
   authorId: i + 1,
+  parentId: null,
+  parentAuthorNickname: null,
 
-  children: Array.from({ length: 3 }, (_, i) => ({
-    id: i + 1,
-    content: `답글 내용${i + 1}`,
+  children: Array.from({ length: 3 }, (_, k) => ({
+    id: k + 1,
+    content: `답글 내용${k + 1}`,
     createdAt: dayjs().format("YYYY.MM.DD"),
-    authorNickname: `답글 작성자${i + 1}`,
-    authorId: i + 1,
+    authorNickname: `답글 작성자${k + 1}`,
+    authorId: k + 1,
+    parentId: i,
+    parentAuthorNickname: `댓글 작성자${i + 1}`,
   })),
 })) as CommentItem[];
 
@@ -33,8 +37,10 @@ export const commentHandlers = [
       createdAt: dayjs().format("YYYY.MM.DD"),
       authorNickname: `작성자${id}`,
       authorId: id,
+      parentId: null,
+      parentAuthorNickname: null,
       children: [],
-    };
+    } as CommentItem;
 
     commentData.unshift(tmp);
 
