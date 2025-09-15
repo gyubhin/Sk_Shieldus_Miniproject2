@@ -79,8 +79,8 @@ function GroupRegisterPage() {
   const onAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && tag.trim()) {
       e.preventDefault();
-      if (tags.length >= 5) {
-        return showToast({ message: "태그는 최대 5개까지 가능합니다.", type: "error" });
+      if (tags.length >= 3) {
+        return showToast({ message: "태그는 최대 3개까지 가능합니다.", type: "error" });
       }
       if (tags.includes(tag.trim())) return;
 
@@ -233,7 +233,7 @@ function GroupRegisterPage() {
         <Card title="부가 정보">
           <InputField
             value={tag}
-            label={"모임에 관련된 태그를 추가해주세요. (최대 5개)"}
+            label={"모임에 관련된 태그를 추가해주세요. (최대 3개)"}
             name={"tag"}
             placeholder="태그 입력 후, Enter"
             onChange={(e) => setTag(e.target.value)}
