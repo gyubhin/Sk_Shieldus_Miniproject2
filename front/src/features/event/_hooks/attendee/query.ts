@@ -11,7 +11,7 @@ export function useGetEventAttendeeApi(eventId?: number) {
     queryKey: [reactQueryKeys.attendee.getEventAttendee, eventId],
     queryFn: () => getEventAttendeeApi(eventId),
     select: (data) => {
-      const confirmed = data.data.filter((item) => item.status === "APPROVED");
+      const confirmed = data.data.filter((item) => item.status === "CONFIRMED");
       const waiting = data.data.filter((item) => item.status === "WAITING");
 
       const res = { confirmed, waiting } as EventAttendeeList;

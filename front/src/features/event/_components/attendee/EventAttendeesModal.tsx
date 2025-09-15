@@ -23,8 +23,8 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
   if (!isOpen || !eventId) return null;
 
   const role = {
-    OWNER: "모임장",
-    MEMBER: "모임원",
+    HOST: "모임장",
+    ATTENDEE: "모임원",
   };
 
   const { refetch, data: attendees } = useGetEventAttendeeApi(eventId);
@@ -75,7 +75,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 
-                {attendee.role === "MEMBER" && (
+                {attendee.role === "ATTENDEE" && (
                   <div className={styles.actions}>
                     <button onClick={() => onManageAttendance(attendee.userId, "CANCELLED")}>
                       취소

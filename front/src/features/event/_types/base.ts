@@ -22,8 +22,8 @@ export type EventItem = {
 export type EventAttendee = {
   userId: number;
   username: string;
-  role: "MEMBER" | "OWNER";
-  status: "APPROVED" | "WAITING";
+  role: "ATTENDEE" | "HOST";
+  status: "CONFIRMED" | "WAITING";
 };
 
 /**
