@@ -7,7 +7,6 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
 import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
-import axios from "axios";
 import styles from "./SignupPage.module.scss";
 import { postSignupApi, useAccessTokenStore } from "@/features/auth";
 import { useUiStore } from "@/shared/stores/ui.store";
@@ -83,12 +82,10 @@ function SignupPage() {
         region: sanitize(region),
       });
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         setToken(res.data.accessToken);
         showToast({ message: "회원가입이 완료되었습니다!", type: "success" });
         nav("/"); // 가입 후 로그인 페이지로 이동
-      } else {
-        alert("회원가입 실패");
       }
     } catch (err) {
       console.error(err);
