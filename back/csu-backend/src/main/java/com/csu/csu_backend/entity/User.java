@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import org.springframework.util.StringUtils; // 추가
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,16 +79,20 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
-    // --- 아래 메서드를 새로 추가 ---
     public void updateProfile(UserDTO.UpdateUserRequest request) {
-        if (request.getNickname() != null) {
+        if (StringUtils.hasText(request.getNickname())) {
             this.nickname = request.getNickname();
         }
-        if (request.getRegion() != null) {
+        if (StringUtils.hasText(request.getRegion())) {
             this.region = request.getRegion();
         }
-        if (request.getIntroduction() != null) {
+        if (StringUtils.hasText(request.getIntroduction())) {
             this.introduction = request.getIntroduction();
         }
+        // ▼▼▼ 수정된 부분 ▼▼▼
+        if (StringUtils.hasText(request.getProfileImageUrl())) {
+            this.profileImageUrl = request.getProfileImageUrl();
+        }
+        // ▲▲▲ 수정된 부분 ▲▲▲
     }
 }
