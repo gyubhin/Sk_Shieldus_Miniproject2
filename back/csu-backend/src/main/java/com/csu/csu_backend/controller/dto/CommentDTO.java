@@ -38,6 +38,7 @@ public class CommentDTO {
         private LocalDateTime createdAt;
         private String authorNickname;
         private Long authorId;
+        private String authorProfileImageUrl; // 필드 추가
         private List<CommentResponse> children;
 
         private Long parentId;
@@ -49,6 +50,7 @@ public class CommentDTO {
             this.createdAt = comment.getCreatedAt();
             this.authorNickname = comment.getUser().getNickname();
             this.authorId = comment.getUser().getId();
+            this.authorProfileImageUrl = comment.getUser().getProfileImageUrl(); // 값 설정
 
             // 중복 조회 방지
             this.children = List.of();
