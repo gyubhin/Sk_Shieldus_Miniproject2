@@ -14,6 +14,8 @@ export type MyPostItem = {
   createdAt: string;
   authorNickname: string;
   authorId: number;
+  groupId: number;
+  authorProfileImageUrl?: string | null;
 };
 
 /**
