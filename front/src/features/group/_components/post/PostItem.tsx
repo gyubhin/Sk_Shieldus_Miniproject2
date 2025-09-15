@@ -14,6 +14,20 @@ type Props = {
  *@description 모임 게시글 항목
  */
 function PostItem({ onContentOpen, data, onMoreOpen, userId }: Props) {
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "HubbyHub",
+          text: "HubbyHubd의 내 게시글을 공유해요.",
+          url: window.location.href,
+        });
+      } catch (err) {}
+    } else {
+      alert("이 브라우저에서는 공유하기를 지원하지 않습니다.");
+    }
+  };
+
   return (
     <section className={styles.post_wrapper}>
       {/* 상단 뷰 */}
@@ -44,7 +58,7 @@ function PostItem({ onContentOpen, data, onMoreOpen, userId }: Props) {
         <IconButton iconName={"Bubble"} onClick={onContentOpen} />
 
         {/* 공유하기 버튼 */}
-        <IconButton iconName={"Share"} />
+        <IconButton iconName={"Share"} onClick={handleShare} />
       </section>
 
       {/* 내용 */}
