@@ -15,6 +15,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "modern-normalize": "^3.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@tanstack/react-query-devtools": "^5.87.3",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^24.3.1",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
