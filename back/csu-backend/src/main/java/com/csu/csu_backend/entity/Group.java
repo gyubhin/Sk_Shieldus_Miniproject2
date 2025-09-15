@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "deleted_at IS NULL") // 소프트 삭제 적용
+@Where(clause = "deleted_at IS NULL")
 public class Group {
 
     @Id
@@ -52,6 +52,10 @@ public class Group {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Setter
+    @Column(name = "cover_image_url")
+    private String coverImageUrl;
+
     @Builder
     public Group(String name, String description, String region, int maxMembers, String imageUrl, String tags, User owner, Category category) {
         this.name = name;
@@ -65,18 +69,33 @@ public class Group {
         this.createdAt = LocalDateTime.now();
     }
 
-    // 그룹 논리적 삭제 메서드
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
 
-    // 그룹장 위임을 위한 메서드
     public void delegateOwner(User newOwner) {
         this.owner = newOwner;
     }
 
-    @Setter
-    @Column(name = "cover_image_url")
-    private String coverImageUrl;
-
+    public void update(String name, String description, String region, Integer maxMembers, String tags, Category category) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (description != null) {
+            this.description = description;
+        }
+        if (region != null) {
+            this.region = region;
+        }
+        if (maxMembers != null) {
+            this.maxMembers = maxMembers;
+        }
+        if (tags != null) {
+            this.tags = tags;
+        }
+        if (category != null) {
+            this.category = category;
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
 }

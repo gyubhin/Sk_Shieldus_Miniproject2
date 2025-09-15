@@ -2,6 +2,7 @@ package com.csu.csu_backend.service;
 
 import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
 import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.GroupDTO.UpdateGroupRequest;
 import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
 import com.csu.csu_backend.controller.dto.Response.PagingResponse;
 import com.csu.csu_backend.entity.*;
@@ -54,6 +55,25 @@ public class GroupService {
         createOwnerMembership(owner, group);
 
         return group.getId();
+    }
+
+    @Transactional
+    public GroupResponse updateGroup(Long groupId, UpdateGroupRequest request, Long ownerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, ownerId);
+
+        if (request.getName() != null && !request.getName().equals(group.getName())) {
+            validateGroupNameDuplication(request.getName());
+        }
+
+        Category newCategory = group.getCategory();
+        if (request.getCategoryId() != null && !request.getCategoryId().equals(newCategory.getId())) {
+            newCategory = findCategoryById(request.getCategoryId());
+        }
+
+        group.update(request.getName(), request.getDescription(), request.getRegion(), request.getMaxMembers(), request.getTags(), newCategory);
+
+        return new GroupResponse(group);
     }
 
     public PagingResponse<GroupResponse> getAllGroups(Long categoryId, String region, Pageable pageable, Long userId) {
