@@ -1,7 +1,6 @@
 import { IconButton } from "@/shared/components/icon/IconButton";
 import styles from "./MyProfileView.module.scss";
 import type { GetUserInfoResponse } from "../../_types/response";
-import { getUserInfo } from "../../_apis/user.api";
 import { getImageUrl } from "@/libs/image";
 
 type Props = {
