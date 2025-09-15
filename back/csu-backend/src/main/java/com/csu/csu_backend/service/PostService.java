@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -62,7 +63,14 @@ public class PostService {
         Post post = findPostById(postId);
         validatePostOwner(post, userId);
         validatePostInGroup(post, groupId);
+
+        // title과 content 업데이트
         post.update(request.getTitle(), request.getContent());
+
+        // imageUrl이 요청에 포함되어 있다면, 이미지 URL도 함께 업데이트
+        if (StringUtils.hasText(request.getImageUrl())) {
+            post.setImageUrl(request.getImageUrl());
+        }
     }
 
     @Transactional
@@ -100,10 +108,6 @@ public class PostService {
         postRepository.save(post);
     }
 
-    /**
-     * 게시글 목록 조회 (커서 방식)
-     * @param cursor 마지막 커서 id
-     */
     public CursorPagingResponse<PostResponse> getPostsByGroupWithCursor(Long groupId, String cursor, int size) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("그룹을 찾을 수 없습니다."));
@@ -114,7 +118,6 @@ public class PostService {
 
         boolean hasNext = posts.size() > size;
 
-        // size+1 개 가져왔으면 마지막 하나 버려서 hasNext 판정
         if (hasNext) {
             posts = posts.subList(0, size);
         }

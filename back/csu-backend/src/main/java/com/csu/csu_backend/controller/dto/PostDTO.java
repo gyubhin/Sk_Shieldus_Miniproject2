@@ -32,7 +32,6 @@ public class PostDTO {
         }
     }
 
-    // 아래 UpdatePostRequest 클래스를 추가합니다.
     @Getter
     @NoArgsConstructor
     public static class UpdatePostRequest {
@@ -40,6 +39,7 @@ public class PostDTO {
         private String title;
         @NotBlank(message = "게시글 내용은 필수입니다.")
         private String content;
+        private String imageUrl; // imageUrl 필드 추가
     }
 
 
