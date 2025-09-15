@@ -19,7 +19,7 @@ export function CommonLayout({ children }: Props) {
     <div className={styles.layout}>
       <main className={styles.container}>{children}</main>
 
-      {location.pathname !== "/login" &&
+      {location.pathname !== "/" &&
         location.pathname !== "/signup" &&
         location.pathname !== "/privacy" && <BottomTab />}
     </div>

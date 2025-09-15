@@ -34,7 +34,7 @@ function MainSearch() {
   } = useGetGroupsListApi({
     size: 9,
     page: page ? Number(page) - 1 : 0,
-    search: word,
+    keyword: word,
     region,
     categoryId: cate === "0" ? undefined : cate,
   });

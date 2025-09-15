@@ -10,10 +10,13 @@ import axios from "axios";
  *@description refresh 토큰 만료 로직 처리 -> at 제거 및 로그인페이지로 이동
  */
 function handleAuthError(error: Error) {
-  if (axios.isAxiosError(error) && error.response?.status === 401) {
+  if (
+    axios.isAxiosError(error) &&
+    (error.response?.status === 401 || error.response?.status === 403)
+  ) {
     useAccessTokenStore.getState().reset();
     if (typeof window !== "undefined") {
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   }
 }

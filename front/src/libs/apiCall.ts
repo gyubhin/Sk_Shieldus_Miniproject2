@@ -1,10 +1,8 @@
 import { useAccessTokenStore } from "@/features/auth/_stores/accessToken.store";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
-import { getCookie } from "./cookie";
 
 export const apiCall = axios.create({
   baseURL: import.meta.env.VITE_APP_LIVE_API_URL,
-  // baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
 
@@ -34,7 +32,10 @@ apiCall.interceptors.response.use(
     };
 
     // rf 토큰 재발급 경우
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
+    ) {
       // 1. 재요청 설정
       originalRequest._retry = true;
 
@@ -53,12 +54,9 @@ apiCall.interceptors.response.use(
       // 3. 요청
       isRefreshing = true;
       try {
-        const res = await axios.post(
-          // `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
-          // {},
-          "",
-          { withCredentials: true },
-        );
+        const res = await axios.post(`${import.meta.env.VITE_APP_LIVE_API_URL}/auth/refresh`, "", {
+          withCredentials: true,
+        });
 
         const newAccessToken = res.data.accessToken;
         useAccessTokenStore.getState().setToken(newAccessToken);
