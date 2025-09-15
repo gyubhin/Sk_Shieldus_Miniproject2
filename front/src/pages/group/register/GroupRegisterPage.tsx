@@ -82,16 +82,19 @@ function GroupRegisterPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [tag, setTag] = useState("");
 
+  const [isComposing, setIsComposing] = useState(false);
+
   // 태그 추가
   const onAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && tag.trim()) {
+    if (e.key === "Enter" && !isComposing) {
       e.preventDefault();
+      const value = tag.trim();
+      if (!value) return;
       if (tags.length >= 3) {
         return showToast({ message: "태그는 최대 3개까지 가능합니다.", type: "error" });
       }
-      if (tags.includes(tag.trim())) return;
-
-      setTags((prev) => [...prev, tag.trim()]);
+      if (tags.includes(value)) return;
+      setTags((prev) => [...prev, value]);
       setTag("");
     }
   };
@@ -240,11 +243,13 @@ function GroupRegisterPage() {
         <Card title="부가 정보">
           <InputField
             value={tag}
+            onChange={(e) => setTag(e.target.value)}
             label={"모임에 관련된 태그를 추가해주세요. (최대 3개)"}
             name={"tag"}
             placeholder="태그 입력 후, Enter"
-            onChange={(e) => setTag(e.target.value)}
             onKeyDown={onAddTag}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
           />
 
           <div className={styles.tags}>
