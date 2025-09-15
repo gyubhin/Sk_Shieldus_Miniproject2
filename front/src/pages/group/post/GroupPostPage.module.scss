@@ -2,17 +2,30 @@
 @use "@/shared/styles/mixin" as *;
 
 .top_tab_view {
-  @include flex-row;
+  @include flex-column;
+  align-items: flex-end;
   position: relative;
   margin-bottom: 40px;
+  gap: 2.4rem;
+
+  @include media(sm) {
+    @include flex-row;
+    align-items: flex-start;
+    gap: 0;
+  }
 
   .top_tab_more_btn {
-    position: absolute;
-    right: 4rem;
+    position: relative;
     font-size: 1.4rem;
 
     padding: 0.6rem 1.2rem;
     border-bottom: 1px solid $color-grayscale-50;
+
+    @include media(sm) {
+      position: absolute;
+      right: 4rem;
+      padding: 0.6rem 1.2rem;
+    }
   }
 }
 

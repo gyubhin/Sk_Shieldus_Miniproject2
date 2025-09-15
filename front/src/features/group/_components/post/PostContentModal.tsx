@@ -174,7 +174,15 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
           {/* 헤더 */}
           <div className={styles.header}>
             <div className={styles.author_view}>
-              <div className={styles.profile_img} />
+              {postDetailData?.authorProfileImageUrl ? (
+                <img
+                  className={styles.profile_image}
+                  alt={"member_image"}
+                  src={getImageUrl(postDetailData.authorProfileImageUrl)}
+                />
+              ) : (
+                <div className={styles.no_profile_image} />
+              )}
 
               <span className={styles.author}>{postDetailData?.authorNickname ?? ""}</span>
               <span>{dayjs(postDetailData?.createdAt).format("YYYY-MM-DD")}</span>

@@ -79,16 +79,20 @@
     @include flex-row;
     gap: 1.4rem;
 
-    .profile_img {
-      width: 22px;
-      height: 22px;
+    .profile_image {
+      width: 3.2rem;
+      height: 3.2rem;
       border-radius: 100%;
       background-color: $color-grayscale-60;
+      border: 1px solid $color-grayscale-20;
+    }
 
-      @include media(sm) {
-        width: 28px;
-        height: 28px;
-      }
+    .no_profile_image {
+      width: 3.2rem;
+      height: 3.2rem;
+      border-radius: 100%;
+      background-color: $color-grayscale-10;
+      border: 1px solid $color-grayscale-20;
     }
 
     .author {

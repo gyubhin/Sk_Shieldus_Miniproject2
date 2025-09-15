@@ -2,6 +2,7 @@ import { useUserId } from "@/features/users/_hooks/useUserId";
 import type { CommentItem } from "../_types/base";
 import styles from "./CommentItem.module.scss";
 import { getRelativeTime } from "@/libs/time";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   onReply?: () => void;
@@ -21,7 +22,15 @@ export function CommentItem({ data, onReply, onDelete, onEdit }: Props) {
   return (
     <div className={styles.container}>
       {/* 프로필 아이콘 */}
-      <div className={styles.avatar} />
+      {data.authorProfileImageUrl ? (
+        <img
+          className={styles.profile_image}
+          alt={"member_image"}
+          src={getImageUrl(data.authorProfileImageUrl)}
+        />
+      ) : (
+        <div className={styles.no_profile_image} />
+      )}
 
       {/* 본문 */}
       <div className={styles.body}>

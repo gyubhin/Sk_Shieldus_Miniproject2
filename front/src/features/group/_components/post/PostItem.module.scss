@@ -20,6 +20,15 @@
     height: 4.4rem;
     border-radius: 100%;
     background-color: $color-grayscale-60;
+    border: 1px solid $color-grayscale-20;
+  }
+
+  .no_profile_image {
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 100%;
+    background-color: $color-grayscale-10;
+    border: 1px solid $color-grayscale-20;
   }
 
   & > p {
