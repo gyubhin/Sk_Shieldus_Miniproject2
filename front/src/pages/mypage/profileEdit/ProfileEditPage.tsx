@@ -11,6 +11,7 @@ import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
 import { useGetUserInfo } from "@/features/users/_hooks/query";
 import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
+import { useNavigate } from "react-router-dom";
 
 /**
  *@description 프로필 수정 페이지
@@ -18,6 +19,7 @@ import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 function ProfileEditPage() {
   const { data: previewUserData, refetch } = useGetUserInfo();
 
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState(previewUserData?.nickname ?? "");
   const [introduction, setIntroduction] = useState(previewUserData?.introduction ?? "");
   const [profileImage, setProfileImage] = useState(previewUserData?.profileImageUrl ?? "");
@@ -46,6 +48,7 @@ function ProfileEditPage() {
 
       if (res.status == 200) {
         refetch();
+        navigate(-1);
         showToast({ message: "회원정보 수정이 완료되었습니다.", type: "success" });
       }
     } catch (error) {
