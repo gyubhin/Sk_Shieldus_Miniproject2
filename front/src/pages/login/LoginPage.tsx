@@ -42,7 +42,7 @@ function LoginPage() {
       if (res.data?.accessToken) {
         setToken(res.data.accessToken);
         showToast({ message: "로그인 성공!", type: "success" });
-        nav("/"); // 성공 시 홈으로 이동
+        nav("/main"); // 성공 시 홈으로 이동
       } else {
         setEmailErr("로그인 실패: 토큰이 반환되지 않았습니다.");
       }

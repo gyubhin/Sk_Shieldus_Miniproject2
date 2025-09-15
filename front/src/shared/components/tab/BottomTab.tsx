@@ -19,7 +19,7 @@ export function BottomTab() {
   console.log(pathname);
 
   const [activeKey, setActvieKey] = useState<ActveKey>(() => {
-    if (pathname === "/" || pathname === "/search") {
+    if (pathname === "/main" || pathname === "/search") {
       return "main" as ActveKey;
     } else if (pathname.indexOf("/group") !== -1) {
       return "group" as ActveKey;
@@ -32,7 +32,7 @@ export function BottomTab() {
     if (!accessToken) navigate("/login", { replace: true });
 
     setActvieKey(_key);
-    navigate(_key === "main" ? "/" : `/${_key}`);
+    navigate(`/${_key}`);
   };
 
   return (
