@@ -1,7 +1,6 @@
 import { reactQueryKeys } from "@/shared/constants/reactQueryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { getCategoriesApi, getCategoriesWithGroupsApi } from "../_apis/category.api";
-import type { PagingQuery } from "@/shared/types/api";
 import type { CategoryWithGroupQuery } from "../_types/query";
 
 /**
@@ -14,7 +13,13 @@ export function useGetCategoriesApi() {
     select: (data) => {
       const reData = data.data.map((item) => ({ value: item.id.toString(), label: item.name }));
 
-      return reData;
+      return [
+        {
+          label: "전체",
+          value: "0",
+        },
+        ...reData,
+      ];
     },
   });
 }

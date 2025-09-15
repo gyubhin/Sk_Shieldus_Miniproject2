@@ -10,11 +10,6 @@ export const regionOptions = [
   { label: "세종", value: "세종" },
 ];
 
-export const sortOptions = [
-  { label: "최신순", value: "latest desc" },
-  { label: "이름순", value: "name desc" },
-];
-
 // 카테고리 필터 TODO 나중에 api로 대체될 수 있음
 export const categoryOptions = [
   { label: "카테고리", value: "" },

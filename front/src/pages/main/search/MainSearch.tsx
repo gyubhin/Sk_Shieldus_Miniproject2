@@ -22,25 +22,16 @@ function MainSearch() {
   const more = query.get("more"); // 더보기로 접근시
   const page = query.get("page");
   const region = query.get("region");
-  const sort = query.get("sort");
   const cate = query.get("cate");
 
   const [search, setSearch] = useState(word);
-
-  const { data: categoryWithGroupData } = useGetCategoriesWithGroupsApi({
-    size: 4,
-    page: page ? Number(page) - 1 : 0,
-    search: word,
-    region,
-    sort,
-  });
 
   const { data: grouopsListData, refetch: groupListRefetch } = useGetGroupsListApi({
     size: 9,
     page: page ? Number(page) - 1 : 0,
     search: word,
     region,
-    sort,
+    categoryId: cate === "0" ? undefined : cate,
   });
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
