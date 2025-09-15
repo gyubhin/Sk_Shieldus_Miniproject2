@@ -12,6 +12,7 @@ import { regionOptions } from "@/shared/constants/options";
 import { useGetUserInfo } from "@/features/users/_hooks/query";
 import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 import { useNavigate } from "react-router-dom";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 프로필 수정 페이지
@@ -26,17 +27,25 @@ function ProfileEditPage() {
   const [region, setRegion] = useState(previewUserData?.region ?? "");
 
   // 유저 정보 수정 api
-  const { mutateAsync: mutatePatch } = usePatchUser();
+  const { mutateAsync: mutatePatch, isPending: isPendingPatch } = usePatchUser();
 
   // 이미지 업로드 훅
-  const { onUploadImage, showToast } = useUploadImage({
+  const {
+    onUploadImage,
+    showToast,
+    isPending: isPendingImage,
+  } = useUploadImage({
     onSuccess: (_imageUrl) => {
       setProfileImage(_imageUrl);
     },
   });
 
+  useLoading(isPendingPatch || isPendingImage);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isPendingPatch || isPendingImage) return;
 
     try {
       const res = await mutatePatch({

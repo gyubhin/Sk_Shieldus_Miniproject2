@@ -20,6 +20,7 @@ import { useState } from "react";
 import { EventAttendeesModal } from "@/features/event/_components/attendee/EventAttendeesModal";
 import { useDeleteEventEventsApi } from "@/features/event/_hooks/event/mutation";
 import { useUserId } from "@/features/users/_hooks/useUserId";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 내 모임 탭 > 모임 설정 페이지
@@ -35,22 +36,43 @@ function GroupSettingPage() {
   const { data } = useGetGroupsOneApi(groupId);
 
   // 멤버 추방 api
-  const { mutateAsync: mutateKickMember } = useDeleteGroupsMemberApi(groupId);
+  const { mutateAsync: mutateKickMember, isPending: isPendingKick } =
+    useDeleteGroupsMemberApi(groupId);
 
   // 그룹 삭제 api
-  const { mutateAsync: mutateDeleteGroup } = useDeleteGroupsApi(groupId);
+  const { mutateAsync: mutateDeleteGroup, isPending: isPendingDelete } =
+    useDeleteGroupsApi(groupId);
 
   // 그룹 위임 api
-  const { mutateAsync: mutateDelegate } = usePatchDelegateOwner(groupId);
+  const { mutateAsync: mutateDelegate, isPending: isPendingDelegate } =
+    usePatchDelegateOwner(groupId);
 
   // 그룹 멤버 조회 api
-  const { data: groupMembers, refetch: refetchGroupMembers } = useGetGroupMemberApi(groupId);
+  const {
+    data: groupMembers,
+    refetch: refetchGroupMembers,
+    isPending: isPendingMembers,
+  } = useGetGroupMemberApi(groupId);
 
   // 이벤트 삭제 api
-  const { mutateAsync: mutateDeleteEvent } = useDeleteEventEventsApi();
+  const { mutateAsync: mutateDeleteEvent, isPending: isPendingDeleteEvent } =
+    useDeleteEventEventsApi();
 
   // 이벤트(일정) 목록 state
-  const { data: eventsList, refetch: refetchEventList } = useGetEventsListApi(groupId);
+  const {
+    data: eventsList,
+    refetch: refetchEventList,
+    isPending: isPendingEvents,
+  } = useGetEventsListApi(groupId);
+
+  useLoading(
+    isPendingKick ||
+      isPendingDelete ||
+      isPendingDelegate ||
+      isPendingMembers ||
+      isPendingDeleteEvent ||
+      isPendingEvents,
+  );
 
   const [selectedEvent, setSelectedEvent] = useState<number>();
 

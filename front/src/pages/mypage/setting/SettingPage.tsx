@@ -14,7 +14,6 @@ function SettingPage() {
 
       <section>
         <MenuItem label={"공지사항"} onClick={() => navigate("/mypage/setting/notice")} />
-        <MenuItem label={"버전정보 v3.1.24"} />
       </section>
     </CommonLayout>
   );

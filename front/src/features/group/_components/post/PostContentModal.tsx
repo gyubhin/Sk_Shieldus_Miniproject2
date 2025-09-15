@@ -14,6 +14,8 @@ import { useUiStore } from "@/shared/stores/ui.store";
 import ModalConfirm from "@/shared/components/modal/ModalConfirm";
 import { isAxiosError } from "axios";
 import { useGetCommentsApi } from "@/features/comment/_hooks/query";
+import useLoading from "@/shared/hooks/useLoading";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   groupId?: number;
@@ -31,17 +33,34 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
 
   const showToast = useUiStore((s) => s.showToast);
 
-  const { data: postDetailData, refetch: refetchPostDetail } = usePostDetailApi(groupId, postId);
+  const {
+    data: postDetailData,
+    refetch: refetchPostDetail,
+    isLoading: isLoadingPost,
+  } = usePostDetailApi(groupId, postId);
 
-  const { data: commentsData, refetch: refetchComments } = useGetCommentsApi(groupId, postId);
+  const {
+    data: commentsData,
+    refetch: refetchComments,
+    isLoading: isLoadingComments,
+  } = useGetCommentsApi(groupId, postId);
 
-  console.log(postDetailData);
-  console.log(commentsData);
-
-  const { mutateAsync: createCommentMutate } = usePostCommentApi(groupId, postId);
-  const { mutateAsync: updateCommentMutate } = usePatchCommentApi(groupId, postId);
-  const { mutateAsync: deleteCommentMutate } = useDeleteCommentApi(groupId, postId);
+  const { mutateAsync: createCommentMutate, isPending: isPendingCreate } = usePostCommentApi(
+    groupId,
+    postId,
+  );
+  const { mutateAsync: updateCommentMutate, isPending: isPendingUpdate } = usePatchCommentApi(
+    groupId,
+    postId,
+  );
+  const { mutateAsync: deleteCommentMutate, isPending: isPendingDelete } = useDeleteCommentApi(
+    groupId,
+    postId,
+  );
   const [comment, setComment] = useState("");
+  useLoading(
+    isPendingCreate || isPendingUpdate || isPendingDelete || isLoadingPost || isLoadingComments,
+  );
 
   const [isDeletePopupShow, setDeletePopupShow] = useState(false);
   const initSelectedId = { delete: null, recomment: null, edit: null };
@@ -53,6 +72,8 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
 
   // 댓글 등록/수정/답글
   const onSubmitComment = async () => {
+    if (isPendingCreate || isPendingUpdate || isPendingDelete) return;
+
     if (comment.length === 0) {
       showToast({ message: "댓글을 입력해주세요.", type: "error" });
       return;
@@ -72,7 +93,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
         });
 
         if (res.status === 200) {
-          refetchPostDetail();
+          refetchComments();
           showToast({ message: "댓글이 수정되었습니다.", type: "success" });
           setSelectedCommentId(initSelectedId);
           setComment("");
@@ -138,7 +159,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
       <div className={styles.modal}>
         {/* 왼쪽: 게시글 이미지 */}
         <div className={styles.image_wrapper}>
-          <img src={imageUrl} alt="post" className={styles.image} />
+          <img src={getImageUrl(postDetailData?.imageUrl)} alt="post" className={styles.image} />
         </div>
 
         {/* 오른쪽: 본문 + 댓글 */}

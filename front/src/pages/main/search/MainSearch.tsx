@@ -7,10 +7,11 @@ import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MainSearch.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
 import { Pagination } from "@/shared/components/pagenation/Pagenation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetGroupsListApi } from "@/features/group/_hooks/query";
 import { useQueryParams } from "@/shared/hooks/useQueryParameter";
-import { useGetCategoriesWithGroupsApi } from "@/features/category/_hooks/query";
+import { useUiStore } from "@/shared/stores/ui.store";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 메인 페이지 > 검색 내용 페이지 컴포넌트
@@ -26,13 +27,19 @@ function MainSearch() {
 
   const [search, setSearch] = useState(word);
 
-  const { data: grouopsListData, refetch: groupListRefetch } = useGetGroupsListApi({
+  const {
+    data: grouopsListData,
+    refetch: groupListRefetch,
+    isLoading,
+  } = useGetGroupsListApi({
     size: 9,
     page: page ? Number(page) - 1 : 0,
     search: word,
     region,
     categoryId: cate === "0" ? undefined : cate,
   });
+
+  useLoading(isLoading);
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);

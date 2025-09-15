@@ -11,10 +11,12 @@ type UseUploadImageOptions = {
  *@description 공통 이미지 업로드 훅
  */
 export function useUploadImage({ onSuccess }: UseUploadImageOptions = {}) {
-  const { mutateAsync: mutateUploadImage } = usePostUploadImage();
+  const { mutateAsync: mutateUploadImage, isPending } = usePostUploadImage();
   const { showToast } = useUiStore();
 
   const onUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isPending) return;
+
     const file = e.target.files?.[0];
     if (!file) {
       showToast({ message: "잘못된 접근입니다.", type: "error" });
@@ -38,5 +40,5 @@ export function useUploadImage({ onSuccess }: UseUploadImageOptions = {}) {
     }
   };
 
-  return { onUploadImage, showToast };
+  return { onUploadImage, showToast, isPending };
 }

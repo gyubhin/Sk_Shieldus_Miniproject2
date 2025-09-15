@@ -12,7 +12,7 @@ import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useDeleteCancelEventAttendeeApi,
   usePostEventsAttendeeApi,
@@ -20,6 +20,7 @@ import {
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { useUserId } from "@/features/users/_hooks/useUserId";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -33,9 +34,11 @@ function GroupInfoPage() {
   const { showToast } = useUiStore();
   const userId = useUserId();
 
-  const { data, refetch: refetchGroupsOne } = useGetGroupsOneApi(groupId);
+  const { data, refetch: refetchGroupsOne, isLoading } = useGetGroupsOneApi(groupId);
 
   const isOwner = Number(userId) === data?.ownerId;
+
+  useLoading(isLoading);
 
   const tabs = isOwner
     ? [

@@ -10,6 +10,7 @@ import { regionOptions } from "@/shared/constants/options";
 import styles from "./SignupPage.module.scss";
 import { postSignupApi, useAccessTokenStore } from "@/features/auth";
 import { useUiStore } from "@/shared/stores/ui.store";
+import useLoading from "@/shared/hooks/useLoading";
 
 // 보이지 않는 문자/공백 정리
 const sanitize = (v: string) =>
@@ -39,6 +40,8 @@ function SignupPage() {
   const { setToken } = useAccessTokenStore();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useLoading(isSubmitting);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
