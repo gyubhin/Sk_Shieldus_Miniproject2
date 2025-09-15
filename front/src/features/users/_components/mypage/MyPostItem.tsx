@@ -1,6 +1,7 @@
 import { getImageUrl } from "@/libs/image";
 import type { MyPostItem as MyPostItemType } from "../../_types/base";
 import styles from "./MyPostItem.module.scss";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   data: MyPostItemType;
@@ -10,8 +11,15 @@ type Props = {
  *@description 마이페이지 > 내가 쓴 게시글
  */
 function MyPostItem({ data }: Props) {
+  const navigate = useNavigate();
+
+  const onMovePage = () => {
+    if (!data.groupId) return;
+
+    navigate(`/group/${data.groupId}/post`);
+  };
   return (
-    <section className={styles.mypost_wrapper}>
+    <section className={styles.mypost_wrapper} onClick={onMovePage}>
       <div className={styles.left}>
         {data.imageUrl ? (
           <img

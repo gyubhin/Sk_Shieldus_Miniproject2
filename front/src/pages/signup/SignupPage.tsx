@@ -7,10 +7,10 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLayout";
 import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
-import axios from "axios";
 import styles from "./SignupPage.module.scss";
 import { postSignupApi, useAccessTokenStore } from "@/features/auth";
 import { useUiStore } from "@/shared/stores/ui.store";
+import useLoading from "@/shared/hooks/useLoading";
 
 // 보이지 않는 문자/공백 정리
 const sanitize = (v: string) =>
@@ -40,6 +40,8 @@ function SignupPage() {
   const { setToken } = useAccessTokenStore();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useLoading(isSubmitting);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,12 +85,10 @@ function SignupPage() {
         region: sanitize(region),
       });
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         setToken(res.data.accessToken);
         showToast({ message: "회원가입이 완료되었습니다!", type: "success" });
         nav("/"); // 가입 후 로그인 페이지로 이동
-      } else {
-        alert("회원가입 실패");
       }
     } catch (err) {
       console.error(err);

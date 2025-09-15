@@ -14,6 +14,7 @@ import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { useUserId } from "@/features/users/_hooks/useUserId";
 import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 모임 게시글 목록 페이지
@@ -28,7 +29,9 @@ function GroupPostPage() {
   const { data } = useGetGroupsOneApi(groupId);
 
   // 커서 방식 조회
-  const { data: postsData, refetch } = useGetPostsWithCursorApi(4, Number(groupId));
+  const { data: postsData, refetch, isLoading } = useGetPostsWithCursorApi(4, Number(groupId));
+
+  useLoading(isLoading);
 
   const { onChangeTab, activeKey } = useSetGroupTab();
   const [isContentModalOpen, setContentModalOpen] = useState(false);

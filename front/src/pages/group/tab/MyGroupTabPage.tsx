@@ -8,6 +8,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
 import { useGetMyUpcomingEvents } from "@/features/event/_hooks/event/query";
 import { EmptyView } from "@/shared/components/empty/EmptyView";
+import { useUiStore } from "@/shared/stores/ui.store";
+import { useEffect } from "react";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 내 모임 탭 > 정모 일정, 내가 참여한 모임 목록 페이지
@@ -16,13 +19,18 @@ function MyGroupTabPage() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page");
 
-  // const { data: eventList } = useGetEventsListApi();
-  const { data: myEventsData } = useGetMyUpcomingEvents();
+  const { data: myEventsData, isLoading: isLoadingEvent } = useGetMyUpcomingEvents();
 
-  const { data: myJoinedGroups, refetch: refetchMyJoinedGroup } = useGetMyJoinedGroupsApi({
+  const {
+    data: myJoinedGroups,
+    refetch: refetchMyJoinedGroup,
+    isLoading: isLoadingGroup,
+  } = useGetMyJoinedGroupsApi({
     page: Number(page),
     size: 9,
   });
+
+  useLoading(isLoadingEvent || isLoadingGroup);
 
   return (
     <CommonLayout>

@@ -15,15 +15,15 @@ let eventData = Array.from({ length: 12 }, (_, i) => ({
 // 더미 참석자/대기자 데이터
 const attendeesMock: Record<number, GetEventsAttendeesResponse> = {
   1: [
-    { userId: 1, username: "홍길동", role: "OWNER", status: "APPROVED" },
-    { userId: 2, username: "김철수", role: "MEMBER", status: "APPROVED" },
-    { userId: 3, username: "이영희", role: "MEMBER", status: "WAITING" },
-    { userId: 4, username: "박민수", role: "MEMBER", status: "WAITING" },
+    { userId: 1, username: "홍길동", role: "HOST", status: "CONFIRMED" },
+    { userId: 2, username: "김철수", role: "ATTENDEE", status: "CONFIRMED" },
+    { userId: 3, username: "이영희", role: "ATTENDEE", status: "WAITING" },
+    { userId: 4, username: "박민수", role: "ATTENDEE", status: "WAITING" },
   ],
   2: [
-    { userId: 5, username: "최주영", role: "OWNER", status: "APPROVED" },
-    { userId: 6, username: "한소라", role: "MEMBER", status: "APPROVED" },
-    { userId: 7, username: "오지훈", role: "MEMBER", status: "WAITING" },
+    { userId: 5, username: "최주영", role: "HOST", status: "CONFIRMED" },
+    { userId: 6, username: "한소라", role: "ATTENDEE", status: "CONFIRMED" },
+    { userId: 7, username: "오지훈", role: "ATTENDEE", status: "WAITING" },
   ],
 };
 
@@ -69,10 +69,10 @@ export const eventHandlers = [
     const newUser: EventAttendee = {
       userId: Date.now(),
       username: "신규참가자",
-      role: "MEMBER",
+      role: "ATTENDEE",
       status:
-        attendeesMock[eid].filter((u) => u.status === "APPROVED").length < 5
-          ? "APPROVED"
+        attendeesMock[eid].filter((u) => u.status === "CONFIRMED").length < 5
+          ? "CONFIRMED"
           : "WAITING",
     };
 
@@ -110,7 +110,7 @@ export const eventHandlers = [
             ...u,
             status:
               body.status === "GOING"
-                ? "APPROVED"
+                ? "CONFIRMED"
                 : body.status === "WAITING"
                   ? "WAITING"
                   : u.status, // CANCELLED은 제외 처리해야 할 수도 있음

@@ -7,9 +7,12 @@ import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MainPage.module.scss";
 import { SmallButton } from "@/shared/components/button/SmallButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGetGroupsListApi } from "@/features/group/_hooks/query";
 import { useGetMyLikedGroups } from "@/features/users/_hooks/query";
+import _ from "lodash";
+import { EmptyView } from "@/shared/components/empty/EmptyView";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 메인 페이지 > 검색, 추천 그룹 표시, 내가 가입한 모임,
@@ -18,11 +21,16 @@ function MainPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const { data: groupsListData, refetch: refetchGroupsData } = useGetGroupsListApi({
+  const {
+    data: groupsListData,
+    refetch: refetchGroupsData,
+    isLoading,
+  } = useGetGroupsListApi({
     size: 9,
     page: 0,
-    sort: "createdAt,DESC",
   });
+
+  useLoading(isLoading);
 
   const { data: myLikedGroups, refetch: refetchMyLikedGroup } = useGetMyLikedGroups({
     page: 0,
@@ -49,10 +57,10 @@ function MainPage() {
     }
   };
 
-  // 더보기 클릭 이벤트
-  const onClickMore = (_more: string) => {
-    navigate(`/search?more=${_more}`);
-  };
+  const onRefetchList = useCallback(() => {
+    refetchGroupsData();
+    refetchMyLikedGroup();
+  }, [refetchGroupsData, refetchMyLikedGroup]);
 
   return (
     <CommonLayout>
@@ -75,16 +83,24 @@ function MainPage() {
 
       <section className={styles.group_view}>
         {(myLikedGroups?.content ?? []).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} refetch={refetchMyLikedGroup} />
+          <GroupSearchItem data={_item} key={idx} refetch={onRefetchList} />
         ))}
+
+        {
+          <EmptyView
+            isEmpty={!myLikedGroups?.content || _.isEmpty(myLikedGroups?.content)}
+            message={"지금 찜해보세요!"}
+            title={"아직 찜한 모임이 없습니다."}
+          />
+        }
       </section>
 
       {/* 그룹 리스트 뷰 */}
       <SectionTitle title={"추천 모임 표시"} />
 
       <section className={styles.group_view}>
-        {(groupsListData?.content ?? []).slice(0, 3).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} refetch={refetchGroupsData} />
+        {(groupsListData?.content ?? []).map((_item, idx) => (
+          <GroupSearchItem data={_item} key={idx} refetch={onRefetchList} />
         ))}
       </section>
     </CommonLayout>

@@ -1,6 +1,6 @@
 import { Dropdown } from "@/shared/components/dropdown/Dropdown";
 import styles from "./FilterList.module.scss";
-import { categoryOptions, regionOptions, sortOptions } from "@/shared/constants/options";
+import { regionOptions } from "@/shared/constants/options";
 import { useGetCategoriesApi } from "@/features/category/_hooks/query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryParams } from "@/shared/hooks/useQueryParameter";
@@ -16,12 +16,12 @@ function FilterList() {
 
   const queryObj = query.toObject();
 
-  const { sort, region, cate } = queryObj;
+  const { region, cate } = queryObj;
 
-  const sortDefault = sort ? sortOptions.find((item) => item.value === sort) : sortOptions[0];
   const regionDefault = region
     ? regionOptions.find((item) => item.value === region)
     : regionOptions[0];
+
   const cateDefault =
     categoriesData && cate
       ? categoriesData.find((item) => item.value === cate)
@@ -41,12 +41,6 @@ function FilterList() {
 
   return (
     <section className={styles.filter_list}>
-      <Dropdown
-        options={sortOptions}
-        defaultValue={sortDefault}
-        onChange={(opt) => onSearchMove("sort", opt.value)}
-      />
-
       <Dropdown
         isWideStyle
         options={regionOptions}

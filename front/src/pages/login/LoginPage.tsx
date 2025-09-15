@@ -7,6 +7,7 @@ import { AuthInnerLayout } from "@/features/auth/_components/layout/AuthInnerLay
 import styles from "./LoginPage.module.scss";
 import { postLoginApi, useAccessTokenStore } from "@/features/auth";
 import { useUiStore } from "@/shared/stores/ui.store";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 로그인 페이지
@@ -20,6 +21,8 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useUiStore();
   const { setToken } = useAccessTokenStore();
+
+  useLoading(isSubmitting);
 
   const validate = () => {
     const ok = /\S+@\S+\.\S+/.test(email);

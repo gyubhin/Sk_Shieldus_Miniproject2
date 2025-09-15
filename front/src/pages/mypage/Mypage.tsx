@@ -18,6 +18,7 @@ import {
 } from "@/features/users/_hooks/query";
 import { GroupSearchItem } from "@/features/group/_components/GroupSearchItem";
 import { useQueryParams } from "@/shared/hooks/useQueryParameter";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 마이페이지
@@ -27,24 +28,28 @@ function Mypage() {
   const query = useQueryParams();
   const page = query.get("page");
 
-  const { data: myPostsData } = useGetMyPosts({
+  const { data: myPostsData, isLoading: isLoadingMyPost } = useGetMyPosts({
     page: Number(page) - 1,
     size: 8,
   });
 
-  const { data: myCommentsData } = useGetMyComments({
+  const { data: myCommentsData, isLoading: isLoadingMyComment } = useGetMyComments({
     page: Number(page) - 1,
     size: 8,
   });
 
-  const { data: myLikedGroupData, refetch: refetchMyLikedGroup } = useGetMyLikedGroups({
+  const {
+    data: myLikedGroupData,
+    refetch: refetchMyLikedGroup,
+    isLoading: isLoadingMyLiked,
+  } = useGetMyLikedGroups({
     page: Number(page) - 1,
     size: 8,
   });
+
+  useLoading(isLoadingMyPost || isLoadingMyComment || isLoadingMyLiked);
 
   const { data: userData } = useGetUserInfo();
-
-  console.log(userData);
 
   const navigate = useNavigate();
 

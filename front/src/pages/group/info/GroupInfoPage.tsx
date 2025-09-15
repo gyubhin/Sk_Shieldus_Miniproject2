@@ -12,7 +12,7 @@ import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useDeleteCancelEventAttendeeApi,
   usePostEventsAttendeeApi,
@@ -20,6 +20,7 @@ import {
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { useUserId } from "@/features/users/_hooks/useUserId";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -33,10 +34,11 @@ function GroupInfoPage() {
   const { showToast } = useUiStore();
   const userId = useUserId();
 
-  const { data } = useGetGroupsOneApi(groupId);
+  const { data, refetch: refetchGroupsOne, isLoading } = useGetGroupsOneApi(groupId);
 
-  console.log(data?.ownerId);
   const isOwner = Number(userId) === data?.ownerId;
+
+  useLoading(isLoading);
 
   const tabs = isOwner
     ? [
@@ -131,7 +133,7 @@ function GroupInfoPage() {
         let message = "";
         if (isAxiosError(error)) {
           if (error.status === 409) {
-            message = "일정에 참석되었습니다.";
+            message = "이미 참석되었습니다.";
           } else if (error.status === 400) {
             message = "일정이 초과되었습니다.";
           } else if (error.status === 500) {
@@ -174,7 +176,7 @@ function GroupInfoPage() {
       {/* 모임 배너 이미지 */}
       <GroupBanner url={data?.imageUrl} />
 
-      {data && <GroupInfoContent data={data} />}
+      {data && <GroupInfoContent data={data} refetchGroupsOne={refetchGroupsOne} />}
 
       <SectionTitle
         title={"정모 일정"}
@@ -184,7 +186,7 @@ function GroupInfoPage() {
 
       <section className={styles.schedule_view}>
         {(eventsList?.content ?? []).map((event) => (
-          <EventItem data={event} onMoreClick={() => onSelectedEvent(event.id)} />
+          <EventItem key={event.id} data={event} onMoreClick={() => onSelectedEvent(event.id)} />
         ))}
       </section>
 

@@ -14,6 +14,7 @@ import z from "zod";
 import { useGetPostsWithCursorApi, usePostDetailApi } from "@/features/post/_hooks/query";
 import { isAxiosError } from "axios";
 import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 게시글 등록/수정 페이지
@@ -41,7 +42,7 @@ function PostRegisterPage() {
   const [form, setForm] = useState<CreatePostBody>(initForm);
 
   // 이미지 업로드 훅
-  const { onUploadImage, showToast } = useUploadImage({
+  const { onUploadImage, showToast, isPending } = useUploadImage({
     onSuccess: (_imageUrl) => {
       setForm((prev) => ({
         ...prev,
@@ -50,8 +51,15 @@ function PostRegisterPage() {
     },
   });
 
-  const { mutateAsync: createMutate } = useCreatePostsApi(Number(groupId));
-  const { mutateAsync: updateMutate } = usePatchPostApi(Number(groupId), Number(postId));
+  const { mutateAsync: createMutate, isPending: isLoadingCreate } = useCreatePostsApi(
+    Number(groupId),
+  );
+  const { mutateAsync: updateMutate, isPending: isLoadingUpdate } = usePatchPostApi(
+    Number(groupId),
+    Number(postId),
+  );
+
+  useLoading(isLoadingCreate || isLoadingUpdate || isPending);
 
   // 폼 수정 이벤트
   const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,6 +75,8 @@ function PostRegisterPage() {
    *@description 등록/수정 이벤트
    */
   const onSubmit = async () => {
+    if (isLoadingCreate || isLoadingUpdate || isPending) return;
+
     try {
       // 검증 실행
       const validated = postSchema.parse({ ...form });

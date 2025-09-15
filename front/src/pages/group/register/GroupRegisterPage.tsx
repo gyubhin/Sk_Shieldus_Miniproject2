@@ -19,6 +19,7 @@ import { strUtils } from "@/libs/str";
 import type { GroupRegisterFormError } from "@/features/group/_types/base";
 import { useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 모임 등록/수정 페이지
@@ -28,7 +29,7 @@ function GroupRegisterPage() {
   const { groupId } = useParams<{ groupId: string }>();
 
   // 그룹 등록
-  const { mutateAsync: mutatePostGroups, isPending } = usePostGroupsApi();
+  const { mutateAsync: mutatePostGroups, isPending: isPendingCreate } = usePostGroupsApi();
 
   // 카테고리 조회
   const { data: categoryOptions } = useGetCategoriesApi();
@@ -36,9 +37,9 @@ function GroupRegisterPage() {
   // 그룹 상세 조회
   const { data: groupsOneData } = useGetGroupsOneApi(groupId);
 
-  // 이미지 업로드
+  // 그룹 수정
 
-  const { mutateAsync: mutatePatchGroups } = usePatchGroupsApi(groupId);
+  const { mutateAsync: mutatePatchGroups, isPending: isPendingPatch } = usePatchGroupsApi(groupId);
 
   // 에러메세지 초기값
   const initError: GroupRegisterFormError = {
@@ -64,7 +65,11 @@ function GroupRegisterPage() {
   const [form, setForm] = useState(initForm);
 
   // 이미지 업로드 훅
-  const { onUploadImage, showToast } = useUploadImage({
+  const {
+    onUploadImage,
+    showToast,
+    isPending: isPendingUpload,
+  } = useUploadImage({
     onSuccess: (_imageUrl) => {
       setForm((prev) => ({
         ...prev,
@@ -72,6 +77,8 @@ function GroupRegisterPage() {
       }));
     },
   });
+
+  useLoading(isPendingUpload || isPendingPatch || isPendingCreate);
   const [tags, setTags] = useState<string[]>([]);
   const [tag, setTag] = useState("");
 
@@ -79,8 +86,8 @@ function GroupRegisterPage() {
   const onAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && tag.trim()) {
       e.preventDefault();
-      if (tags.length >= 5) {
-        return showToast({ message: "태그는 최대 5개까지 가능합니다.", type: "error" });
+      if (tags.length >= 3) {
+        return showToast({ message: "태그는 최대 3개까지 가능합니다.", type: "error" });
       }
       if (tags.includes(tag.trim())) return;
 
@@ -107,7 +114,7 @@ function GroupRegisterPage() {
    *@description 등록/수정 이벤트
    */
   const onRegister = async () => {
-    if (isPending) return;
+    if (isPendingUpload || isPendingPatch || isPendingCreate) return;
 
     try {
       // 1. tags 배열 → 문자열로 합치기 (예: 콤마 구분)
@@ -233,7 +240,7 @@ function GroupRegisterPage() {
         <Card title="부가 정보">
           <InputField
             value={tag}
-            label={"모임에 관련된 태그를 추가해주세요. (최대 5개)"}
+            label={"모임에 관련된 태그를 추가해주세요. (최대 3개)"}
             name={"tag"}
             placeholder="태그 입력 후, Enter"
             onChange={(e) => setTag(e.target.value)}

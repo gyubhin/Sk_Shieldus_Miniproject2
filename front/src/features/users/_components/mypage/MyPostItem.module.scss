@@ -2,6 +2,7 @@
 @use "@/shared/styles/mixin" as *;
 
 .mypost_wrapper {
+  cursor: pointer;
   display: flex;
   padding-bottom: 32px;
   gap: 5.8rem;

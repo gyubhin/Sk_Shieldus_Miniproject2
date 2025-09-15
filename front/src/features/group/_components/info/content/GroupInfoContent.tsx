@@ -9,12 +9,13 @@ import { isAxiosError } from "axios";
 
 type Props = {
   data: GroupsItem;
+  refetchGroupsOne: () => void;
 };
 
 /**
  *@description 모임 정보 페이지 > 모입 정보 (이름, 인원수, 소개, 태그, 장소)
  */
-function GroupInfoContent({ data }: Props) {
+function GroupInfoContent({ data, refetchGroupsOne }: Props) {
   const { mutateAsync: mutateJoin } = usePostGroupsJoinApi();
   const { mutateAsync: mutateLeave } = useDeleteGroupsLeaveApi();
   const { showToast } = useUiStore();
@@ -26,6 +27,8 @@ function GroupInfoContent({ data }: Props) {
 
       if (res.status === 200) {
         showToast({ message: "가입 신청이 완료되었습니다.", type: "success" });
+
+        refetchGroupsOne();
       }
     } catch (error) {
       let message = "";
@@ -49,8 +52,9 @@ function GroupInfoContent({ data }: Props) {
       try {
         const res = await mutateLeave(data.id);
 
-        if (res.status === 204) {
+        if (res.status === 200) {
           showToast({ message: "모임 탈퇴가 완료되었습니다.", type: "success" });
+          refetchGroupsOne();
         }
       } catch (error) {
         let message = "";
@@ -79,7 +83,9 @@ function GroupInfoContent({ data }: Props) {
           <LikeButton isLike={data.liked} />
         </div>
 
-        <button onClick={onJoin}>{data?.joined ? "탈퇴하기" : "가입하기"}</button>
+        <button onClick={data?.joined ? onLeave : onJoin}>
+          {data?.joined ? "탈퇴하기" : "가입하기"}
+        </button>
       </div>
 
       {/* 장소, 멤버 인원수 */}

@@ -11,6 +11,8 @@ import { LabeledDropdown } from "@/shared/components/dropdown/LabeledDropdown";
 import { regionOptions } from "@/shared/constants/options";
 import { useGetUserInfo } from "@/features/users/_hooks/query";
 import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
+import { useNavigate } from "react-router-dom";
+import useLoading from "@/shared/hooks/useLoading";
 
 /**
  *@description 프로필 수정 페이지
@@ -18,23 +20,32 @@ import { useUploadImage } from "@/features/image/_hooks/useUploadImage";
 function ProfileEditPage() {
   const { data: previewUserData, refetch } = useGetUserInfo();
 
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState(previewUserData?.nickname ?? "");
   const [introduction, setIntroduction] = useState(previewUserData?.introduction ?? "");
   const [profileImage, setProfileImage] = useState(previewUserData?.profileImageUrl ?? "");
   const [region, setRegion] = useState(previewUserData?.region ?? "");
 
   // 유저 정보 수정 api
-  const { mutateAsync: mutatePatch } = usePatchUser();
+  const { mutateAsync: mutatePatch, isPending: isPendingPatch } = usePatchUser();
 
   // 이미지 업로드 훅
-  const { onUploadImage, showToast } = useUploadImage({
+  const {
+    onUploadImage,
+    showToast,
+    isPending: isPendingImage,
+  } = useUploadImage({
     onSuccess: (_imageUrl) => {
       setProfileImage(_imageUrl);
     },
   });
 
+  useLoading(isPendingPatch || isPendingImage);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isPendingPatch || isPendingImage) return;
 
     try {
       const res = await mutatePatch({
@@ -46,6 +57,7 @@ function ProfileEditPage() {
 
       if (res.status == 200) {
         refetch();
+        navigate(-1);
         showToast({ message: "회원정보 수정이 완료되었습니다.", type: "success" });
       }
     } catch (error) {

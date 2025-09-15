@@ -20,7 +20,6 @@ type Props = {
  */
 export function GroupSearchItem({ data, refetch }: Props) {
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(data.liked);
   const [imageError, setImageError] = useState(false);
   const { showToast } = useUiStore();
 
@@ -40,8 +39,6 @@ export function GroupSearchItem({ data, refetch }: Props) {
   // 좋아요 클릭
   const onHeartTogggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-
-    setLiked((prev) => !prev);
 
     mutateLike(data.id)
       .then((res) => {
@@ -92,6 +89,8 @@ export function GroupSearchItem({ data, refetch }: Props) {
 
         {/* 태그 */}
         <div className={styles.tags}>
+          <Tag name={data.categoryName} />
+
           {data.tags.split(",").map((tag, i) => (
             <React.Fragment key={i}>
               <Tag name={tag} />
@@ -120,7 +119,7 @@ export function GroupSearchItem({ data, refetch }: Props) {
         <div className={styles.date}>{dayjs(data.createdAt).format("YYYY.MM.DD")}</div>
 
         <button className={styles.heart} onClick={onHeartTogggle}>
-          <LikeButton isLike={liked} />
+          <LikeButton isLike={data.liked} />
         </button>
       </div>
     </div>
