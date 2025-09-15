@@ -83,7 +83,14 @@ function ProfileEditPage() {
       <form className={styles.form} onSubmit={onSubmit}>
         <Card title="유저 정보">
           {/* 이메일은 수정 불가 → disabled */}
-          <InputField label={"이메일"} required name={"email"} placeholder="example.com" disabled />
+          <InputField
+            label={"이메일"}
+            value={previewUserData?.email ?? ""}
+            required
+            name={"email"}
+            placeholder="example.com"
+            disabled
+          />
 
           <InputField
             label={"닉네임"}
