@@ -3,20 +3,17 @@ import { IconButton } from "../icon/IconButton";
 
 type Props = {
   isLike?: boolean;
-  onClick?: () => void;
   size?: number;
 };
 
 /**
  *@description 좋아요 버튼
  */
-function LikeButton({ isLike, onClick, size }: Props) {
-  const [like, setLike] = useState(isLike);
+function LikeButton({ isLike, size }: Props) {
   return (
     <IconButton
-      onClick={() => setLike(!like)}
-      fill={like ? "#f36438" : "#7f838cff"}
-      iconName={like ? "FillHeart" : "StrokeHeart"}
+      fill={isLike ? "#f36438" : "#7f838cff"}
+      iconName={isLike ? "FillHeart" : "StrokeHeart"}
       size={size ?? 14}
     />
   );
