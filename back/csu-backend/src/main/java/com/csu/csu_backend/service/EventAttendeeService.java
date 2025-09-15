@@ -4,6 +4,7 @@ import com.csu.csu_backend.controller.dto.EventAttendeeResponse;
 import com.csu.csu_backend.entity.Event;
 import com.csu.csu_backend.entity.EventAttendee;
 import com.csu.csu_backend.entity.User;
+import com.csu.csu_backend.exception.DuplicateResourceException;
 import com.csu.csu_backend.repository.EventAttendeeRepository;
 import com.csu.csu_backend.repository.EventRepository;
 import com.csu.csu_backend.repository.UserRepository;
@@ -34,8 +35,7 @@ public class EventAttendeeService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
         if (eventAttendeeRepository.findByEventIdAndUserId(eventId, userId).isPresent()) {
-            // 이미 참여한 사용자는 아무 작업도 하지 않음
-            return;
+            throw new DuplicateResourceException("이미 참여한 이벤트입니다.");
         }
 
         long confirmedCount = eventAttendeeRepository.countByEventIdAndStatus(eventId, "CONFIRMED");
