@@ -123,6 +123,7 @@ function GroupSettingPage() {
       if (res.status === 200) {
         refetchGroupMembers();
         showToast({ message: "모임장 위임 성공", type: "success" });
+        navigate(`/group/${groupId}/info`);
       }
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
