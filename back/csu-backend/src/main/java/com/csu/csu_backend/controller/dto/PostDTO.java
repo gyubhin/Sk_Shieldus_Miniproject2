@@ -53,7 +53,8 @@ public class PostDTO {
         private LocalDateTime createdAt;
         private String authorNickname;
         private Long authorId;
-        private String authorProfileImageUrl; // 필드 추가
+        private String authorProfileImageUrl;
+        private Long groupId; // 필드 추가
 
         public PostResponse(Post post) {
             this.id = post.getId();
@@ -63,7 +64,8 @@ public class PostDTO {
             this.createdAt = post.getCreatedAt();
             this.authorNickname = post.getUser().getNickname();
             this.authorId = post.getUser().getId();
-            this.authorProfileImageUrl = post.getUser().getProfileImageUrl(); // 값 설정
+            this.authorProfileImageUrl = post.getUser().getProfileImageUrl();
+            this.groupId = post.getGroup().getId(); // 값 설정
         }
     }
 
@@ -78,7 +80,8 @@ public class PostDTO {
         private LocalDateTime updatedAt;
         private String authorNickname;
         private Long authorId;
-        private String authorProfileImageUrl; // 필드 추가
+        private String authorProfileImageUrl;
+        private Long groupId; // 필드 추가
         private List<CommentDTO.CommentResponse> comments;
 
         public PostDetailResponse(Post post) {
@@ -90,7 +93,8 @@ public class PostDTO {
             this.updatedAt = post.getUpdatedAt();
             this.authorNickname = post.getUser().getNickname();
             this.authorId = post.getUser().getId();
-            this.authorProfileImageUrl = post.getUser().getProfileImageUrl(); // 값 설정
+            this.authorProfileImageUrl = post.getUser().getProfileImageUrl();
+            this.groupId = post.getGroup().getId(); // 값 설정
             this.comments = post.getComments().stream()
                     .filter(comment -> comment.getParent() == null)
                     .map(CommentDTO.CommentResponse::new)
