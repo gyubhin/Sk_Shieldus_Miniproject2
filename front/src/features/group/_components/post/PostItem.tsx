@@ -32,7 +32,15 @@ function PostItem({ onContentOpen, data, onMoreOpen, userId }: Props) {
     <section className={styles.post_wrapper}>
       {/* 상단 뷰 */}
       <section className={styles.top_view}>
-        <div className={styles.profile_image} />
+        {data.authorProfileImageUrl ? (
+          <img
+            className={styles.profile_image}
+            alt={"member_image"}
+            src={getImageUrl(data.authorProfileImageUrl)}
+          />
+        ) : (
+          <div className={styles.no_profile_image} />
+        )}
 
         <p>{data.authorNickname}</p>
 

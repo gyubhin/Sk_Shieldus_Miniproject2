@@ -1,3 +1,4 @@
+import { getImageUrl } from "@/libs/image";
 import styles from "./MemberItem.module.scss";
 
 type Props = {
@@ -6,15 +7,16 @@ type Props = {
   onKick?: (userId: number) => void;
   onDelegate?: (userId: number) => void;
   userId: number;
+  imageUrl?: string | null;
 };
 
 /**
  *@description 모임원 항목 컴포넌트 (정보, 프로필, 이름)
  */
-function MemberItem({ name, description, onKick, onDelegate, userId }: Props) {
+function MemberItem({ name, description, onKick, onDelegate, userId, imageUrl }: Props) {
   return (
     <div className={styles.member_wrapper}>
-      <image />
+      <img alt={"member_image"} src={getImageUrl(imageUrl)} />
 
       <div className={styles.member_info}>
         <p>{name}</p>

@@ -29,10 +29,10 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/main" element={<MainPage />} />
 
         {/* AUTH */}
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="signup" element={<SignupPage />} />
         <Route path="search" element={<MainSearch />} />

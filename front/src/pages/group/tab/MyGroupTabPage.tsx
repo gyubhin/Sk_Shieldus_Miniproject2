@@ -4,12 +4,10 @@ import { CommonLayout } from "@/shared/components/layout/CommonLayout";
 import { SectionTitle } from "@/shared/components/title/SectionTitle";
 import styles from "./MyGroupTabPage.module.scss";
 import EventItem from "@/features/group/_components/EventItem";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useGetMyJoinedGroupsApi } from "@/features/group/_hooks/query";
 import { useGetMyUpcomingEvents } from "@/features/event/_hooks/event/query";
 import { EmptyView } from "@/shared/components/empty/EmptyView";
-import { useUiStore } from "@/shared/stores/ui.store";
-import { useEffect } from "react";
 import useLoading from "@/shared/hooks/useLoading";
 
 /**

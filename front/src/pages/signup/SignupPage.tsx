@@ -88,7 +88,7 @@ function SignupPage() {
       if (res.status === 200) {
         setToken(res.data.accessToken);
         showToast({ message: "회원가입이 완료되었습니다!", type: "success" });
-        nav("/"); // 가입 후 로그인 페이지로 이동
+        nav("/main"); // 가입 후 로그인 페이지로 이동
       }
     } catch (err) {
       console.error(err);

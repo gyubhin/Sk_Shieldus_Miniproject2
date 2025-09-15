@@ -5,19 +5,21 @@
 .container {
   display: flex;
   gap: 1.4rem;
-}
 
-/* 프로필 아이콘 */
-.avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: $color-grayscale-40;
-  flex-shrink: 0;
+  .profile_image {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background-color: $color-grayscale-60;
+    border: 1px solid $color-grayscale-20;
+  }
 
-  @include media(sm) {
-    width: 28px;
-    height: 28px;
+  .no_profile_image {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background-color: $color-grayscale-10;
+    border: 1px solid $color-grayscale-20;
   }
 }
 

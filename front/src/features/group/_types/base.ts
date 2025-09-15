@@ -30,6 +30,7 @@ export type GetGroupsMemberItem = {
   nickname: string;
   introduction: string;
   role: "OWNER" | "MEMBER";
+  profileImageUrl?: string | null;
 };
 
 /**

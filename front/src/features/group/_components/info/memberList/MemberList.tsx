@@ -20,6 +20,7 @@ function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
         <p>운영진</p>
 
         <MemberItem
+          imageUrl={admin.profileImageUrl}
           userId={admin?.userId}
           name={admin?.nickname ?? ""}
           description={admin?.introduction ?? ""}
@@ -32,6 +33,7 @@ function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
         <div className={styles.manager_list}>
           {members.map((member) => (
             <MemberItem
+              imageUrl={admin.profileImageUrl}
               key={member.userId}
               userId={member.userId}
               name={member?.nickname ?? ""}

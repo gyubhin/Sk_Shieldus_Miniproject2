@@ -9,5 +9,6 @@ export type CommentItem = {
   authorId: number;
   parentId: number | null;
   parentAuthorNickname: string | null;
+  authorProfileImageUrl?: string | null;
   children?: CommentItem[];
 };

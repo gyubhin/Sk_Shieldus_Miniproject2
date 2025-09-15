@@ -11,6 +11,7 @@ export type PostItem = {
   authorNickname: string;
   authorId: number;
   imageUrl?: string | null;
+  authorProfileImageUrl?: string | null;
 };
 
 /**
