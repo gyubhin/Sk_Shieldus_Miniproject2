@@ -10,7 +10,7 @@ export default function NotFoundPage() {
 
       <div className={styles.egg}>🥚</div>
 
-      <Link to="/" className={styles.homeButton}>
+      <Link to="/main" className={styles.homeButton}>
         집으로 돌아가기
       </Link>
     </div>

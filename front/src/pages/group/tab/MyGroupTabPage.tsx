@@ -56,12 +56,6 @@ function MyGroupTabPage() {
         title="아직 가입하신 모임이 없습니다."
         message="첫 번째 모임에 가입해보세요!"
       />
-
-      {/* <Pagination
-        totalPages={myJoinedGroups?.totalPages ?? 1}
-        currentPage={Number(page ?? 1)}
-        onChange={onPageMove}
-      /> */}
     </CommonLayout>
   );
 }

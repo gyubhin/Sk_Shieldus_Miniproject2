@@ -29,7 +29,7 @@ export function BottomTab() {
   });
 
   const onTabClick = (_key: ActveKey) => {
-    if (!accessToken) navigate("/login", { replace: true });
+    if (!accessToken) navigate("/", { replace: true });
 
     setActvieKey(_key);
     navigate(`/${_key}`);

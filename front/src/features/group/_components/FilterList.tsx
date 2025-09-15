@@ -32,7 +32,7 @@ function FilterList() {
 
   // 필터 버튼 클릭 이벤트
   const onSearchMove = (key: string, value: string) => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/main") {
       navigate(`/search?${key}=${value}`);
     } else {
       query.set(key, value);
