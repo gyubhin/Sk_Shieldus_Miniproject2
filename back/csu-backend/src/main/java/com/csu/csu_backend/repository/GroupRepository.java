@@ -1,26 +1,34 @@
 package com.csu.csu_backend.repository;
 
 import com.csu.csu_backend.entity.Group;
-import jakarta.persistence.LockModeType; // 추가
+import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Lock; // 추가
-import org.springframework.data.jpa.repository.Query; // 추가
-import org.springframework.data.repository.query.Param; // 추가
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
     Optional<Group> findByName(String name);
 
-    // --- 아래 메서드를 새로 추가 ---
-    /**
-     * 비관적 락을 사용하여 그룹 이름으로 조회합니다.
-     * 동일한 이름의 그룹 생성을 시도하는 동시성 문제를 방지합니다.
-     * @param name 그룹 이름
-     * @return Group Optional 객체
-     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT g FROM Group g WHERE g.name = :name")
     Optional<Group> findByNameWithLock(@Param("name") String name);
+
+    /**
+     * 그룹을 이름, 설명, 태그로 검색합니다.
+     * description 필드는 CLOB 타입이므로 LOWER() 함수 적용을 제외합니다.
+     * @param keyword 검색어
+     * @param pageable 페이징 정보
+     * @return 검색된 그룹 페이지
+     */
+    @Query("SELECT g FROM Group g WHERE " +
+            "LOWER(g.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "g.description LIKE CONCAT('%', :keyword, '%') OR " + // LOWER() 제거
+            "LOWER(g.tags) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Group> search(@Param("keyword") String keyword, Pageable pageable);
 }

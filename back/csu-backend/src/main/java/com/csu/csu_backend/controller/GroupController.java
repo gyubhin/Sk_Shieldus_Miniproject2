@@ -42,7 +42,7 @@ public class GroupController {
         return ResponseEntity.created(URI.create("/api/groups/" + groupId)).build();
     }
 
-    @Operation(summary = "그룹 검색 API")
+    @Operation(summary = "그룹 목록 조회 및 필터링 API")
     @GetMapping
     public ResponseEntity<PagingResponse<GroupResponse>> getAllGroups(
             @RequestParam(required = false) Long categoryId,
@@ -60,6 +60,18 @@ public class GroupController {
 
         Long userId = (currentUser != null) ? currentUser.getId() : null;
         PagingResponse<GroupResponse> groups = groupService.getAllGroups(categoryId, region, finalPageable, userId);
+        return ResponseEntity.ok(groups);
+    }
+
+    @Operation(summary = "그룹 검색 API (이름, 설명, 태그)")
+    @GetMapping("/search")
+    public ResponseEntity<PagingResponse<GroupResponse>> searchGroups(
+            @RequestParam String keyword,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+
+        Long userId = (currentUser != null) ? currentUser.getId() : null;
+        PagingResponse<GroupResponse> groups = groupService.searchGroups(keyword, pageable, userId);
         return ResponseEntity.ok(groups);
     }
 

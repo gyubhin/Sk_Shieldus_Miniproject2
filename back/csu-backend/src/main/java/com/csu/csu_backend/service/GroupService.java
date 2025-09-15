@@ -103,6 +103,22 @@ public class GroupService {
         return PagingResponse.of(responsePage);
     }
 
+    public PagingResponse<GroupResponse> searchGroups(String keyword, Pageable pageable, Long userId) {
+        Page<Group> groupPage = groupRepository.search(keyword, pageable);
+
+        Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
+        Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
+
+        Page<GroupResponse> responsePage = groupPage.map(group -> {
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(likedGroupIds.contains(group.getId()));
+            response.setJoined(joinedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(responsePage);
+    }
+
     public GroupResponse getGroup(Long groupId, Long userId) {
         Group group = findGroupById(groupId);
         GroupResponse response = new GroupResponse(group);
@@ -243,11 +259,9 @@ public class GroupService {
         Optional<GroupLike> groupLikeOptional = groupLikeRepository.findByUserAndGroup(user, group);
 
         if (groupLikeOptional.isPresent()) {
-            // 이미 찜한 경우, 찜 취소
             groupLikeRepository.delete(groupLikeOptional.get());
             return false;
         } else {
-            // 찜하지 않은 경우, 찜하기
             GroupLike newGroupLike = GroupLike.builder()
                     .user(user)
                     .group(group)
