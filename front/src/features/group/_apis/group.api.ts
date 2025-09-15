@@ -37,7 +37,7 @@ export const patchGroupsApi = (body: PatchGroupsBody, groupId?: string) => {
  */
 export const getGroupsListApi = (params: GetGroupsListQuery) => {
   return apiCall<GetGroupsListResponse>({
-    url: "/groups",
+    url: "/groups/search",
     params,
   });
 };
