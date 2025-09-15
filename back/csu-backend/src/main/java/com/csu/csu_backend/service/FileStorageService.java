@@ -23,7 +23,14 @@ public class FileStorageService {
                 Files.createDirectories(dirPath);
             }
 
-            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            String originalFilename = file.getOriginalFilename();
+            String ext = "";
+
+            if (originalFilename != null && originalFilename.contains(".")) {
+                ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+
+            String filename = UUID.randomUUID().toString() + ext;
             Path filePath = dirPath.resolve(filename);
 
             file.transferTo(filePath.toFile());

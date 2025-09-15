@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll() // 인증 관련 API는 모두 허용
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(SWAGGER_URL_PATTERNS).permitAll() // Swagger 관련 경로 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
