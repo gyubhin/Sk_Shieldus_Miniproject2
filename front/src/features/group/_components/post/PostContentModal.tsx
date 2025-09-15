@@ -158,8 +158,15 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
     <div className={styles.overlay}>
       <div className={styles.modal}>
         {/* 왼쪽: 게시글 이미지 */}
+
         <div className={styles.image_wrapper}>
-          <img src={getImageUrl(postDetailData?.imageUrl)} alt="post" className={styles.image} />
+          {postDetailData?.imageUrl ? (
+            <img src={getImageUrl(postDetailData?.imageUrl)} alt="post" className={styles.image} />
+          ) : (
+            <div className={styles.no_view}>
+              <p>이미지가 없습니다.</p>
+            </div>
+          )}
         </div>
 
         {/* 오른쪽: 본문 + 댓글 */}
