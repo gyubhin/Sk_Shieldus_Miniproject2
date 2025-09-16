@@ -28,7 +28,6 @@ export function useGetMyJoinedGroup(query: PagingQuery) {
  */
 export function useGetUserInfo() {
   const { accessToken } = useAccessTokenStore();
-  console.log(accessToken);
 
   return useQuery({
     queryKey: [reactQueryKeys.user.getUserInfo],

@@ -60,7 +60,6 @@ export function useGetGroupMemberApi(groupId?: string) {
     select: (data) => {
       const admins = data.data.filter((item) => item.role === "OWNER");
       const admin = admins[0];
-      console.log(admin);
       const members = data.data.filter((item) => item.role === "MEMBER");
 
       return {

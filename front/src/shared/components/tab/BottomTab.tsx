@@ -16,8 +16,6 @@ export function BottomTab() {
   const navigate = useNavigate();
   const { accessToken } = useAccessTokenStore();
 
-  console.log(pathname);
-
   const [activeKey, setActvieKey] = useState<ActveKey>(() => {
     if (pathname === "/main" || pathname === "/search") {
       return "main" as ActveKey;

@@ -47,7 +47,6 @@ export const userHandlers = [
   // 회원정보 수정 api
   http.patch(mswUtils.getUrl("/users/me"), async ({ request }) => {
     const body = await request.json();
-    console.log(body);
 
     return HttpResponse.json({ success: true }, { status: 200 });
   }),
