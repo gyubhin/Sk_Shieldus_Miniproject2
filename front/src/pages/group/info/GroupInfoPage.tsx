@@ -12,7 +12,7 @@ import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   useDeleteCancelEventAttendeeApi,
   usePostEventsAttendeeApi,
@@ -21,6 +21,7 @@ import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { useUserId } from "@/features/users/_hooks/useUserId";
 import useLoading from "@/shared/hooks/useLoading";
+import { EventAttendeesModal } from "@/features/event/_components/attendee/EventAttendeesModal";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -32,6 +33,7 @@ function GroupInfoPage() {
   const [isEventMoreOpen, setEventMoreOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const { showToast } = useUiStore();
+
   const userId = useUserId();
 
   const { data, refetch: refetchGroupsOne, isLoading } = useGetGroupsOneApi(groupId);
@@ -52,7 +54,7 @@ function GroupInfoPage() {
       ];
 
   // 이벤트(일정) 목록 state
-  const { data: eventsList } = useGetEventsListApi(groupId);
+  const { data: eventsList, refetch: refetchEvents } = useGetEventsListApi(groupId);
 
   // 탭 활성화 이벤트, state
   const { onChangeTab, activeKey } = useSetGroupTab();
@@ -82,6 +84,7 @@ function GroupInfoPage() {
             message: "일정에 나갔습니다.",
             type: "success",
           });
+          refetchEvents();
         }
       })
       .catch((error) => {
@@ -127,6 +130,7 @@ function GroupInfoPage() {
             message: "일정에 참석되었습니다.",
             type: "success",
           });
+          refetchEvents();
         }
       })
       .catch((error) => {
@@ -200,6 +204,13 @@ function GroupInfoPage() {
         onClickSecond={() => onWithdrawl(selectedEvent)}
         onClose={() => setEventMoreOpen(false)}
         destructive="second"
+      />
+
+      <EventAttendeesModal
+        isOpen={false}
+        onClose={function (): void {
+          throw new Error("Function not implemented.");
+        }}
       />
     </CommonLayout>
   );
