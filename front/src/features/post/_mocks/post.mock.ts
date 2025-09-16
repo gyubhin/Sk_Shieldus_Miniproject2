@@ -58,7 +58,6 @@ export const postHandlers = [
   // 게시글 상세 조회
   http.get(mswUtils.getUrl("/groups/:groupId/posts/:postId"), ({ params }) => {
     const { groupId, postId } = params;
-    console.log(groupId, postId);
 
     // 2. 응답
     return HttpResponse.json(postData[Number(postId)], { status: 200 });
@@ -67,7 +66,6 @@ export const postHandlers = [
   // 게시글 등록 요청
   http.post(mswUtils.getUrl("/groups/:groupId/posts"), async ({ request }) => {
     const body = (await request.json()) as CreatePostBody;
-    console.log(body);
 
     const id = postData.length + 1;
     const tmp = {

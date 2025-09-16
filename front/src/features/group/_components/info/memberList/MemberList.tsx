@@ -14,6 +14,8 @@ type Props = {
  */
 function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
   const { admin, members } = groupMembers;
+
+  console.log(members);
   return (
     <section className={styles.member_list_container}>
       <div className={clsx(styles.manager_view, styles.members_wrapper)}>

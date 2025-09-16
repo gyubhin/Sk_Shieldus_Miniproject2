@@ -9,7 +9,6 @@ export const apiCall = axios.create({
 apiCall.interceptors.request.use(
   (config) => {
     const token = useAccessTokenStore.getState().accessToken;
-    console.log(token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -5,7 +5,6 @@ export const authHandlers = [
   // 로그인 API
   http.post(mswUtils.getUrl("/auth/login"), async ({ request }) => {
     const body = await request.json();
-    console.log(body);
 
     return HttpResponse.json(
       {
@@ -18,7 +17,6 @@ export const authHandlers = [
   // 회원가입 API
   http.post(mswUtils.getUrl("/auth/signup"), async ({ request }) => {
     const body = await request.json();
-    console.log(body);
 
     return HttpResponse.json(
       {
@@ -31,7 +29,6 @@ export const authHandlers = [
   // 로그아웃 API
   http.post(mswUtils.getUrl("/auth/logout"), async ({ request }) => {
     const body = await request.json();
-    console.log(body);
 
     return HttpResponse.json(undefined, { status: 204 });
   }),
@@ -39,7 +36,6 @@ export const authHandlers = [
   // 로그아웃 API
   http.post(mswUtils.getUrl("/auth/logout"), async ({ request }) => {
     const body = await request.json();
-    console.log(body);
 
     return HttpResponse.json(undefined, { status: 204 });
   }),

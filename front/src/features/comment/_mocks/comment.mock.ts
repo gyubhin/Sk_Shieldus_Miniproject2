@@ -28,7 +28,6 @@ export const commentHandlers = [
   // 댓글 등록 요청
   http.post(mswUtils.getUrl("/groups/:groupId/posts/:postId/comments"), async ({ request }) => {
     const body = (await request.json()) as PostCommentBody;
-    console.log(body);
 
     const id = commentData.length + 1;
     const tmp = {
