@@ -9,6 +9,7 @@ import LikeButton from "@/shared/components/button/LikeButton";
 import { usePostGroupsLike } from "../_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
+import { getImageUrl } from "@/libs/image";
 
 type Props = {
   data: GroupsItem;
@@ -68,17 +69,10 @@ export function GroupSearchItem({ data, refetch }: Props) {
       onKeyDown={onKeyDownGroup}
     >
       {/* 이미지 */}
-      {!imageError && data.imageUrl && (
-        <img
-          src={`${import.meta.env.VITE_APP_IMG_BASE_URL}${data.imageUrl}`}
-          alt={data.name}
-          className={styles.image}
-          onError={() => {
-            setImageError(true);
-          }}
-        />
+      {data.imageUrl && (
+        <img src={`${getImageUrl(data.imageUrl)}`} alt={data.name} className={styles.image} />
       )}
-      {(imageError || !data.imageUrl) && (
+      {!data.imageUrl && (
         <img src={"https://placehold.co/300x200"} alt={"대체 이미지"} className={styles.image} />
       )}
 

@@ -28,6 +28,7 @@ function MainPage() {
   } = useGetGroupsListApi({
     size: 9,
     page: 0,
+    keyword: "",
   });
 
   useLoading(isLoading);
@@ -57,10 +58,10 @@ function MainPage() {
     }
   };
 
-  const onRefetchList = useCallback(() => {
+  const onRefetchList = () => {
     refetchGroupsData();
     refetchMyLikedGroup();
-  }, [refetchGroupsData, refetchMyLikedGroup]);
+  };
 
   return (
     <CommonLayout>
@@ -82,8 +83,8 @@ function MainPage() {
       <SectionTitle title={"내가 찜한 모임"} />
 
       <section className={styles.group_view}>
-        {(myLikedGroups?.content ?? []).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} refetch={onRefetchList} />
+        {(myLikedGroups?.content ?? []).map((_item) => (
+          <GroupSearchItem data={_item} key={_item.id} refetch={onRefetchList} />
         ))}
 
         {
@@ -99,8 +100,8 @@ function MainPage() {
       <SectionTitle title={"추천 모임 표시"} />
 
       <section className={styles.group_view}>
-        {(groupsListData?.content ?? []).map((_item, idx) => (
-          <GroupSearchItem data={_item} key={idx} refetch={onRefetchList} />
+        {(groupsListData?.content ?? []).map((_item) => (
+          <GroupSearchItem data={_item} key={_item.id} refetch={onRefetchList} />
         ))}
       </section>
     </CommonLayout>

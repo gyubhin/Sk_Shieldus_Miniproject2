@@ -12,7 +12,7 @@ import useSetGroupTab from "@/features/group/_hooks/useSetGroupTab";
 import { useGetGroupMemberApi, useGetGroupsOneApi } from "@/features/group/_hooks/query";
 import { useGetEventsListApi } from "@/features/event/_hooks/event/query";
 import ActionSheet from "@/shared/components/actionsheet/ActionSheet";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   useDeleteCancelEventAttendeeApi,
   usePostEventsAttendeeApi,
@@ -21,6 +21,7 @@ import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { useUserId } from "@/features/users/_hooks/useUserId";
 import useLoading from "@/shared/hooks/useLoading";
+import { EventAttendeesModal } from "@/features/event/_components/attendee/EventAttendeesModal";
 
 /**
  *@description 내 모임 탭 > 모임 정보 페이지
@@ -31,7 +32,9 @@ function GroupInfoPage() {
 
   const [isEventMoreOpen, setEventMoreOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<number>();
+  const [isEventShowList, setEventShowList] = useState(false);
   const { showToast } = useUiStore();
+
   const userId = useUserId();
 
   const { data, refetch: refetchGroupsOne, isLoading } = useGetGroupsOneApi(groupId);
@@ -52,18 +55,28 @@ function GroupInfoPage() {
       ];
 
   // 이벤트(일정) 목록 state
-  const { data: eventsList } = useGetEventsListApi(groupId);
+  const { data: eventsList, refetch: refetchEvents } = useGetEventsListApi(groupId);
 
   // 탭 활성화 이벤트, state
   const { onChangeTab, activeKey } = useSetGroupTab();
-
-  // 그룹 상세정보 state
 
   // 그룹 멤버 state
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
 
   const { mutateAsync: mutateAttend } = usePostEventsAttendeeApi();
   const { mutateAsync: mutateDelete } = useDeleteCancelEventAttendeeApi();
+
+  // close view list
+  const onCloseViewList = () => {
+    setEventShowList(false);
+    setSelectedEvent(undefined);
+  };
+
+  // show view list
+  const onShowViewList = () => {
+    setEventShowList(true);
+    setEventMoreOpen(false);
+  };
 
   // 탈퇴
   const onWithdrawl = (eventId?: number) => {
@@ -82,6 +95,7 @@ function GroupInfoPage() {
             message: "일정에 나갔습니다.",
             type: "success",
           });
+          refetchEvents();
         }
       })
       .catch((error) => {
@@ -127,6 +141,7 @@ function GroupInfoPage() {
             message: "일정에 참석되었습니다.",
             type: "success",
           });
+          refetchEvents();
         }
       })
       .catch((error) => {
@@ -196,10 +211,18 @@ function GroupInfoPage() {
         open={isEventMoreOpen}
         firstText={isOwner ? "수정" : "참여"}
         secondText={!isOwner ? "취소" : undefined}
+        thirdText={"보기"}
         onClickFirst={() => onAttendAndModify(selectedEvent)}
         onClickSecond={() => onWithdrawl(selectedEvent)}
+        onClickThird={onShowViewList}
         onClose={() => setEventMoreOpen(false)}
         destructive="second"
+      />
+
+      <EventAttendeesModal
+        isOpen={isEventShowList}
+        onClose={onCloseViewList}
+        eventId={selectedEvent}
       />
     </CommonLayout>
   );

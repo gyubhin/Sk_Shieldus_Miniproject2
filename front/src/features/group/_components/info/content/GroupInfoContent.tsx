@@ -2,7 +2,11 @@ import Tag from "@/shared/components/tag/Tag";
 import styles from "./GroupInfoContent.module.scss";
 import type { GroupsItem } from "@/features/group/_types/base";
 import LikeButton from "@/shared/components/button/LikeButton";
-import { useDeleteGroupsLeaveApi, usePostGroupsJoinApi } from "@/features/group/_hooks/mutation";
+import {
+  useDeleteGroupsLeaveApi,
+  usePostGroupsJoinApi,
+  usePostGroupsLike,
+} from "@/features/group/_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 import type { ErrorResponse } from "react-router-dom";
 import { isAxiosError } from "axios";
@@ -18,6 +22,7 @@ type Props = {
 function GroupInfoContent({ data, refetchGroupsOne }: Props) {
   const { mutateAsync: mutateJoin } = usePostGroupsJoinApi();
   const { mutateAsync: mutateLeave } = useDeleteGroupsLeaveApi();
+  const { mutateAsync: mutateLike } = usePostGroupsLike();
   const { showToast } = useUiStore();
 
   // 모임 가입 이벤트
@@ -73,6 +78,29 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
     }
   };
 
+  // 좋아요 클릭
+  const onHeartTogggle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+
+    mutateLike(data.id)
+      .then((res) => {
+        if (res.status === 200) {
+          refetchGroupsOne();
+          showToast({
+            message: res.data.liked ? "찜했습니다." : "찜 해제했습니다.",
+            type: "success",
+          });
+        }
+      })
+      .catch((error) => {
+        if (isAxiosError(error)) {
+          if (error.status === 403) {
+            showToast({ message: "접근 권한이없습니다.", type: "error" });
+          }
+        }
+      });
+  };
+
   return (
     <section className={styles.group_content}>
       {/* 모임 이름 + 탈퇴 버튼 */}
@@ -80,7 +108,9 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
         <div className={styles.top_view_left}>
           <h2>{data.name}</h2>
 
-          <LikeButton isLike={data.liked} />
+          <button onClick={onHeartTogggle}>
+            <LikeButton isLike={data.liked} />
+          </button>
         </div>
 
         <button onClick={data?.joined ? onLeave : onJoin}>
@@ -99,8 +129,8 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
 
       {/* 태그 */}
       <div className={styles.tags_view}>
-        {data.tags.split(",").map((tag) => (
-          <Tag name={tag} />
+        {data.tags.split(",").map((tag, i) => (
+          <Tag name={tag} key={`${tag}_${i}`} />
         ))}
       </div>
 

@@ -16,7 +16,9 @@ type Props = {
 function MemberItem({ name, description, onKick, onDelegate, userId, imageUrl }: Props) {
   return (
     <div className={styles.member_wrapper}>
-      <img alt={"member_image"} src={getImageUrl(imageUrl)} />
+      {imageUrl && <img alt={"member_image"} src={getImageUrl(imageUrl)} />}
+
+      {!imageUrl && <div className={styles.no_profile_image} />}
 
       <div className={styles.member_info}>
         <p>{name}</p>

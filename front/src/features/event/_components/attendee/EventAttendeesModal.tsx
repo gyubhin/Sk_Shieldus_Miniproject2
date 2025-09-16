@@ -1,13 +1,10 @@
-import { useState } from "react";
 import styles from "./EventAttendeesModal.module.scss";
-import { patchAttendeeStatusApi } from "../../_apis/attendee.api";
 import type { PatchAttendeeStatusBody } from "../../_types/body";
-import type { GetEventsAttendeesResponse } from "../../_types/response";
 import { useGetEventAttendeeApi } from "../../_hooks/attendee/query";
 import { usePatchAttendeeStatusApi } from "../../_hooks/attendee/mutation";
-import { fi } from "zod/locales";
 import { isAxiosError } from "axios";
 import { useUiStore } from "@/shared/stores/ui.store";
+import { useUserId } from "@/features/users/_hooks/useUserId";
 
 type Props = {
   isOpen: boolean;
@@ -19,8 +16,10 @@ type Props = {
 /**
  *@description event(일정) 참석자 관리 모달
  */
-export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
+export function EventAttendeesModal({ isOpen, onClose, eventId, isAdmin }: Props) {
   if (!isOpen || !eventId) return null;
+
+  const userId = useUserId();
 
   const role = {
     HOST: "모임장",
@@ -56,6 +55,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
       }
     }
   };
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
@@ -75,7 +75,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 
-                {attendee.role === "ATTENDEE" && (
+                {attendee.role === "ATTENDEE" && userId === attendee.userId && (
                   <div className={styles.actions}>
                     <button onClick={() => onManageAttendance(attendee.userId, "CANCELLED")}>
                       취소
@@ -98,12 +98,16 @@ export function EventAttendeesModal({ isOpen, onClose, eventId }: Props) {
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 
-                <div className={styles.actions}>
-                  <button onClick={() => onManageAttendance(attendee.userId, "GOING")}>승인</button>
-                  <button onClick={() => onManageAttendance(attendee.userId, "CANCELLED")}>
-                    취소
-                  </button>
-                </div>
+                {isAdmin && (
+                  <div className={styles.actions}>
+                    <button onClick={() => onManageAttendance(attendee.userId, "GOING")}>
+                      승인
+                    </button>
+                    <button onClick={() => onManageAttendance(attendee.userId, "CANCELLED")}>
+                      취소
+                    </button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

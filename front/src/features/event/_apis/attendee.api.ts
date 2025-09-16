@@ -3,17 +3,6 @@ import type { PatchAttendeeStatusBody } from "../_types/body";
 import type { GetEventsAttendeesResponse } from "../_types/response";
 import type { MutationResponse } from "@/shared/types/api";
 
-// /**
-//  *@description events 일정 참석자 목록 api
-// TODO 회의 후, 결정
-//  */
-// export const getEventAttendeeAllStatusApi = (eventId: number) => {
-//   return apiCall<undefined>({
-//     url: `/events/${eventId}/attendees`,
-//     method: "GET",
-//   });
-// };
-
 /**
  *@description attendees 참석자 목록 조회 api (참석자 + 대기자)
  */

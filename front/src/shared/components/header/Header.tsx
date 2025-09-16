@@ -7,6 +7,8 @@ import { IconButton } from "../icon/IconButton";
 import { useEffect, useState } from "react";
 import { usePostLogoutApi } from "@/features/auth/_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
+import { useQueryClient } from "@tanstack/react-query";
+import { reactQueryKeys } from "@/shared/constants/reactQueryKeys";
 
 /**
  *@description 헤더 컴포넌트
@@ -19,6 +21,7 @@ export function Header() {
   const { mutateAsync } = usePostLogoutApi();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { showToast } = useUiStore();
+  const queryClient = useQueryClient();
 
   const isMobile = useIsMobile();
 
@@ -51,11 +54,19 @@ export function Header() {
         .then((res) => {
           if (res.status === 200) {
             showToast({ message: "로그아웃되었습니다.", type: "success" });
+            queryClient.removeQueries({
+              queryKey: [reactQueryKeys.user.getUserInfo],
+            });
+
             navigate("/");
             reset(); // 토큰 삭제
           }
         })
         .catch(() => {
+          queryClient.removeQueries({
+            queryKey: [reactQueryKeys.user.getUserInfo],
+          });
+
           showToast({ message: "잘못된 접근입니다.", type: "error" });
           navigate("/");
         });
