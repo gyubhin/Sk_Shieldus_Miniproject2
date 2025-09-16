@@ -10,6 +10,7 @@ import { usePostGroupsLike } from "../_hooks/mutation";
 import { useUiStore } from "@/shared/stores/ui.store";
 import { isAxiosError } from "axios";
 import { getImageUrl } from "@/libs/image";
+import _ from "lodash";
 
 type Props = {
   data: GroupsItem;
@@ -85,11 +86,12 @@ export function GroupSearchItem({ data, refetch }: Props) {
         <div className={styles.tags}>
           <Tag name={data.categoryName} />
 
-          {data.tags.split(",").map((tag, i) => (
-            <React.Fragment key={i}>
-              <Tag name={tag} />
-            </React.Fragment>
-          ))}
+          {!_.isEmpty(data.tags) &&
+            data.tags.split(",").map((tag, i) => (
+              <React.Fragment key={i}>
+                <Tag name={tag} />
+              </React.Fragment>
+            ))}
         </div>
 
         {/* 정보 */}
