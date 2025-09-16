@@ -61,7 +61,7 @@ function GroupInfoPage() {
   const { onChangeTab, activeKey } = useSetGroupTab();
 
   // 그룹 멤버 state
-  const { data: groupMembers } = useGetGroupMemberApi(groupId);
+  const { data: groupMembers, refetch: refetchMembers } = useGetGroupMemberApi(groupId);
 
   const { mutateAsync: mutateAttend } = usePostEventsAttendeeApi();
   const { mutateAsync: mutateDelete } = useDeleteCancelEventAttendeeApi();
@@ -191,7 +191,13 @@ function GroupInfoPage() {
       {/* 모임 배너 이미지 */}
       <GroupBanner url={data?.imageUrl} />
 
-      {data && <GroupInfoContent data={data} refetchGroupsOne={refetchGroupsOne} />}
+      {data && (
+        <GroupInfoContent
+          data={data}
+          refetchGroupsOne={refetchGroupsOne}
+          refetchMembers={refetchMembers}
+        />
+      )}
 
       <SectionTitle
         title={"정모 일정"}

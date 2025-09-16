@@ -14,12 +14,13 @@ import { isAxiosError } from "axios";
 type Props = {
   data: GroupsItem;
   refetchGroupsOne: () => void;
+  refetchMembers: () => void;
 };
 
 /**
  *@description 모임 정보 페이지 > 모입 정보 (이름, 인원수, 소개, 태그, 장소)
  */
-function GroupInfoContent({ data, refetchGroupsOne }: Props) {
+function GroupInfoContent({ data, refetchGroupsOne, refetchMembers }: Props) {
   const { mutateAsync: mutateJoin } = usePostGroupsJoinApi();
   const { mutateAsync: mutateLeave } = useDeleteGroupsLeaveApi();
   const { mutateAsync: mutateLike } = usePostGroupsLike();
@@ -33,6 +34,7 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
       if (res.status === 200) {
         showToast({ message: "가입 신청이 완료되었습니다.", type: "success" });
 
+        refetchMembers();
         refetchGroupsOne();
       }
     } catch (error) {
@@ -59,6 +61,7 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
 
         if (res.status === 200) {
           showToast({ message: "모임 탈퇴가 완료되었습니다.", type: "success" });
+          refetchMembers();
           refetchGroupsOne();
         }
       } catch (error) {
@@ -129,9 +132,8 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
 
       {/* 태그 */}
       <div className={styles.tags_view}>
-        {data.tags.split(",").map((tag, i) => (
-          <Tag name={tag} key={`${tag}_${i}`} />
-        ))}
+        {data.tags !== "" &&
+          data.tags.split(",").map((tag, i) => <Tag name={tag} key={`${tag}_${i}`} />)}
       </div>
 
       {/* 모임 소개글 */}
