@@ -42,11 +42,12 @@ public class GroupController {
         return ResponseEntity.created(URI.create("/api/groups/" + groupId)).build();
     }
 
-    @Operation(summary = "그룹 목록 조회 및 필터링 API")
+    @Operation(summary = "그룹 목록 조회, 필터링, 검색 API")
     @GetMapping
     public ResponseEntity<PagingResponse<GroupResponse>> getAllGroups(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String region,
+            @RequestParam(required = false) String keyword,
             @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
             @PageableDefault(size = 20) Pageable pageable,
             @AuthenticationPrincipal UserPrincipal currentUser) {
@@ -54,15 +55,16 @@ public class GroupController {
         Pageable finalPageable;
         if ("name".equals(sort)) {
             finalPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
-        } else { // "latest" or any other value
+        } else {
             finalPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
         }
 
         Long userId = (currentUser != null) ? currentUser.getId() : null;
-        PagingResponse<GroupResponse> groups = groupService.getAllGroups(categoryId, region, finalPageable, userId);
+        PagingResponse<GroupResponse> groups = groupService.getAllGroups(categoryId, region, keyword, finalPageable, userId);
         return ResponseEntity.ok(groups);
     }
 
+    /*
     @Operation(summary = "그룹 검색 API (이름, 설명, 태그)")
     @GetMapping("/search")
     public ResponseEntity<PagingResponse<GroupResponse>> searchGroups(
@@ -74,6 +76,7 @@ public class GroupController {
         PagingResponse<GroupResponse> groups = groupService.searchGroups(keyword, pageable, userId);
         return ResponseEntity.ok(groups);
     }
+    */
 
     @Operation(summary = "그룹 상세 조회 API")
     @GetMapping("/{groupId}")

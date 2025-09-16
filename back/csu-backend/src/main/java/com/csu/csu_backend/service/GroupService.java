@@ -76,35 +76,28 @@ public class GroupService {
         return new GroupResponse(group);
     }
 
-    public PagingResponse<GroupResponse> getAllGroups(Long categoryId, String region, Pageable pageable, Long userId) {
+    public PagingResponse<GroupResponse> getAllGroups(Long categoryId, String region, String keyword, Pageable pageable, Long userId) {
         Specification<Group> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
             if (categoryId != null) {
                 predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
             }
             if (StringUtils.hasText(region)) {
                 predicates.add(criteriaBuilder.equal(root.get("region"), region));
             }
+            if (StringUtils.hasText(keyword)) {
+                String pattern = "%" + keyword.toLowerCase() + "%";
+                Predicate nameLike = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), pattern);
+                Predicate descriptionLike = criteriaBuilder.like(root.get("description"), "%" + keyword + "%");
+                Predicate tagsLike = criteriaBuilder.like(criteriaBuilder.lower(root.get("tags")), pattern);
+                predicates.add(criteriaBuilder.or(nameLike, descriptionLike, tagsLike));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
         Page<Group> groupPage = groupRepository.findAll(spec, pageable);
-
-        Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
-        Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
-
-        Page<GroupResponse> responsePage = groupPage.map(group -> {
-            GroupResponse response = new GroupResponse(group);
-            response.setLiked(likedGroupIds.contains(group.getId()));
-            response.setJoined(joinedGroupIds.contains(group.getId()));
-            return response;
-        });
-
-        return PagingResponse.of(responsePage);
-    }
-
-    public PagingResponse<GroupResponse> searchGroups(String keyword, Pageable pageable, Long userId) {
-        Page<Group> groupPage = groupRepository.search(keyword, pageable);
 
         Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
         Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
