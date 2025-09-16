@@ -19,7 +19,6 @@ function PrivacyPage() {
         <div className={styles.container}>
           <section className={styles.card}>
             <article className={styles.article}>
-              {/* TODO: 실제 개인정보처리방침 전문으로 교체 */}
               <h2>Hobby Hub 개인정보 처리방침</h2>
               <p>
                 Hobby Hub(이하 “회사”)는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의

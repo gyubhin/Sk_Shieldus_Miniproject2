@@ -17,14 +17,16 @@
   padding: 20px;
   max-height: 60vh;
   overflow: auto;
+  margin-bottom: 60px;
 }
 
 .article {
   color: #111827;
-  line-height: 1.7;
+  line-height: 3.2rem;
+  font-size: 1.4rem;
 
   h2 {
-    font-size: 18px;
+    font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 12px;
   }
