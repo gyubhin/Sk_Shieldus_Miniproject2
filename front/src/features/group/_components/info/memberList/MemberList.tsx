@@ -15,7 +15,6 @@ type Props = {
 function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
   const { admin, members } = groupMembers;
 
-  console.log(members);
   return (
     <section className={styles.member_list_container}>
       <div className={clsx(styles.manager_view, styles.members_wrapper)}>
@@ -35,7 +34,7 @@ function MemberList({ onKickMember, onDelegateGroup, groupMembers }: Props) {
         <div className={styles.manager_list}>
           {members.map((member) => (
             <MemberItem
-              imageUrl={admin.profileImageUrl}
+              imageUrl={member.profileImageUrl}
               key={member.userId}
               userId={member.userId}
               name={member?.nickname ?? ""}
