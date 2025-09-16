@@ -10,7 +10,6 @@ export const regionOptions = [
   { label: "세종", value: "세종" },
 ];
 
-// 카테고리 필터 TODO 나중에 api로 대체될 수 있음
 export const categoryOptions = [
   { label: "카테고리", value: "" },
   { label: "개발", value: "develop" },

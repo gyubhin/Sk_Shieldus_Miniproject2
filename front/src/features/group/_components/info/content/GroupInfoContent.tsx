@@ -129,8 +129,8 @@ function GroupInfoContent({ data, refetchGroupsOne }: Props) {
 
       {/* 태그 */}
       <div className={styles.tags_view}>
-        {data.tags.split(",").map((tag) => (
-          <Tag name={tag} />
+        {data.tags.split(",").map((tag, i) => (
+          <Tag name={tag} key={`${tag}_${i}`} />
         ))}
       </div>
 

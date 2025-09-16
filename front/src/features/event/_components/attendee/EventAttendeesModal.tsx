@@ -4,6 +4,7 @@ import { useGetEventAttendeeApi } from "../../_hooks/attendee/query";
 import { usePatchAttendeeStatusApi } from "../../_hooks/attendee/mutation";
 import { isAxiosError } from "axios";
 import { useUiStore } from "@/shared/stores/ui.store";
+import { useUserId } from "@/features/users/_hooks/useUserId";
 
 type Props = {
   isOpen: boolean;
@@ -17,6 +18,8 @@ type Props = {
  */
 export function EventAttendeesModal({ isOpen, onClose, eventId, isAdmin }: Props) {
   if (!isOpen || !eventId) return null;
+
+  const userId = useUserId();
 
   const role = {
     HOST: "모임장",
@@ -72,7 +75,7 @@ export function EventAttendeesModal({ isOpen, onClose, eventId, isAdmin }: Props
                   <span className={styles.role}>{role[attendee.role]}</span>
                 </div>
 
-                {attendee.role === "ATTENDEE" && (
+                {attendee.role === "ATTENDEE" && userId === attendee.userId && (
                   <div className={styles.actions}>
                     <button onClick={() => onManageAttendance(attendee.userId, "CANCELLED")}>
                       취소

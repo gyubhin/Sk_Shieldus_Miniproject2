@@ -32,6 +32,7 @@ function GroupInfoPage() {
 
   const [isEventMoreOpen, setEventMoreOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<number>();
+  const [isEventShowList, setEventShowList] = useState(false);
   const { showToast } = useUiStore();
 
   const userId = useUserId();
@@ -59,13 +60,23 @@ function GroupInfoPage() {
   // 탭 활성화 이벤트, state
   const { onChangeTab, activeKey } = useSetGroupTab();
 
-  // 그룹 상세정보 state
-
   // 그룹 멤버 state
   const { data: groupMembers } = useGetGroupMemberApi(groupId);
 
   const { mutateAsync: mutateAttend } = usePostEventsAttendeeApi();
   const { mutateAsync: mutateDelete } = useDeleteCancelEventAttendeeApi();
+
+  // close view list
+  const onCloseViewList = () => {
+    setEventShowList(false);
+    setSelectedEvent(undefined);
+  };
+
+  // show view list
+  const onShowViewList = () => {
+    setEventShowList(true);
+    setEventMoreOpen(false);
+  };
 
   // 탈퇴
   const onWithdrawl = (eventId?: number) => {
@@ -200,17 +211,18 @@ function GroupInfoPage() {
         open={isEventMoreOpen}
         firstText={isOwner ? "수정" : "참여"}
         secondText={!isOwner ? "취소" : undefined}
+        thirdText={"보기"}
         onClickFirst={() => onAttendAndModify(selectedEvent)}
         onClickSecond={() => onWithdrawl(selectedEvent)}
+        onClickThird={onShowViewList}
         onClose={() => setEventMoreOpen(false)}
         destructive="second"
       />
 
       <EventAttendeesModal
-        isOpen={false}
-        onClose={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        isOpen={isEventShowList}
+        onClose={onCloseViewList}
+        eventId={selectedEvent}
       />
     </CommonLayout>
   );
