@@ -11,6 +11,7 @@ import com.csu.csu_backend.exception.GroupFullException;
 import com.csu.csu_backend.exception.ResourceNotFoundException;
 import com.csu.csu_backend.exception.UnauthorizedException;
 import com.csu.csu_backend.repository.*;
+import jakarta.persistence.criteria.Join; // 추가
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,7 @@ public class GroupService {
     private final GroupLikeRepository groupLikeRepository;
     private final FileStorageService fileStorageService;
 
+    // ... (createGroup, updateGroup 등 다른 메서드는 그대로 유지) ...
     @Transactional
     public Long createGroup(CreateGroupRequest request, Long ownerId) {
         User owner = findUserById(ownerId);
@@ -80,9 +82,14 @@ public class GroupService {
         Specification<Group> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // ▼▼▼ 수정된 부분 ▼▼▼
             if (categoryId != null) {
-                predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
+                // 'groups' 테이블과 'category' 테이블을 명시적으로 조인합니다.
+                Join<Group, Category> categoryJoin = root.join("category");
+                predicates.add(criteriaBuilder.equal(categoryJoin.get("id"), categoryId));
             }
+            // ▲▲▲ 수정된 부분 ▲▲▲
+
             if (StringUtils.hasText(region)) {
                 predicates.add(criteriaBuilder.equal(root.get("region"), region));
             }
@@ -93,6 +100,9 @@ public class GroupService {
                 Predicate tagsLike = criteriaBuilder.like(criteriaBuilder.lower(root.get("tags")), pattern);
                 predicates.add(criteriaBuilder.or(nameLike, descriptionLike, tagsLike));
             }
+
+            // 중복된 결과가 나올 수 있으므로 distinct를 적용합니다.
+            query.distinct(true);
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
@@ -112,6 +122,7 @@ public class GroupService {
         return PagingResponse.of(responsePage);
     }
 
+    // ... (getGroup 이하 다른 메서드는 그대로 유지) ...
     public GroupResponse getGroup(Long groupId, Long userId) {
         Group group = findGroupById(groupId);
         GroupResponse response = new GroupResponse(group);
