@@ -6,7 +6,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3.2rem;
+  padding: 0 0 2rem;
+
+  @include media(sm) {
+    padding: 2rem 3.2rem;
+  }
 }
 
 /* 좌측 뷰 */
