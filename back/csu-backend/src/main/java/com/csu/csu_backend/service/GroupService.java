@@ -1,0 +1,346 @@
+package com.csu.csu_backend.service;
+
+import com.csu.csu_backend.controller.dto.GroupDTO.CreateGroupRequest;
+import com.csu.csu_backend.controller.dto.GroupDTO.GroupResponse;
+import com.csu.csu_backend.controller.dto.GroupDTO.UpdateGroupRequest;
+import com.csu.csu_backend.controller.dto.MembershipDTO.MemberResponse;
+import com.csu.csu_backend.controller.dto.Response.PagingResponse;
+import com.csu.csu_backend.entity.*;
+import com.csu.csu_backend.exception.DuplicateResourceException;
+import com.csu.csu_backend.exception.GroupFullException;
+import com.csu.csu_backend.exception.ResourceNotFoundException;
+import com.csu.csu_backend.exception.UnauthorizedException;
+import com.csu.csu_backend.repository.*;
+import jakarta.persistence.criteria.Join; // 추가
+import jakarta.persistence.criteria.Predicate;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class GroupService {
+
+    private static final String ROLE_OWNER = "OWNER";
+    private static final String ROLE_MEMBER = "MEMBER";
+
+    private final GroupRepository groupRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final MembershipRepository membershipRepository;
+    private final GroupLikeRepository groupLikeRepository;
+    private final FileStorageService fileStorageService;
+
+    // ... (createGroup, updateGroup 등 다른 메서드는 그대로 유지) ...
+    @Transactional
+    public Long createGroup(CreateGroupRequest request, Long ownerId) {
+        User owner = findUserById(ownerId);
+        Category category = findCategoryById(request.getCategoryId());
+        validateGroupNameDuplication(request.getName());
+
+        Group group = request.toEntity(owner, category);
+        groupRepository.save(group);
+
+        createOwnerMembership(owner, group);
+
+        return group.getId();
+    }
+
+    @Transactional
+    public GroupResponse updateGroup(Long groupId, UpdateGroupRequest request, Long ownerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, ownerId);
+
+        if (request.getName() != null && !request.getName().equals(group.getName())) {
+            validateGroupNameDuplication(request.getName());
+        }
+
+        Category newCategory = group.getCategory();
+        if (request.getCategoryId() != null && !request.getCategoryId().equals(newCategory.getId())) {
+            newCategory = findCategoryById(request.getCategoryId());
+        }
+
+        group.update(request.getName(), request.getDescription(), request.getRegion(), request.getMaxMembers(), request.getTags(), newCategory);
+
+        return new GroupResponse(group);
+    }
+
+    public PagingResponse<GroupResponse> getAllGroups(Long categoryId, String region, String keyword, Pageable pageable, Long userId) {
+        Specification<Group> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            // ▼▼▼ 수정된 부분 ▼▼▼
+            if (categoryId != null) {
+                // 'groups' 테이블과 'category' 테이블을 명시적으로 조인합니다.
+                Join<Group, Category> categoryJoin = root.join("category");
+                predicates.add(criteriaBuilder.equal(categoryJoin.get("id"), categoryId));
+            }
+            // ▲▲▲ 수정된 부분 ▲▲▲
+
+            if (StringUtils.hasText(region)) {
+                predicates.add(criteriaBuilder.equal(root.get("region"), region));
+            }
+            if (StringUtils.hasText(keyword)) {
+                String pattern = "%" + keyword.toLowerCase() + "%";
+                Predicate nameLike = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), pattern);
+                Predicate descriptionLike = criteriaBuilder.like(root.get("description"), "%" + keyword + "%");
+                Predicate tagsLike = criteriaBuilder.like(criteriaBuilder.lower(root.get("tags")), pattern);
+                predicates.add(criteriaBuilder.or(nameLike, descriptionLike, tagsLike));
+            }
+
+            // 중복된 결과가 나올 수 있으므로 distinct를 적용합니다.
+            query.distinct(true);
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<Group> groupPage = groupRepository.findAll(spec, pageable);
+
+        Set<Long> likedGroupIds = (userId != null) ? groupLikeRepository.findLikedGroupIdsByUserId(userId) : Collections.emptySet();
+        Set<Long> joinedGroupIds = (userId != null) ? membershipRepository.findJoinedGroupIdsByUserId(userId) : Collections.emptySet();
+
+        Page<GroupResponse> responsePage = groupPage.map(group -> {
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(likedGroupIds.contains(group.getId()));
+            response.setJoined(joinedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(responsePage);
+    }
+
+    // ... (getGroup 이하 다른 메서드는 그대로 유지) ...
+    public GroupResponse getGroup(Long groupId, Long userId) {
+        Group group = findGroupById(groupId);
+        GroupResponse response = new GroupResponse(group);
+
+        if (userId == null) {
+            response.setLiked(false);
+            response.setJoined(false);
+        } else {
+            User user = findUserById(userId);
+            boolean isLiked = groupLikeRepository.findByUserAndGroup(user, group).isPresent();
+            boolean isJoined = membershipRepository.existsByUserAndGroup(user, group);
+            response.setLiked(isLiked);
+            response.setJoined(isJoined);
+        }
+
+        return response;
+    }
+
+    public List<MemberResponse> getGroupMembers(Long groupId) {
+        Group group = findGroupById(groupId);
+        List<Membership> memberships = membershipRepository.findByGroup(group);
+
+        return memberships.stream()
+                .map(MemberResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void joinGroup(Long groupId, Long userId) {
+        User user = findUserById(userId);
+        Group group = findGroupById(groupId);
+        validateUserIsAlreadyMember(user, group);
+        validateGroupCapacity(group);
+        createMemberMembership(user, group);
+    }
+
+    @Transactional
+    public void leaveGroup(Long groupId, Long userId) {
+        User user = findUserById(userId);
+        Group group = findGroupById(groupId);
+        Membership membership = findMembershipByUserAndGroup(user, group);
+        validateMemberIsOwner(membership);
+        membershipRepository.delete(membership);
+    }
+
+    @Transactional
+    public void removeMember(Long groupId, Long memberId, Long ownerId) {
+        if (ownerId.equals(memberId)) {
+            throw new UnauthorizedException("그룹장은 자기 자신을 강퇴할 수 없습니다.");
+        }
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, ownerId);
+        User member = findUserById(memberId);
+        Membership membership = findMembershipByUserAndGroup(member, group);
+        membershipRepository.delete(membership);
+    }
+
+    public List<GroupResponse> getMyGroups(Long userId) {
+        User user = findUserById(userId);
+        List<Membership> memberships = membershipRepository.findByUser(user);
+        Set<Long> likedGroupIds = groupLikeRepository.findLikedGroupIdsByUserId(userId);
+        return memberships.stream()
+                .map(Membership::getGroup)
+                .map(group -> {
+                    GroupResponse response = new GroupResponse(group);
+                    response.setLiked(likedGroupIds.contains(group.getId()));
+                    response.setJoined(true);
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteGroup(Long groupId, Long ownerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, ownerId);
+        group.delete();
+    }
+
+    @Transactional
+    public void delegateGroupOwner(Long groupId, Long newOwnerId, Long currentOwnerId) {
+        Group group = findGroupById(groupId);
+        validateUserIsOwner(group, currentOwnerId);
+        if (currentOwnerId.equals(newOwnerId)) {
+            throw new IllegalArgumentException("그룹장을 자기 자신에게 위임할 수 없습니다.");
+        }
+        User newOwner = findUserById(newOwnerId);
+        Membership newOwnerMembership = findMembershipByUserAndGroup(newOwner, group);
+        Membership currentOwnerMembership = findMembershipByUserAndGroup(findUserById(currentOwnerId), group);
+        currentOwnerMembership.updateRole(ROLE_MEMBER);
+        newOwnerMembership.updateRole(ROLE_OWNER);
+        group.delegateOwner(newOwner);
+    }
+
+    @Transactional
+    public String updateCoverImage(Long groupId, MultipartFile file) {
+        Group group = findGroupById(groupId);
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+        String path = fileStorageService.saveFile(file, "groups");
+        group.setCoverImageUrl(path);
+        groupRepository.save(group);
+        return path;
+    }
+
+    @Transactional
+    public void deleteCoverImage(Long groupId, Long userId) {
+        Group group = findGroupById(groupId);
+        if (!group.getOwner().getId().equals(userId)) {
+            throw new UnauthorizedException("그룹장만 커버 이미지를 삭제할 수 있습니다.");
+        }
+        fileStorageService.deleteFile(group.getCoverImageUrl());
+        group.setCoverImageUrl(null);
+        groupRepository.save(group);
+    }
+
+    public PagingResponse<GroupResponse> getLikedGroups(Long userId, Pageable pageable) {
+        User user = findUserById(userId);
+        Page<GroupLike> likedGroupsPage = groupLikeRepository.findByUser(user, pageable);
+
+        Set<Long> joinedGroupIds = membershipRepository.findJoinedGroupIdsByUserId(userId);
+
+        Page<GroupResponse> responsePage = likedGroupsPage.map(groupLike -> {
+            Group group = groupLike.getGroup();
+            GroupResponse response = new GroupResponse(group);
+            response.setLiked(true);
+            response.setJoined(joinedGroupIds.contains(group.getId()));
+            return response;
+        });
+
+        return PagingResponse.of(responsePage);
+    }
+
+    @Transactional
+    public boolean toggleGroupLike(Long groupId, Long userId) {
+        User user = findUserById(userId);
+        Group group = findGroupById(groupId);
+
+        Optional<GroupLike> groupLikeOptional = groupLikeRepository.findByUserAndGroup(user, group);
+
+        if (groupLikeOptional.isPresent()) {
+            groupLikeRepository.delete(groupLikeOptional.get());
+            return false;
+        } else {
+            GroupLike newGroupLike = GroupLike.builder()
+                    .user(user)
+                    .group(group)
+                    .build();
+            groupLikeRepository.save(newGroupLike);
+            return true;
+        }
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + userId));
+    }
+
+    private Group findGroupById(Long groupId) {
+        return groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 그룹을 찾을 수 없습니다: " + groupId));
+    }
+
+    private Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 ID의 카테고리를 찾을 수 없습니다: " + categoryId));
+    }
+
+    private Membership findMembershipByUserAndGroup(User user, Group group) {
+        return membershipRepository.findByUserAndGroup(user, group)
+                .orElseThrow(() -> new UnauthorizedException("사용자가 해당 그룹의 멤버가 아닙니다."));
+    }
+
+    private void createOwnerMembership(User owner, Group group) {
+        Membership membership = Membership.builder()
+                .user(owner)
+                .group(group)
+                .role(ROLE_OWNER)
+                .build();
+        membershipRepository.save(membership);
+    }
+
+    private void createMemberMembership(User user, Group group) {
+        Membership membership = Membership.builder()
+                .user(user)
+                .group(group)
+                .role(ROLE_MEMBER)
+                .build();
+        membershipRepository.save(membership);
+    }
+
+    private void validateGroupNameDuplication(String name) {
+        groupRepository.findByNameWithLock(name).ifPresent(g -> {
+            throw new DuplicateResourceException("이미 존재하는 그룹 이름입니다: " + name);
+        });
+    }
+
+    private void validateUserIsAlreadyMember(User user, Group group) {
+        if (membershipRepository.existsByUserAndGroup(user, group)) {
+            throw new DuplicateResourceException("이미 가입된 그룹입니다.");
+        }
+    }
+
+    private void validateGroupCapacity(Group group) {
+        long currentMembers = membershipRepository.countByGroup(group);
+        if (currentMembers >= group.getMaxMembers()) {
+            throw new GroupFullException("그룹 정원이 모두 찼습니다.");
+        }
+    }
+
+    private void validateMemberIsOwner(Membership membership) {
+        if (ROLE_OWNER.equals(membership.getRole())) {
+            throw new UnauthorizedException("그룹장은 그룹을 탈퇴할 수 없습니다.");
+        }
+    }
+
+    private void validateUserIsOwner(Group group, Long userId) {
+        if (!group.getOwner().getId().equals(userId)) {
+            throw new UnauthorizedException("그룹장만 해당 작업을 수행할 수 있습니다.");
+        }
+    }
+}
