@@ -46,11 +46,9 @@ export function CommentItem({ data, onReply, onDelete, onEdit }: Props) {
         <div className={styles.meta}>
           <span className={styles.date}>{getRelativeTime(data.createdAt)}</span>
 
-          {userId === data.authorId && (
-            <button className={styles.action} onClick={onReply}>
-              답글달기
-            </button>
-          )}
+          <button className={styles.action} onClick={onReply}>
+            답글달기
+          </button>
 
           {userId === data.authorId && (
             <button className={styles.action} onClick={onEdit}>

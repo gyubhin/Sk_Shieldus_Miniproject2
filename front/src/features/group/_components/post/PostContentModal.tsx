@@ -132,7 +132,7 @@ export function PostContentModal({ groupId, postId, isOpen, imageUrl, onClose }:
       .then((res) => {
         if (res.status === 200) {
           refetchPostDetail();
-
+          refetchComments();
           showToast({
             message: "댓글이 삭제되었습니다.",
             type: "success",
