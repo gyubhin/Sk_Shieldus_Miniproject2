@@ -11,6 +11,7 @@ import styles from "./SignupPage.module.scss";
 import { postSignupApi, useAccessTokenStore } from "@/features/auth";
 import { useUiStore } from "@/shared/stores/ui.store";
 import useLoading from "@/shared/hooks/useLoading";
+import { isAxiosError } from "axios";
 
 // 보이지 않는 문자/공백 정리
 const sanitize = (v: string) =>
@@ -91,8 +92,15 @@ function SignupPage() {
         nav("/main"); // 가입 후 로그인 페이지로 이동
       }
     } catch (err) {
-      console.error(err);
-      alert("회원가입 중 오류가 발생했습니다.");
+      if (isAxiosError(err)) {
+        const message = err.response?.data.message as string;
+
+        if (message.includes("이미 가입된 이메일입니다")) {
+          setEmailErr("이미 가입된 이메일입니다.");
+        }
+      } else {
+        alert("회원가입 중 오류가 발생했습니다.");
+      }
     } finally {
       setIsSubmitting(false);
     }
